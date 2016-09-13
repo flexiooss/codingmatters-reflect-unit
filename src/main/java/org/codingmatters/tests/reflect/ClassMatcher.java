@@ -59,28 +59,28 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
     }
 
 
-    public ClassMatcher thatIsStatic() {
-        return this.addMatcher("static method", item -> isStatic(item.getModifiers()));
+    public ClassMatcher static_() {
+        return this.addMatcher("static", item -> isStatic(item.getModifiers()));
     }
 
-    public ClassMatcher thatIsNotStatic() {
-        return this.addMatcher("instance method", item -> ! isStatic(item.getModifiers()));
+    public ClassMatcher instance_() {
+        return this.addMatcher("instance", item -> ! isStatic(item.getModifiers()));
     }
 
-    public ClassMatcher thatIsPublic() {
-        return this.addMatcher("public method", item -> isPublic(item.getModifiers()));
+    public ClassMatcher public_() {
+        return this.addMatcher("public", item -> isPublic(item.getModifiers()));
     }
 
-    public ClassMatcher thatIsPrivate() {
-        return this.addMatcher("private method", item -> isPrivate(item.getModifiers()));
+    public ClassMatcher private_() {
+        return this.addMatcher("private", item -> isPrivate(item.getModifiers()));
     }
 
-    public ClassMatcher thatIsProtected() {
-        return this.addMatcher("protected method", item -> isProtected(item.getModifiers()));
+    public ClassMatcher protected_() {
+        return this.addMatcher("protected", item -> isProtected(item.getModifiers()));
     }
 
-    public ClassMatcher thatIsPackagePrivateMethod() {
-        return this.addMatcher("package private method", item -> ! (isPublic(item.getModifiers()) || isPrivate(item.getModifiers()) || isProtected(item.getModifiers())));
+    public ClassMatcher packagePrivate() {
+        return this.addMatcher("package private", item -> ! (isPublic(item.getModifiers()) || isPrivate(item.getModifiers()) || isProtected(item.getModifiers())));
     }
 
 

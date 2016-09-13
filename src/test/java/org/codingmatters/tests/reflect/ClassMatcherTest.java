@@ -74,22 +74,22 @@ public class ClassMatcherTest {
 
     @Test
     public void publicClass() throws Exception {
-        assertThat(Public.class, is(aClass().thatIsPublic()));
+        assertThat(Public.class, is(aClass().public_()));
     }
 
     @Test
     public void privateClass() throws Exception {
-        assertThat(Private.class, is(aClass().thatIsPrivate()));
+        assertThat(Private.class, is(aClass().private_()));
     }
 
     @Test
     public void protectedClass() throws Exception {
-        assertThat(Protected.class, is(aClass().thatIsProtected()));
+        assertThat(Protected.class, is(aClass().protected_()));
     }
 
     @Test
     public void packagePrivateClass() throws Exception {
-        assertThat(PackagePrivate.class, is(aClass().thatIsPackagePrivateMethod()));
+        assertThat(PackagePrivate.class, is(aClass().packagePrivate()));
     }
 
     static class Static {}
@@ -97,12 +97,12 @@ public class ClassMatcherTest {
 
     @Test
     public void staticClass() throws Exception {
-        assertThat(Static.class, is(aClass().thatIsStatic()));
+        assertThat(Static.class, is(aClass().static_()));
     }
 
     @Test
     public void notStaticClass() throws Exception {
-        assertThat(NotStatic.class, is(aClass().thatIsNotStatic()));
+        assertThat(NotStatic.class, is(aClass().instance_()));
     }
 
     static class ClassWithField {
