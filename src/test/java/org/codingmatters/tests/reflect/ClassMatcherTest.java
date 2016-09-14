@@ -140,4 +140,18 @@ public class ClassMatcherTest {
         exception.expect(AssertionError.class);
         assertThat(Implementation.class, is(aClass().implementing(String.class)));
     }
+
+    class SuperClass {}
+    class SubClass extends SuperClass{}
+
+    @Test
+    public void classExtendingClass() throws Exception {
+        assertThat(SubClass.class, is(aClass().extending(SuperClass.class)));
+    }
+
+    @Test
+    public void classNotExtendingClass() throws Exception {
+        exception.expect(AssertionError.class);
+        assertThat(SuperClass.class, is(aClass().extending(SubClass.class)));
+    }
 }

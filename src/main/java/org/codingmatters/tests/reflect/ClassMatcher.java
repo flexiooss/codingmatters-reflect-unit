@@ -111,6 +111,11 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         return this;
     }
 
+    public ClassMatcher extending(Class aClass) {
+        this.matchers.addMatcher("extends " + aClass.getName(), item -> item.getSuperclass().equals(aClass));
+        return this;
+    }
+
     static private class ClassMemberMatcher<T extends Member> extends TypeSafeMatcher<Class> {
 
         private final TypeSafeMatcher<T> methodMatcher;
