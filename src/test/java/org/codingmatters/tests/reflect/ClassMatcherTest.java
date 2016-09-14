@@ -4,6 +4,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.io.Closeable;
+
 import static org.codingmatters.tests.reflect.ReflectMatchers.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -117,5 +119,25 @@ public class ClassMatcherTest {
     @Test
     public void classWithNamedField() throws Exception {
         assertThat(ClassWithField.class, is(aClass().with(aField().named("field"))));
+    }
+
+    interface Interface {}
+    class Implementation implements Interface{}
+
+    @Test
+    public void classImplementingInterface() throws Exception {
+        assertThat(Implementation.class, is(aClass().implementing(Interface.class)));
+    }
+
+    @Test
+    public void classNotImplementingAnInterface() throws Exception {
+        exception.expect(AssertionError.class);
+        assertThat(Implementation.class, is(aClass().implementing(Closeable.class)));
+    }
+
+    @Test
+    public void classImplementingAsNonInterface() throws Exception {
+        exception.expect(AssertionError.class);
+        assertThat(Implementation.class, is(aClass().implementing(String.class)));
     }
 }

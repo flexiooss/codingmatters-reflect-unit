@@ -105,6 +105,12 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         return this;
     }
 
+    public ClassMatcher implementing(Class interfaceClass) {
+        this.matchers.addMatcher("implements an interface", item -> isInterface(interfaceClass.getModifiers()));
+        this.matchers.addMatcher("implements " + interfaceClass.getName(), item -> Arrays.asList(item.getInterfaces()).contains(interfaceClass));
+        return this;
+    }
+
     static private class ClassMemberMatcher<T extends Member> extends TypeSafeMatcher<Class> {
 
         private final TypeSafeMatcher<T> methodMatcher;
