@@ -76,7 +76,13 @@ public class ClassMatcherTest {
 
     @Test
     public void publicClass() throws Exception {
-        assertThat(Public.class, is(aClass().public_()));
+    }
+
+    @Test
+    public void public_failsOnPackagePrivateClass() throws Exception {
+        exception.expect(AssertionError.class);
+
+        assertThat(PackagePrivate.class, is(aClass().public_()));
     }
 
     @Test
