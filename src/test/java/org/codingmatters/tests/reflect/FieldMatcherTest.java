@@ -23,6 +23,8 @@ public class FieldMatcherTest {
 
         public String instanceField;
         static public String staticField;
+
+        final String finalField = "val";
     }
 
     @Test
@@ -53,6 +55,11 @@ public class FieldMatcherTest {
     @Test
     public void packagePrivateField() throws Exception {
         assertThat(field("packagePrivateField"), is(aField().packagePrivate()));
+    }
+
+    @Test
+    public void finalField() throws Exception {
+        assertThat(field("finalField"), is(aField().final_()));
     }
 
     @Test

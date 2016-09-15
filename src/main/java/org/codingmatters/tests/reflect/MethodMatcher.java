@@ -62,6 +62,10 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this.memberDeleguate.packagePrivate(this);
     }
 
+    public MethodMatcher final_() {
+        return this.memberDeleguate.final_(this);
+    }
+
     public MethodMatcher abstract_() {
         return this.memberDeleguate.abstract_(this);
     }
@@ -96,5 +100,4 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
     protected void describeMismatchSafely(Method item, Description mismatchDescription) {
         this.matchers.compoundMatcher().describeMismatch(item, mismatchDescription);
     }
-
 }

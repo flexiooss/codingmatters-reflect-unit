@@ -160,4 +160,12 @@ public class ClassMatcherTest {
         exception.expect(AssertionError.class);
         assertThat(SuperClass.class, is(aClass().extending(SubClass.class)));
     }
+
+    static public final class FinalClass {}
+
+    @Test
+    public void finalClass() throws Exception {
+        assertThat(FinalClass.class, is(aClass().final_()));
+
+    }
 }

@@ -93,6 +93,11 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
     }
 
 
+    public ClassMatcher final_() {
+        return this.addMatcher("final", item -> isFinal(item.getModifiers()));
+    }
+
+
 
     @Override
     protected boolean matchesSafely(Class aClass) {

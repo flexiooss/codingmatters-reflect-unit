@@ -52,9 +52,13 @@ public class MemberDeleguate<T> {
         return self;
     }
 
+    public T final_(T self) {
+        this.matchers.addMatcher("final member", item -> isFinal(item.getModifiers()));
+        return self;
+    }
+
     public T abstract_(T self) {
         this.matchers.addMatcher("abstract member", item -> isAbstract(item.getModifiers()));
         return self;
     }
-
 }

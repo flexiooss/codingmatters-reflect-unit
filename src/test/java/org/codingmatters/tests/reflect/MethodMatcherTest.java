@@ -37,6 +37,8 @@ public class MethodMatcherTest {
         public abstract void abstractMethod();
 
         public String complete(String arg1, String arg2) {return "";}
+
+        public final void finalMethod() {}
     }
 
     @Test
@@ -175,6 +177,11 @@ public class MethodMatcherTest {
     @Test
     public void abstractMethod() throws Exception {
         assertThat(method("abstractMethod"), is(aMethod().abstract_()));
+    }
+
+    @Test
+    public void finalMethod() throws Exception {
+        assertThat(method("finalMethod"), is(aMethod().final_()));
     }
 
     private Method method(String name, Class ... args) throws NoSuchMethodException {
