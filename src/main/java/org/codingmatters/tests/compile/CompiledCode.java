@@ -52,4 +52,58 @@ public class CompiledCode {
         }
     }
 
+    public Invoker onClass(String className) {
+        return new Invoker(this.getClass(className), null);
+    }
+
+    public Invoker on(Object o) {
+        return new Invoker(o.getClass(), o);
+    }
+
+    static public class Invoker {
+        private final Class aClass;
+        private final Object on;
+
+        private Invoker(Class aClass, Object on) {
+            this.aClass = aClass;
+            this.on = on;
+        }
+
+
+        public <T> T invoke(String method) throws Exception {
+            try {
+                return (T) this.aClass.getMethod(method).invoke(this.on);
+            } catch(ClassCastException e) {
+                throw new AssertionError(method + " return type mismatch", e);
+            }
+        }
+
+        public ParametrizedInvoker invoke(String method, Class ... paramTypes) {
+            return new ParametrizedInvoker(this.aClass, this.on, method, paramTypes);
+        }
+
+        static public class ParametrizedInvoker {
+
+            private final Class aClass;
+            private final Object on;
+            private final String method;
+            private final Class[] paramTypes;
+
+            public ParametrizedInvoker(Class aClass, Object on, String method, Class[] paramTypes) {
+                this.aClass = aClass;
+                this.on = on;
+                this.method = method;
+                this.paramTypes = paramTypes;
+            }
+
+            public <T> T with(Object ... params) throws Exception {
+                try {
+                    return (T) this.aClass.getMethod(this.method, this.paramTypes).invoke(this.on, params);
+                } catch(ClassCastException e) {
+                    throw new AssertionError(method + " return type mismatch", e);
+                }
+            }
+        }
+    }
+
 }
