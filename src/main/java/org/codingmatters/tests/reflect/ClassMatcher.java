@@ -6,10 +6,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -53,6 +50,18 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
             List<Field> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getDeclaredFields()));
             result.addAll(Arrays.asList(item.getFields()));
+            return result;
+        }));
+        return this;
+    }
+
+
+
+    public ClassMatcher with(ConstructorMatcher constructorMatcher) {
+        this.matchers.add(new ClassMemberMatcher<Constructor>(constructorMatcher, item -> {
+            List<Constructor> result = new LinkedList<>();
+            result.addAll(Arrays.asList(item.getDeclaredConstructors()));
+            result.addAll(Arrays.asList(item.getConstructors()));
             return result;
         }));
         return this;

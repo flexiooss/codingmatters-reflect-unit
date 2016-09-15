@@ -12,6 +12,10 @@ public class ReflectMatchers {
         return ClassMatcher.anInterface();
     }
 
+    static public ConstructorMatcher aConstructor() {
+        return ConstructorMatcher.aConstructor();
+    }
+
     static public MethodMatcher aMethod() {
         return MethodMatcher.aMethod();
     }
