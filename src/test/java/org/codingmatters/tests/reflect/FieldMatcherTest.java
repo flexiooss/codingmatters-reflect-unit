@@ -4,7 +4,8 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import static org.codingmatters.tests.reflect.ReflectMatchers.*;
+import static org.codingmatters.tests.reflect.ReflectMatchers.aStaticField;
+import static org.codingmatters.tests.reflect.ReflectMatchers.anInstanceField;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -29,37 +30,37 @@ public class FieldMatcherTest {
 
     @Test
     public void namedField() throws Exception {
-        assertThat(field("name"), is(aField().named("name")));
+        assertThat(field("name"), is(FieldMatcher.anInstanceField().named("name")));
     }
 
     @Test
     public void fieldType() throws Exception {
-        assertThat(field("name"), is(aField().withType(String.class)));
+        assertThat(field("name"), is(FieldMatcher.anInstanceField().withType(String.class)));
     }
 
     @Test
     public void publicField() throws Exception {
-        assertThat(field("publicField"), is(aField().public_()));
+        assertThat(field("publicField"), is(FieldMatcher.anInstanceField().public_()));
     }
 
     @Test
     public void privateField() throws Exception {
-        assertThat(field("privateField"), is(aField().private_()));
+        assertThat(field("privateField"), is(FieldMatcher.anInstanceField().private_()));
     }
 
     @Test
     public void protectedField() throws Exception {
-        assertThat(field("protectedField"), is(aField().protected_()));
+        assertThat(field("protectedField"), is(FieldMatcher.anInstanceField().protected_()));
     }
 
     @Test
     public void packagePrivateField() throws Exception {
-        assertThat(field("packagePrivateField"), is(aField().packagePrivate()));
+        assertThat(field("packagePrivateField"), is(FieldMatcher.anInstanceField().packagePrivate()));
     }
 
     @Test
     public void finalField() throws Exception {
-        assertThat(field("finalField"), is(aField().final_()));
+        assertThat(field("finalField"), is(FieldMatcher.anInstanceField().final_()));
     }
 
     @Test

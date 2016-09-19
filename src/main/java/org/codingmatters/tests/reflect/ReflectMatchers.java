@@ -16,20 +16,12 @@ public class ReflectMatchers {
         return ConstructorMatcher.aConstructor();
     }
 
-    static public MethodMatcher aMethod() {
-        return MethodMatcher.aMethod();
-    }
-
     static public MethodMatcher aStaticMethod() {
         return MethodMatcher.aStaticMethod();
     }
 
     static public MethodMatcher anInstanceMethod() {
         return MethodMatcher.anInstanceMethod();
-    }
-
-    static public FieldMatcher aField() {
-        return FieldMatcher.aField();
     }
 
     static public FieldMatcher aStaticField() {

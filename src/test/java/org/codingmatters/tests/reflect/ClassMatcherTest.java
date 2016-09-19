@@ -6,7 +6,8 @@ import org.junit.rules.ExpectedException;
 
 import java.io.Closeable;
 
-import static org.codingmatters.tests.reflect.ReflectMatchers.*;
+import static org.codingmatters.tests.reflect.ReflectMatchers.aClass;
+import static org.codingmatters.tests.reflect.ReflectMatchers.anInterface;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -41,21 +42,21 @@ public class ClassMatcherTest {
 
     @Test
     public void classWithMethod() throws Exception {
-        assertThat(String.class, aClass().with(aMethod().named("toUpperCase")));
+        assertThat(String.class, aClass().with(MethodMatcher.anInstanceMethod().named("toUpperCase")));
     }
 
     @Test
     public void classWithMethod_failure() throws Exception {
         exception.expect(AssertionError.class);
 
-        assertThat(String.class, is(aClass().with(aMethod().named("noSuchMeth"))));
+        assertThat(String.class, is(aClass().with(MethodMatcher.anInstanceMethod().named("noSuchMeth"))));
     }
 
     @Test
     public void classWithManyMethod() throws Exception {
         assertThat(String.class, is(aClass()
-                .with(aMethod().named("toUpperCase"))
-                .with(aMethod().named("toLowerCase")))
+                .with(MethodMatcher.anInstanceMethod().named("toUpperCase"))
+                .with(MethodMatcher.anInstanceMethod().named("toLowerCase")))
         );
     }
 
@@ -64,8 +65,8 @@ public class ClassMatcherTest {
         exception.expect(AssertionError.class);
 
         assertThat(String.class, is(aClass()
-                .with(aMethod().named("toUpperCase"))
-                .with(aMethod().named("noSuchMethod")))
+                .with(MethodMatcher.anInstanceMethod().named("toUpperCase"))
+                .with(MethodMatcher.anInstanceMethod().named("noSuchMethod")))
         );
     }
 
@@ -119,12 +120,12 @@ public class ClassMatcherTest {
 
     @Test
     public void classWithField() throws Exception {
-        assertThat(ClassWithField.class, is(aClass().with(aField())));
+        assertThat(ClassWithField.class, is(aClass().with(FieldMatcher.anInstanceField())));
     }
 
     @Test
     public void classWithNamedField() throws Exception {
-        assertThat(ClassWithField.class, is(aClass().with(aField().named("field"))));
+        assertThat(ClassWithField.class, is(aClass().with(FieldMatcher.anInstanceField().named("field"))));
     }
 
     interface Interface {}
