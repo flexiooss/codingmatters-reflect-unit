@@ -10,8 +10,8 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.io.FileWriter;
 
-import static org.codingmatters.tests.reflect.ReflectMatchers.aClass;
-import static org.codingmatters.tests.reflect.ReflectMatchers.aStaticMethod;
+import static org.codingmatters.tests.reflect.ReflectMatchers.aStatic_;
+import static org.codingmatters.tests.reflect.ReflectMatchers.anInstance;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
@@ -54,17 +54,17 @@ public class CompiledCodeTest {
 
     @Test
     public void getCompiledClass() throws Exception {
-        assertThat(compiled.getClass("org.codingmatters.HelloWorld"), is(aClass()));
-        assertThat(compiled.getClass("org.codingmatters.NoSuchClass"), is(not(aClass())));
+        assertThat(compiled.getClass("org.codingmatters.HelloWorld"), is(anInstance().class_()));
+        assertThat(compiled.getClass("org.codingmatters.NoSuchClass"), is(not(anInstance().class_())));
     }
 
     @Test
     public void classMatcher_methodNameMatches() throws Exception {
         assertThat(
                 compiled.getClass("org.codingmatters.HelloWorld"),
-                is(aClass()
+                is(anInstance().class_()
                         .with(MethodMatcher.anInstanceMethod().named("sayHello").public_().returning(String.class))
-                        .with(aStaticMethod().named("main").public_().withParameters(String[].class).returningVoid())
+                        .with(aStatic_().method().named("main").public_().withParameters(String[].class).returningVoid())
                 )
         );
     }

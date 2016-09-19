@@ -4,31 +4,17 @@ package org.codingmatters.tests.reflect;
  * Created by nelt on 9/8/16.
  */
 public class ReflectMatchers {
-    static public ClassMatcher aClass() {
-        return ClassMatcher.aClass();
-    }
-
-    static public ClassMatcher anInterface() {
-        return ClassMatcher.anInterface();
-    }
 
     static public ConstructorMatcher aConstructor() {
         return ConstructorMatcher.aConstructor();
     }
 
-    static public MethodMatcher aStaticMethod() {
-        return MethodMatcher.aStaticMethod();
+    static public StaticMatcher aStatic_() {
+        return new StaticMatcher();
     }
 
-    static public MethodMatcher anInstanceMethod() {
-        return MethodMatcher.anInstanceMethod();
+    static public InstanceMatcher anInstance() {
+        return new InstanceMatcher();
     }
 
-    static public FieldMatcher aStaticField() {
-        return FieldMatcher.aStaticField();
-    }
-
-    static public FieldMatcher anInstanceField() {
-        return FieldMatcher.anInstanceField();
-    }
 }

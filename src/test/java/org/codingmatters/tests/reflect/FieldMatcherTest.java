@@ -4,8 +4,8 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import static org.codingmatters.tests.reflect.ReflectMatchers.aStaticField;
-import static org.codingmatters.tests.reflect.ReflectMatchers.anInstanceField;
+import static org.codingmatters.tests.reflect.ReflectMatchers.aStatic_;
+import static org.codingmatters.tests.reflect.ReflectMatchers.anInstance;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -65,12 +65,12 @@ public class FieldMatcherTest {
 
     @Test
     public void instanceField() throws Exception {
-        assertThat(field("instanceField"), is(anInstanceField()));
+        assertThat(field("instanceField"), is(anInstance().field()));
     }
 
     @Test
     public void staticField() throws Exception {
-        assertThat(field("staticField"), is(aStaticField()));
+        assertThat(field("staticField"), is(aStatic_().field()));
     }
 
 

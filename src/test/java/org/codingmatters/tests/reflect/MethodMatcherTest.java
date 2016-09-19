@@ -7,8 +7,8 @@ import org.junit.rules.ExpectedException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import static org.codingmatters.tests.reflect.ReflectMatchers.aStaticMethod;
-import static org.codingmatters.tests.reflect.ReflectMatchers.anInstanceMethod;
+import static org.codingmatters.tests.reflect.ReflectMatchers.aStatic_;
+import static org.codingmatters.tests.reflect.ReflectMatchers.anInstance;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -151,27 +151,27 @@ public class MethodMatcherTest {
 
     @Test
     public void staticMethod() throws Exception {
-        assertThat(method("staticMethod"), is(aStaticMethod()));
+        assertThat(method("staticMethod"), is(aStatic_().method()));
     }
 
     @Test
     public void staticMethod_fails() throws Exception {
         exception.expect(AssertionError.class);
 
-        assertThat(method("instanceMethod"), is(aStaticMethod()));
+        assertThat(method("instanceMethod"), is(aStatic_().method()));
     }
 
     @Test
     public void instanceMethod() throws Exception {
-        assertThat(method("instanceMethod"), is(anInstanceMethod()));
-        assertThat(method("instanceMethod"), is(MethodMatcher.anInstanceMethod().notStatic()));
+        assertThat(method("instanceMethod"), is(anInstance().method()));
+        assertThat(method("instanceMethod"), is(MethodMatcher.anInstanceMethod()));
     }
 
     @Test
     public void instanceMethod_fails() throws Exception {
         exception.expect(AssertionError.class);
 
-        assertThat(method("staticMethod"), is(anInstanceMethod()));
+        assertThat(method("staticMethod"), is(anInstance().method()));
     }
 
     @Test

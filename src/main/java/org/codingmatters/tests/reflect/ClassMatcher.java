@@ -18,12 +18,28 @@ import static java.lang.reflect.Modifier.*;
  */
 public class ClassMatcher extends TypeSafeMatcher<Class> {
 
-    static public ClassMatcher aClass() {
+    static private ClassMatcher anInterface() {
+        return new ClassMatcher().addMatcher("interface", item -> Modifier.isInterface(item.getModifiers()));
+    }
+
+    static private ClassMatcher aClass() {
         return new ClassMatcher().addMatcher("class", item -> ! Modifier.isInterface(item.getModifiers()));
     }
 
-    static public ClassMatcher anInterface() {
-        return new ClassMatcher().addMatcher("interface", item -> Modifier.isInterface(item.getModifiers()));
+    static ClassMatcher aStaticInterface() {
+        return anInterface().static_();
+    }
+
+    static ClassMatcher anInstanceInterface() {
+        return anInterface().instance_();
+    }
+
+    static ClassMatcher aStaticClass() {
+        return aClass().static_();
+    }
+
+    static ClassMatcher anInstanceClass() {
+        return aClass().instance_();
     }
 
     private final MatcherChain<Class> matchers = new MatcherChain<>();
@@ -36,7 +52,7 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
     }
 
     public ClassMatcher with(MethodMatcher methodMatcher) {
-        this.matchers.add(new ClassMemberMatcher<Method>(methodMatcher, item -> {
+        this.matchers.add(new ClassMemberMatcher<>(methodMatcher, item -> {
             List<Method> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getDeclaredMethods()));
             result.addAll(Arrays.asList(item.getMethods()));
@@ -46,7 +62,7 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
     }
 
     public Matcher<Class> with(FieldMatcher fieldMatcher) {
-        this.matchers.add(new ClassMemberMatcher<Field>(fieldMatcher, item -> {
+        this.matchers.add(new ClassMemberMatcher<>(fieldMatcher, item -> {
             List<Field> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getDeclaredFields()));
             result.addAll(Arrays.asList(item.getFields()));
@@ -58,7 +74,7 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
 
 
     public ClassMatcher with(ConstructorMatcher constructorMatcher) {
-        this.matchers.add(new ClassMemberMatcher<Constructor>(constructorMatcher, item -> {
+        this.matchers.add(new ClassMemberMatcher<>(constructorMatcher, item -> {
             List<Constructor> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getDeclaredConstructors()));
             result.addAll(Arrays.asList(item.getConstructors()));
@@ -68,11 +84,11 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
     }
 
 
-    public ClassMatcher static_() {
+    private ClassMatcher static_() {
         return this.addMatcher("static", item -> isStatic(item.getModifiers()));
     }
 
-    public ClassMatcher instance_() {
+    private ClassMatcher instance_() {
         return this.addMatcher("instance", item -> ! isStatic(item.getModifiers()));
     }
 

@@ -14,12 +14,8 @@ import java.util.stream.Collectors;
  */
 public class MethodMatcher extends TypeSafeMatcher<Method> {
 
-    static public MethodMatcher aMethod() {
-        return new MethodMatcher();
-    }
-
     static public MethodMatcher anInstanceMethod() {
-        return new MethodMatcher().notStatic();
+        return new MethodMatcher().instance();
     }
 
     static public MethodMatcher aStaticMethod() {
@@ -38,11 +34,11 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
     }
 
 
-    public MethodMatcher static_() {
+    private MethodMatcher static_() {
         return this.memberDeleguate.static_(this);
     }
 
-    public MethodMatcher notStatic() {
+    private MethodMatcher instance() {
         return this.memberDeleguate.notStatic(this);
     }
 
