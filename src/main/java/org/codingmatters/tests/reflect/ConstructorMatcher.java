@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  */
 public class ConstructorMatcher extends TypeSafeMatcher<Constructor> {
 
-    public static ConstructorMatcher aConstructor(ReflectMatcherConfiguration configuration) {
+    static ConstructorMatcher aConstructor(ReflectMatcherConfiguration configuration) {
         return new ConstructorMatcher().configure(configuration);
     }
 

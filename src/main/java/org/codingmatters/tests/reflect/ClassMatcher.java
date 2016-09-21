@@ -18,20 +18,16 @@ import static java.lang.reflect.Modifier.*;
  */
 public class ClassMatcher extends TypeSafeMatcher<Class> {
 
-    static private ClassMatcher anInterface() {
-        return new ClassMatcher().addMatcher("interface", item -> Modifier.isInterface(item.getModifiers()));
+    static ClassMatcher anInterface(ReflectMatcherConfiguration builder) {
+        return new ClassMatcher()
+                .addMatcher("interface", item -> Modifier.isInterface(item.getModifiers()))
+                .configure(builder);
     }
 
-    static private ClassMatcher aClass() {
-        return new ClassMatcher().addMatcher("class", item -> ! Modifier.isInterface(item.getModifiers()));
-    }
-
-    static public ClassMatcher anInterface(ReflectMatcherConfiguration builder) {
-        return anInterface().configure(builder);
-    }
-
-    static public ClassMatcher aClass(ReflectMatcherConfiguration builder) {
-        return aClass().configure(builder);
+    static ClassMatcher aClass(ReflectMatcherConfiguration builder) {
+        return new ClassMatcher()
+                .addMatcher("class", item -> !Modifier.isInterface(item.getModifiers()))
+                .configure(builder);
     }
 
 
