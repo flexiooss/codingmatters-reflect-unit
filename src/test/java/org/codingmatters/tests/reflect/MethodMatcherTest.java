@@ -52,19 +52,19 @@ public class MethodMatcherTest {
 
     @Test
     public void isAMethod() throws Exception {
-        assertThat(method("publicMethod"), is(MethodMatcher.anInstanceMethod()));
+        assertThat(method("publicMethod"), is(anInstance().method()));
     }
 
     @Test
     public void aMethodWithName() throws Exception {
-        assertThat(method("publicMethod"), is(MethodMatcher.anInstanceMethod().named("publicMethod")));
+        assertThat(method("publicMethod"), is(anInstance().method().named("publicMethod")));
     }
 
     @Test
     public void aMethodWithName_failure() throws Exception {
         exception.expect(AssertionError.class);
 
-        assertThat(method("publicMethod"), is(MethodMatcher.anInstanceMethod().named("noNamedLikeThat")));
+        assertThat(method("publicMethod"), is(anInstance().method().named("noNamedLikeThat")));
     }
 
     @Test
@@ -110,60 +110,60 @@ public class MethodMatcherTest {
 
     @Test
     public void returnsType() throws Exception {
-        assertThat(method("returnsString"), is(MethodMatcher.anInstanceMethod().returning(String.class)));
+        assertThat(method("returnsString"), is(anInstance().method().returning(String.class)));
     }
 
     @Test
     public void returnsVoid() throws Exception {
-        assertThat(method("returnsVoid"), is(MethodMatcher.anInstanceMethod().returningVoid()));
-        assertThat(method("returnsVoid"), is(MethodMatcher.anInstanceMethod().returning(void.class)));
+        assertThat(method("returnsVoid"), is(anInstance().method().returningVoid()));
+        assertThat(method("returnsVoid"), is(anInstance().method().returning(void.class)));
     }
 
     @Test
     public void returnsType_failure() throws Exception {
         exception.expect(AssertionError.class);
 
-        assertThat(method("returnsString"), is(MethodMatcher.anInstanceMethod().returning(List.class)));
+        assertThat(method("returnsString"), is(anInstance().method().returning(List.class)));
     }
 
     @Test
     public void withParameters() throws Exception {
-        assertThat(method("withParameters", String.class, int.class), is(MethodMatcher.anInstanceMethod().withParameters(String.class, int.class)));
+        assertThat(method("withParameters", String.class, int.class), is(anInstance().method().withParameters(String.class, int.class)));
     }
 
     @Test
     public void withoutParameters() throws Exception {
-        assertThat(method("withoutParameters"), is(MethodMatcher.anInstanceMethod().withParameters()));
+        assertThat(method("withoutParameters"), is(anInstance().method().withParameters()));
     }
 
     @Test
     public void withParameters_fails() throws Exception {
         exception.expect(AssertionError.class);
-        assertThat(method("withParameters", String.class, int.class), is(MethodMatcher.anInstanceMethod().withParameters(String.class)));
+        assertThat(method("withParameters", String.class, int.class), is(anInstance().method().withParameters(String.class)));
 
         exception.expect(AssertionError.class);
-        assertThat(method("withParameters", String.class, int.class), is(MethodMatcher.anInstanceMethod().withParameters()));
+        assertThat(method("withParameters", String.class, int.class), is(anInstance().method().withParameters()));
 
         exception.expect(AssertionError.class);
-        assertThat(method("withoutParameters"), is(MethodMatcher.anInstanceMethod().withParameters(String.class)));
+        assertThat(method("withoutParameters"), is(anInstance().method().withParameters(String.class)));
     }
 
     @Test
     public void staticMethod() throws Exception {
-        assertThat(method("staticMethod"), is(aStatic_().method()));
+        assertThat(method("staticMethod"), is(aStatic().method()));
     }
 
     @Test
     public void staticMethod_fails() throws Exception {
         exception.expect(AssertionError.class);
 
-        assertThat(method("instanceMethod"), is(aStatic_().method()));
+        assertThat(method("instanceMethod"), is(aStatic().method()));
     }
 
     @Test
     public void instanceMethod() throws Exception {
         assertThat(method("instanceMethod"), is(anInstance().method()));
-        assertThat(method("instanceMethod"), is(MethodMatcher.anInstanceMethod()));
+        assertThat(method("instanceMethod"), is(anInstance().method()));
     }
 
     @Test
@@ -175,12 +175,12 @@ public class MethodMatcherTest {
 
     @Test
     public void abstractMethod() throws Exception {
-        assertThat(method("abstractMethod"), is(MethodMatcher.anInstanceMethod().abstract_()));
+        assertThat(method("abstractMethod"), is(anInstance().method().abstract_()));
     }
 
     @Test
     public void finalMethod() throws Exception {
-        assertThat(method("finalMethod"), is(MethodMatcher.anInstanceMethod().final_()));
+        assertThat(method("finalMethod"), is(anInstance().method().final_()));
     }
 
     private Method method(String name, Class ... args) throws NoSuchMethodException {

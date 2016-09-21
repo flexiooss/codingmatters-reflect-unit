@@ -16,31 +16,6 @@ public class FieldMatcher extends TypeSafeMatcher<Field> {
         return new FieldMatcher().configure(builder);
     }
 
-    private FieldMatcher configure(ReflectMatcherConfiguration builder) {
-        if(builder.levelModifier().equals(LevelModifier.INSTANCE)) {
-            this.instance();
-        } else {
-            this.static_();
-        }
-
-        switch (builder.accessModifier()) {
-            case PUBLIC:
-                this.public_();
-                break;
-            case PRIVATE:
-                this.private_();
-                break;
-            case PROTECTED:
-                this.protected_();
-                break;
-            case PACKAGE_PRIVATE:
-                this.packagePrivate();
-                break;
-        }
-        return this;
-    }
-
-
     private final MatcherChain<Field> matchers = new MatcherChain<>();
     private final MemberDeleguate<FieldMatcher> memberDeleguate;
 
@@ -86,8 +61,6 @@ public class FieldMatcher extends TypeSafeMatcher<Field> {
         return this;
     }
 
-
-
     @Override
     protected boolean matchesSafely(Field aField) {
         return matchers.compoundMatcher().matches(aField);
@@ -101,5 +74,29 @@ public class FieldMatcher extends TypeSafeMatcher<Field> {
     @Override
     protected void describeMismatchSafely(Field item, Description mismatchDescription) {
         this.matchers.compoundMatcher().describeMismatch(item, mismatchDescription);
+    }
+
+    private FieldMatcher configure(ReflectMatcherConfiguration builder) {
+        if(builder.levelModifier().equals(LevelModifier.INSTANCE)) {
+            this.instance();
+        } else {
+            this.static_();
+        }
+
+        switch (builder.accessModifier()) {
+            case PUBLIC:
+                this.public_();
+                break;
+            case PRIVATE:
+                this.private_();
+                break;
+            case PROTECTED:
+                this.protected_();
+                break;
+            case PACKAGE_PRIVATE:
+                this.packagePrivate();
+                break;
+        }
+        return this;
     }
 }

@@ -69,7 +69,7 @@ public class FieldMatcherTest {
 
     @Test
     public void staticField() throws Exception {
-        assertThat(field("staticField"), is(aStatic_().field()));
+        assertThat(field("staticField"), is(aStatic().field()));
     }
 
 

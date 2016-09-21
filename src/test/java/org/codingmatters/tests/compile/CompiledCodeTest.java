@@ -62,7 +62,7 @@ public class CompiledCodeTest {
                 compiled.getClass("org.codingmatters.HelloWorld"),
                 is(anInstance().class_()
                         .with(aPublic().method().named("sayHello").returning(String.class))
-                        .with(aStatic_().public_().method().named("main").withParameters(String[].class).returningVoid())
+                        .with(aStatic().public_().method().named("main").withParameters(String[].class).returningVoid())
                 )
         );
     }

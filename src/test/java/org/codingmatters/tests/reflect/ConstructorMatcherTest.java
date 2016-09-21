@@ -7,7 +7,7 @@ import org.junit.rules.ExpectedException;
 import java.lang.reflect.Constructor;
 
 import static org.codingmatters.tests.reflect.ReflectMatchers.aConstructor;
-import static org.codingmatters.tests.reflect.ReflectMatchers.aStatic_;
+import static org.codingmatters.tests.reflect.ReflectMatchers.aStatic;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -41,7 +41,7 @@ public class ConstructorMatcherTest {
 
     @Test
     public void classConstructor() throws Exception {
-        assertThat(TestClass.class, is(aStatic_().class_().with(aConstructor().withParameters(String.class))));
+        assertThat(TestClass.class, is(aStatic().class_().with(aConstructor().withParameters(String.class))));
     }
 
     private Constructor constructor(Class ... args) throws NoSuchMethodException {

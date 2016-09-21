@@ -41,21 +41,21 @@ public class ClassMatcherTest {
 
     @Test
     public void classWithMethod() throws Exception {
-        assertThat(String.class, anInstance().class_().with(MethodMatcher.anInstanceMethod().named("toUpperCase")));
+        assertThat(String.class, anInstance().class_().with(anInstance().method().named("toUpperCase")));
     }
 
     @Test
     public void classWithMethod_failure() throws Exception {
         exception.expect(AssertionError.class);
 
-        assertThat(String.class, is(anInstance().class_().with(MethodMatcher.anInstanceMethod().named("noSuchMeth"))));
+        assertThat(String.class, is(anInstance().class_().with(anInstance().method().named("noSuchMeth"))));
     }
 
     @Test
     public void classWithManyMethod() throws Exception {
         assertThat(String.class, is(anInstance().class_()
-                .with(MethodMatcher.anInstanceMethod().named("toUpperCase"))
-                .with(MethodMatcher.anInstanceMethod().named("toLowerCase")))
+                .with(anInstance().method().named("toUpperCase"))
+                .with(anInstance().method().named("toLowerCase")))
         );
     }
 
@@ -64,8 +64,8 @@ public class ClassMatcherTest {
         exception.expect(AssertionError.class);
 
         assertThat(String.class, is(anInstance().class_()
-                .with(MethodMatcher.anInstanceMethod().named("toUpperCase"))
-                .with(MethodMatcher.anInstanceMethod().named("noSuchMethod")))
+                .with(anInstance().method().named("toUpperCase"))
+                .with(anInstance().method().named("noSuchMethod")))
         );
     }
 
@@ -105,7 +105,7 @@ public class ClassMatcherTest {
 
     @Test
     public void staticClass() throws Exception {
-        assertThat(Static.class, is(aStatic_().class_()));
+        assertThat(Static.class, is(aStatic().class_()));
     }
 
     @Test
@@ -119,12 +119,12 @@ public class ClassMatcherTest {
 
     @Test
     public void classWithField() throws Exception {
-        assertThat(ClassWithField.class, is(aStatic_().class_().with(aPublic().field())));
+        assertThat(ClassWithField.class, is(aStatic().class_().with(aPublic().field())));
     }
 
     @Test
     public void classWithNamedField() throws Exception {
-        assertThat(ClassWithField.class, is(aStatic_().class_().with(aPublic().field().named("field"))));
+        assertThat(ClassWithField.class, is(aStatic().class_().with(aPublic().field().named("field"))));
     }
 
     interface Interface {}
@@ -165,7 +165,7 @@ public class ClassMatcherTest {
 
     @Test
     public void finalClass() throws Exception {
-        assertThat(FinalClass.class, is(aStatic_().class_().final_()));
+        assertThat(FinalClass.class, is(aStatic().class_().final_()));
 
     }
 }

@@ -14,36 +14,8 @@ import java.util.stream.Collectors;
  */
 public class MethodMatcher extends TypeSafeMatcher<Method> {
 
-    static public MethodMatcher anInstanceMethod() {
-        return new MethodMatcher().instance();
-    }
-
     static MethodMatcher method(ReflectMatcherConfiguration builder) {
         return new MethodMatcher().configure(builder);
-    }
-
-    private MethodMatcher configure(ReflectMatcherConfiguration builder) {
-        if(builder.levelModifier().equals(LevelModifier.INSTANCE)) {
-            this.instance();
-        } else {
-            this.static_();
-        }
-
-        switch (builder.accessModifier()) {
-            case PUBLIC:
-                this.public_();
-                break;
-            case PRIVATE:
-                this.private_();
-                break;
-            case PROTECTED:
-                this.protected_();
-                break;
-            case PACKAGE_PRIVATE:
-                this.packagePrivate();
-                break;
-        }
-        return this;
     }
 
     private final MatcherChain<Method> matchers = new MatcherChain<>();
@@ -119,5 +91,29 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
     @Override
     protected void describeMismatchSafely(Method item, Description mismatchDescription) {
         this.matchers.compoundMatcher().describeMismatch(item, mismatchDescription);
+    }
+
+    private MethodMatcher configure(ReflectMatcherConfiguration builder) {
+        if(builder.levelModifier().equals(LevelModifier.INSTANCE)) {
+            this.instance();
+        } else {
+            this.static_();
+        }
+
+        switch (builder.accessModifier()) {
+            case PUBLIC:
+                this.public_();
+                break;
+            case PRIVATE:
+                this.private_();
+                break;
+            case PROTECTED:
+                this.protected_();
+                break;
+            case PACKAGE_PRIVATE:
+                this.packagePrivate();
+                break;
+        }
+        return this;
     }
 }

@@ -24,14 +24,6 @@ public class ConstructorMatcher extends TypeSafeMatcher<Constructor> {
         this.memberDeleguate = new MemberDeleguate<>(this.matchers);
     }
 
-    public ConstructorMatcher static_() {
-        return this.memberDeleguate.static_(this);
-    }
-
-    public ConstructorMatcher notStatic() {
-        return this.memberDeleguate.notStatic(this);
-    }
-
     public ConstructorMatcher public_() {
         return this.memberDeleguate.public_(this);
     }

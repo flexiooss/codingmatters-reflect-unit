@@ -9,7 +9,7 @@ public class ReflectMatchers {
         return ConstructorMatcher.aConstructor();
     }
 
-    static public ReflectMatcherBuilder aStatic_() {
+    static public ReflectMatcherBuilder aStatic() {
         return new ReflectMatcherBuilder().static_();
     }
 
