@@ -26,6 +26,38 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         return new ClassMatcher().addMatcher("class", item -> ! Modifier.isInterface(item.getModifiers()));
     }
 
+    static public ClassMatcher anInterface(ReflectMatcherConfiguration builder) {
+        return anInterface().configure(builder);
+    }
+
+    static public ClassMatcher aClass(ReflectMatcherConfiguration builder) {
+        return aClass().configure(builder);
+    }
+
+    private ClassMatcher configure(ReflectMatcherConfiguration builder) {
+        if(builder.levelModifier().equals(LevelModifier.INSTANCE)) {
+            this.instance_();
+        } else {
+            this.static_();
+        }
+
+        switch (builder.accessModifier()) {
+            case PUBLIC:
+                this.public_();
+                break;
+            case PRIVATE:
+                this.private_();
+                break;
+            case PROTECTED:
+                this.protected_();
+                break;
+            case PACKAGE_PRIVATE:
+                this.packagePrivate();
+                break;
+        }
+        return this;
+    }
+
     static ClassMatcher aStaticInterface() {
         return anInterface().static_();
     }
@@ -92,19 +124,19 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         return this.addMatcher("instance", item -> ! isStatic(item.getModifiers()));
     }
 
-    public ClassMatcher public_() {
+    private ClassMatcher public_() {
         return this.addMatcher("public", item -> isPublic(item.getModifiers()));
     }
 
-    public ClassMatcher private_() {
+    private ClassMatcher private_() {
         return this.addMatcher("private", item -> isPrivate(item.getModifiers()));
     }
 
-    public ClassMatcher protected_() {
+    private ClassMatcher protected_() {
         return this.addMatcher("protected", item -> isProtected(item.getModifiers()));
     }
 
-    public ClassMatcher packagePrivate() {
+    private ClassMatcher packagePrivate() {
         return this.addMatcher("package private", item -> ! (isPublic(item.getModifiers()) || isPrivate(item.getModifiers()) || isProtected(item.getModifiers())));
     }
 

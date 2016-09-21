@@ -7,8 +7,7 @@ import org.junit.rules.ExpectedException;
 import java.lang.reflect.Method;
 import java.util.List;
 
-import static org.codingmatters.tests.reflect.ReflectMatchers.aStatic_;
-import static org.codingmatters.tests.reflect.ReflectMatchers.anInstance;
+import static org.codingmatters.tests.reflect.ReflectMatchers.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -46,7 +45,7 @@ public class MethodMatcherTest {
     public void completeSignature() throws Exception {
         assertThat(method("complete", String.class, String.class),
                 is(
-                        MethodMatcher.anInstanceMethod().named("complete").public_().withParameters(String.class, String.class).returning(String.class)
+                        aPublic().method().named("complete").withParameters(String.class, String.class).returning(String.class)
                 )
         );
     }
@@ -72,7 +71,7 @@ public class MethodMatcherTest {
     public void isAPublicMethod() throws Exception {
         assertThat(
                 method("publicMethod"),
-                is(MethodMatcher.anInstanceMethod().public_())
+                is(ReflectMatchers.aPublic().method())
         );
     }
 
@@ -81,7 +80,7 @@ public class MethodMatcherTest {
         exception.expect(AssertionError.class);
         assertThat(
                 method("privateMethod"),
-                is(MethodMatcher.anInstanceMethod().public_())
+                is(aPublic().method())
         );
     }
 
@@ -89,7 +88,7 @@ public class MethodMatcherTest {
     public void isAPrivateMethod() throws Exception {
         assertThat(
                 method("privateMethod"),
-                is(MethodMatcher.anInstanceMethod().private_())
+                is(aPrivate().method())
         );
     }
 
@@ -97,7 +96,7 @@ public class MethodMatcherTest {
     public void isAProtectedMethod() throws Exception {
         assertThat(
                 method("protectedMethod"),
-                is(MethodMatcher.anInstanceMethod().protected_())
+                is(aProtected().method())
         );
     }
 
@@ -105,7 +104,7 @@ public class MethodMatcherTest {
     public void isAPackagePrivateMethod() throws Exception {
         assertThat(
                 method("packagePrivateMethod"),
-                is(MethodMatcher.anInstanceMethod().packagePrivate())
+                is(aPackagePrivate().method())
         );
     }
 

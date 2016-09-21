@@ -4,8 +4,7 @@ import org.junit.Test;
 
 import java.lang.reflect.Field;
 
-import static org.codingmatters.tests.reflect.ReflectMatchers.aStatic_;
-import static org.codingmatters.tests.reflect.ReflectMatchers.anInstance;
+import static org.codingmatters.tests.reflect.ReflectMatchers.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -30,37 +29,37 @@ public class FieldMatcherTest {
 
     @Test
     public void namedField() throws Exception {
-        assertThat(field("name"), is(FieldMatcher.anInstanceField().named("name")));
+        assertThat(field("name"), is(aPublic().field().named("name")));
     }
 
     @Test
     public void fieldType() throws Exception {
-        assertThat(field("name"), is(FieldMatcher.anInstanceField().withType(String.class)));
+        assertThat(field("name"), is(aPublic().field().withType(String.class)));
     }
 
     @Test
     public void publicField() throws Exception {
-        assertThat(field("publicField"), is(FieldMatcher.anInstanceField().public_()));
+        assertThat(field("publicField"), is(aPublic().field()));
     }
 
     @Test
     public void privateField() throws Exception {
-        assertThat(field("privateField"), is(FieldMatcher.anInstanceField().private_()));
+        assertThat(field("privateField"), is(aPrivate().field()));
     }
 
     @Test
     public void protectedField() throws Exception {
-        assertThat(field("protectedField"), is(FieldMatcher.anInstanceField().protected_()));
+        assertThat(field("protectedField"), is(aProtected().field()));
     }
 
     @Test
     public void packagePrivateField() throws Exception {
-        assertThat(field("packagePrivateField"), is(FieldMatcher.anInstanceField().packagePrivate()));
+        assertThat(field("packagePrivateField"), is(aPackagePrivate().field()));
     }
 
     @Test
     public void finalField() throws Exception {
-        assertThat(field("finalField"), is(FieldMatcher.anInstanceField().final_()));
+        assertThat(field("finalField"), is(aPublic().field().final_()));
     }
 
     @Test

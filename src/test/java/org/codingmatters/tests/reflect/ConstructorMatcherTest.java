@@ -19,7 +19,7 @@ public class ConstructorMatcherTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
-    static class TestClass {
+    static public class TestClass {
         private TestClass() {}
         public TestClass(String arg) {}
     }

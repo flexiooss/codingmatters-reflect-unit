@@ -22,6 +22,34 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return new MethodMatcher().static_();
     }
 
+    public static MethodMatcher method(ReflectMatcherConfiguration builder) {
+        return new MethodMatcher().configure(builder);
+    }
+
+    private MethodMatcher configure(ReflectMatcherConfiguration builder) {
+        if(builder.levelModifier().equals(LevelModifier.INSTANCE)) {
+            this.instance();
+        } else {
+            this.static_();
+        }
+
+        switch (builder.accessModifier()) {
+            case PUBLIC:
+                this.public_();
+                break;
+            case PRIVATE:
+                this.private_();
+                break;
+            case PROTECTED:
+                this.protected_();
+                break;
+            case PACKAGE_PRIVATE:
+                this.packagePrivate();
+                break;
+        }
+        return this;
+    }
+
     private final MatcherChain<Method> matchers = new MatcherChain<>();
     private final MemberDeleguate<MethodMatcher> memberDeleguate;
 
@@ -42,19 +70,19 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this.memberDeleguate.notStatic(this);
     }
 
-    public MethodMatcher public_() {
+    private MethodMatcher public_() {
         return this.memberDeleguate.public_(this);
     }
 
-    public MethodMatcher private_() {
+    private MethodMatcher private_() {
         return this.memberDeleguate.private_(this);
     }
 
-    public MethodMatcher protected_() {
+    private MethodMatcher protected_() {
         return this.memberDeleguate.protected_(this);
     }
 
-    public MethodMatcher packagePrivate() {
+    private MethodMatcher packagePrivate() {
         return this.memberDeleguate.packagePrivate(this);
     }
 

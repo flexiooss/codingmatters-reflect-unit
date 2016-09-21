@@ -6,8 +6,7 @@ import org.junit.rules.ExpectedException;
 
 import java.io.Closeable;
 
-import static org.codingmatters.tests.reflect.ReflectMatchers.aStatic_;
-import static org.codingmatters.tests.reflect.ReflectMatchers.anInstance;
+import static org.codingmatters.tests.reflect.ReflectMatchers.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -83,26 +82,26 @@ public class ClassMatcherTest {
     public void public_failsOnPackagePrivateClass() throws Exception {
         exception.expect(AssertionError.class);
 
-        assertThat(PackagePrivate.class, is(anInstance().class_().public_()));
+        assertThat(PackagePrivate.class, is(aPublic().class_()));
     }
 
     @Test
     public void privateClass() throws Exception {
-        assertThat(Private.class, is(anInstance().class_().private_()));
+        assertThat(Private.class, is(aPrivate().class_()));
     }
 
     @Test
     public void protectedClass() throws Exception {
-        assertThat(Protected.class, is(anInstance().class_().protected_()));
+        assertThat(Protected.class, is(anInstance().protected_().class_()));
     }
 
     @Test
     public void packagePrivateClass() throws Exception {
-        assertThat(PackagePrivate.class, is(anInstance().class_().packagePrivate()));
+        assertThat(PackagePrivate.class, is(aPackagePrivate().class_()));
     }
 
-    static class Static {}
-    class NotStatic {}
+    public static class Static {}
+    public class NotStatic {}
 
     @Test
     public void staticClass() throws Exception {
@@ -114,22 +113,22 @@ public class ClassMatcherTest {
         assertThat(NotStatic.class, is(anInstance().class_()));
     }
 
-    static class ClassWithField {
+    public static class ClassWithField {
         public String field;
     }
 
     @Test
     public void classWithField() throws Exception {
-        assertThat(ClassWithField.class, is(aStatic_().class_().with(FieldMatcher.anInstanceField())));
+        assertThat(ClassWithField.class, is(aStatic_().class_().with(aPublic().field())));
     }
 
     @Test
     public void classWithNamedField() throws Exception {
-        assertThat(ClassWithField.class, is(aStatic_().class_().with(FieldMatcher.anInstanceField().named("field"))));
+        assertThat(ClassWithField.class, is(aStatic_().class_().with(aPublic().field().named("field"))));
     }
 
     interface Interface {}
-    class Implementation implements Interface{}
+    public class Implementation implements Interface{}
 
     @Test
     public void classImplementingInterface() throws Exception {
@@ -149,7 +148,7 @@ public class ClassMatcherTest {
     }
 
     class SuperClass {}
-    class SubClass extends SuperClass{}
+    public class SubClass extends SuperClass{}
 
     @Test
     public void classExtendingClass() throws Exception {

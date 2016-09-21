@@ -12,17 +12,34 @@ import java.lang.reflect.Field;
  */
 public class FieldMatcher extends TypeSafeMatcher<Field> {
 
-    static public FieldMatcher aField() {
-        return new FieldMatcher();
+    public static FieldMatcher field(ReflectMatcherConfiguration builder) {
+        return new FieldMatcher().configure(builder);
     }
 
-    static public FieldMatcher aStaticField() {
-        return new FieldMatcher().static_();
+    private FieldMatcher configure(ReflectMatcherConfiguration builder) {
+        if(builder.levelModifier().equals(LevelModifier.INSTANCE)) {
+            this.instance();
+        } else {
+            this.static_();
+        }
+
+        switch (builder.accessModifier()) {
+            case PUBLIC:
+                this.public_();
+                break;
+            case PRIVATE:
+                this.private_();
+                break;
+            case PROTECTED:
+                this.protected_();
+                break;
+            case PACKAGE_PRIVATE:
+                this.packagePrivate();
+                break;
+        }
+        return this;
     }
 
-    static public FieldMatcher anInstanceField() {
-        return new FieldMatcher().notStatic();
-    }
 
     private final MatcherChain<Field> matchers = new MatcherChain<>();
     private final MemberDeleguate<FieldMatcher> memberDeleguate;
@@ -40,23 +57,23 @@ public class FieldMatcher extends TypeSafeMatcher<Field> {
         return this.memberDeleguate.static_(this);
     }
 
-    public FieldMatcher notStatic() {
+    public FieldMatcher instance() {
         return this.memberDeleguate.notStatic(this);
     }
 
-    public FieldMatcher public_() {
+    private FieldMatcher public_() {
         return this.memberDeleguate.public_(this);
     }
 
-    public FieldMatcher private_() {
+    private FieldMatcher private_() {
         return this.memberDeleguate.private_(this);
     }
 
-    public FieldMatcher protected_() {
+    private FieldMatcher protected_() {
         return this.memberDeleguate.protected_(this);
     }
 
-    public FieldMatcher packagePrivate() {
+    private FieldMatcher packagePrivate() {
         return this.memberDeleguate.packagePrivate(this);
     }
 

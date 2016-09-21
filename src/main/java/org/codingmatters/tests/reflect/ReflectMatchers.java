@@ -9,12 +9,28 @@ public class ReflectMatchers {
         return ConstructorMatcher.aConstructor();
     }
 
-    static public StaticMatcher aStatic_() {
-        return new StaticMatcher();
+    static public ReflectMatcherBuilder aStatic_() {
+        return new ReflectMatcherBuilder().static_();
     }
 
-    static public InstanceMatcher anInstance() {
-        return new InstanceMatcher();
+    static public ReflectMatcherBuilder anInstance() {
+        return new ReflectMatcherBuilder().instance_();
+    }
+
+    static public ReflectMatcherBuilder aPublic() {
+        return new ReflectMatcherBuilder().public_();
+    }
+
+    static public ReflectMatcherBuilder aPrivate() {
+        return new ReflectMatcherBuilder().private_();
+    }
+
+    static public ReflectMatcherBuilder aProtected() {
+        return new ReflectMatcherBuilder().protected_();
+    }
+
+    static public ReflectMatcherBuilder aPackagePrivate() {
+        return new ReflectMatcherBuilder().packagePrivate();
     }
 
 }

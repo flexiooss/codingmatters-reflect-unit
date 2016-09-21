@@ -1,6 +1,5 @@
 package org.codingmatters.tests.compile;
 
-import org.codingmatters.tests.reflect.MethodMatcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -10,8 +9,7 @@ import org.junit.rules.TemporaryFolder;
 import java.io.File;
 import java.io.FileWriter;
 
-import static org.codingmatters.tests.reflect.ReflectMatchers.aStatic_;
-import static org.codingmatters.tests.reflect.ReflectMatchers.anInstance;
+import static org.codingmatters.tests.reflect.ReflectMatchers.*;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
@@ -63,8 +61,8 @@ public class CompiledCodeTest {
         assertThat(
                 compiled.getClass("org.codingmatters.HelloWorld"),
                 is(anInstance().class_()
-                        .with(MethodMatcher.anInstanceMethod().named("sayHello").public_().returning(String.class))
-                        .with(aStatic_().method().named("main").public_().withParameters(String[].class).returningVoid())
+                        .with(aPublic().method().named("sayHello").returning(String.class))
+                        .with(aStatic_().public_().method().named("main").withParameters(String[].class).returningVoid())
                 )
         );
     }
