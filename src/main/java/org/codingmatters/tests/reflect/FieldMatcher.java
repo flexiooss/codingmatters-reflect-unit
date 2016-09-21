@@ -12,7 +12,7 @@ import java.lang.reflect.Field;
  */
 public class FieldMatcher extends TypeSafeMatcher<Field> {
 
-    public static FieldMatcher field(ReflectMatcherConfiguration builder) {
+    static FieldMatcher field(ReflectMatcherConfiguration builder) {
         return new FieldMatcher().configure(builder);
     }
 
@@ -44,7 +44,7 @@ public class FieldMatcher extends TypeSafeMatcher<Field> {
     private final MatcherChain<Field> matchers = new MatcherChain<>();
     private final MemberDeleguate<FieldMatcher> memberDeleguate;
 
-    public FieldMatcher() {
+    private FieldMatcher() {
         this.memberDeleguate = new MemberDeleguate<>(this.matchers);
     }
 
@@ -53,11 +53,11 @@ public class FieldMatcher extends TypeSafeMatcher<Field> {
         return this.memberDeleguate.named(name, this);
     }
 
-    public FieldMatcher static_() {
+    private FieldMatcher static_() {
         return this.memberDeleguate.static_(this);
     }
 
-    public FieldMatcher instance() {
+    private FieldMatcher instance() {
         return this.memberDeleguate.notStatic(this);
     }
 

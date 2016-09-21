@@ -18,11 +18,7 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return new MethodMatcher().instance();
     }
 
-    static public MethodMatcher aStaticMethod() {
-        return new MethodMatcher().static_();
-    }
-
-    public static MethodMatcher method(ReflectMatcherConfiguration builder) {
+    static MethodMatcher method(ReflectMatcherConfiguration builder) {
         return new MethodMatcher().configure(builder);
     }
 

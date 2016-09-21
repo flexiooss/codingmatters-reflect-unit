@@ -24,7 +24,7 @@ public class FieldMatcherTest {
         public String instanceField;
         static public String staticField;
 
-        final String finalField = "val";
+        public final String finalField = "val";
     }
 
     @Test
