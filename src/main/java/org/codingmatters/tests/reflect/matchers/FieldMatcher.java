@@ -1,7 +1,8 @@
-package org.codingmatters.tests.reflect;
+package org.codingmatters.tests.reflect.matchers;
 
 import org.codingmatters.tests.reflect.utils.MatcherChain;
 import org.codingmatters.tests.reflect.utils.MemberDeleguate;
+import org.codingmatters.tests.reflect.utils.ReflectMatcherConfiguration;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -12,7 +13,7 @@ import java.lang.reflect.Field;
  */
 public class FieldMatcher extends TypeSafeMatcher<Field> {
 
-    static FieldMatcher field(ReflectMatcherConfiguration builder) {
+    static public FieldMatcher field(ReflectMatcherConfiguration builder) {
         return new FieldMatcher().configure(builder);
     }
 

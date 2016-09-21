@@ -1,5 +1,13 @@
 package org.codingmatters.tests.reflect;
 
+import org.codingmatters.tests.reflect.matchers.ClassMatcher;
+import org.codingmatters.tests.reflect.matchers.ConstructorMatcher;
+import org.codingmatters.tests.reflect.matchers.FieldMatcher;
+import org.codingmatters.tests.reflect.matchers.MethodMatcher;
+import org.codingmatters.tests.reflect.utils.AccessModifier;
+import org.codingmatters.tests.reflect.utils.LevelModifier;
+import org.codingmatters.tests.reflect.utils.ReflectMatcherConfiguration;
+
 /**
  * Created by nelt on 9/21/16.
  */

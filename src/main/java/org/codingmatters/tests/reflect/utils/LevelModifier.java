@@ -1,6 +1,4 @@
-package org.codingmatters.tests.reflect;
-
-import org.codingmatters.tests.reflect.utils.MemberDeleguate;
+package org.codingmatters.tests.reflect.utils;
 
 /**
  * Created by nelt on 9/21/16.

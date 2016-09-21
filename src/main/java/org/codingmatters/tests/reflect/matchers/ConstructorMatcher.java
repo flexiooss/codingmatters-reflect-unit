@@ -1,7 +1,8 @@
-package org.codingmatters.tests.reflect;
+package org.codingmatters.tests.reflect.matchers;
 
 import org.codingmatters.tests.reflect.utils.MatcherChain;
 import org.codingmatters.tests.reflect.utils.MemberDeleguate;
+import org.codingmatters.tests.reflect.utils.ReflectMatcherConfiguration;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class ConstructorMatcher extends TypeSafeMatcher<Constructor> {
 
-    static ConstructorMatcher aConstructor(ReflectMatcherConfiguration configuration) {
+    static public ConstructorMatcher aConstructor(ReflectMatcherConfiguration configuration) {
         return new ConstructorMatcher().configure(configuration);
     }
 

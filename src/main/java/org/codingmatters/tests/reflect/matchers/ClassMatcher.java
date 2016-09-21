@@ -1,7 +1,9 @@
-package org.codingmatters.tests.reflect;
+package org.codingmatters.tests.reflect.matchers;
 
 import org.codingmatters.tests.reflect.utils.LambdaMatcher;
+import org.codingmatters.tests.reflect.utils.LevelModifier;
 import org.codingmatters.tests.reflect.utils.MatcherChain;
+import org.codingmatters.tests.reflect.utils.ReflectMatcherConfiguration;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -18,13 +20,13 @@ import static java.lang.reflect.Modifier.*;
  */
 public class ClassMatcher extends TypeSafeMatcher<Class> {
 
-    static ClassMatcher anInterface(ReflectMatcherConfiguration builder) {
+    public static ClassMatcher anInterface(ReflectMatcherConfiguration builder) {
         return new ClassMatcher()
                 .addMatcher("interface", item -> Modifier.isInterface(item.getModifiers()))
                 .configure(builder);
     }
 
-    static ClassMatcher aClass(ReflectMatcherConfiguration builder) {
+    public static ClassMatcher aClass(ReflectMatcherConfiguration builder) {
         return new ClassMatcher()
                 .addMatcher("class", item -> !Modifier.isInterface(item.getModifiers()))
                 .configure(builder);
