@@ -6,7 +6,7 @@ package org.codingmatters.tests.reflect;
 public class ReflectMatchers {
 
     static public ConstructorMatcher aConstructor() {
-        return ConstructorMatcher.aConstructor();
+        return new ReflectMatcherBuilder().constructor();
     }
 
     static public ReflectMatcherBuilder aStatic() {

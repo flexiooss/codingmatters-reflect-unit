@@ -6,8 +6,7 @@ import org.junit.rules.ExpectedException;
 
 import java.lang.reflect.Constructor;
 
-import static org.codingmatters.tests.reflect.ReflectMatchers.aConstructor;
-import static org.codingmatters.tests.reflect.ReflectMatchers.aStatic;
+import static org.codingmatters.tests.reflect.ReflectMatchers.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -26,12 +25,12 @@ public class ConstructorMatcherTest {
 
     @Test
     public void publicConstructor() throws Exception {
-        assertThat(constructor(String.class), is(aConstructor().public_()));
+        assertThat(constructor(String.class), is(aPublic().constructor()));
     }
 
     @Test
     public void privateConstructor() throws Exception {
-        assertThat(constructor(), is(aConstructor().private_()));
+        assertThat(constructor(), is(aPrivate().constructor()));
     }
 
     @Test

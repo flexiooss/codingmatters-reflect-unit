@@ -27,7 +27,7 @@ public class MemberDeleguate<T> {
         return self;
     }
 
-    public T notStatic(T self) {
+    public T instance(T self) {
         this.matchers.addMatcher("instance member", item -> ! isStatic(item.getModifiers()));
         return self;
     }

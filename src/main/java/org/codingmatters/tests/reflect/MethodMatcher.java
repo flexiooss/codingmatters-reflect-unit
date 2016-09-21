@@ -29,31 +29,6 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this.memberDeleguate.named(name, this);
     }
 
-
-    private MethodMatcher static_() {
-        return this.memberDeleguate.static_(this);
-    }
-
-    private MethodMatcher instance() {
-        return this.memberDeleguate.notStatic(this);
-    }
-
-    private MethodMatcher public_() {
-        return this.memberDeleguate.public_(this);
-    }
-
-    private MethodMatcher private_() {
-        return this.memberDeleguate.private_(this);
-    }
-
-    private MethodMatcher protected_() {
-        return this.memberDeleguate.protected_(this);
-    }
-
-    private MethodMatcher packagePrivate() {
-        return this.memberDeleguate.packagePrivate(this);
-    }
-
     public MethodMatcher final_() {
         return this.memberDeleguate.final_(this);
     }
@@ -94,26 +69,8 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
     }
 
     private MethodMatcher configure(ReflectMatcherConfiguration builder) {
-        if(builder.levelModifier().equals(LevelModifier.INSTANCE)) {
-            this.instance();
-        } else {
-            this.static_();
-        }
-
-        switch (builder.accessModifier()) {
-            case PUBLIC:
-                this.public_();
-                break;
-            case PRIVATE:
-                this.private_();
-                break;
-            case PROTECTED:
-                this.protected_();
-                break;
-            case PACKAGE_PRIVATE:
-                this.packagePrivate();
-                break;
-        }
+        builder.levelModifier().apply(this.memberDeleguate, this);
+        builder.accessModifier().apply(this.memberDeleguate, this);
         return this;
     }
 }

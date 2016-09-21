@@ -51,4 +51,8 @@ public class ReflectMatcherBuilder {
     public MethodMatcher method() {
         return MethodMatcher.method(this.configuration);
     }
+
+    public ConstructorMatcher constructor() {
+        return ConstructorMatcher.aConstructor(this.configuration);
+    }
 }

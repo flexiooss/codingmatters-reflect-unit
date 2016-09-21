@@ -34,45 +34,6 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         return aClass().configure(builder);
     }
 
-    private ClassMatcher configure(ReflectMatcherConfiguration builder) {
-        if(builder.levelModifier().equals(LevelModifier.INSTANCE)) {
-            this.instance_();
-        } else {
-            this.static_();
-        }
-
-        switch (builder.accessModifier()) {
-            case PUBLIC:
-                this.public_();
-                break;
-            case PRIVATE:
-                this.private_();
-                break;
-            case PROTECTED:
-                this.protected_();
-                break;
-            case PACKAGE_PRIVATE:
-                this.packagePrivate();
-                break;
-        }
-        return this;
-    }
-
-    static ClassMatcher aStaticInterface() {
-        return anInterface().static_();
-    }
-
-    static ClassMatcher anInstanceInterface() {
-        return anInterface().instance_();
-    }
-
-    static ClassMatcher aStaticClass() {
-        return aClass().static_();
-    }
-
-    static ClassMatcher anInstanceClass() {
-        return aClass().instance_();
-    }
 
     private final MatcherChain<Class> matchers = new MatcherChain<>();
 
@@ -124,20 +85,28 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         return this.addMatcher("instance", item -> ! isStatic(item.getModifiers()));
     }
 
-    private ClassMatcher public_() {
-        return this.addMatcher("public", item -> isPublic(item.getModifiers()));
-    }
+    private ClassMatcher configure(ReflectMatcherConfiguration builder) {
+        if(builder.levelModifier().equals(LevelModifier.INSTANCE)) {
+            this.instance_();
+        } else {
+            this.static_();
+        }
 
-    private ClassMatcher private_() {
-        return this.addMatcher("private", item -> isPrivate(item.getModifiers()));
-    }
-
-    private ClassMatcher protected_() {
-        return this.addMatcher("protected", item -> isProtected(item.getModifiers()));
-    }
-
-    private ClassMatcher packagePrivate() {
-        return this.addMatcher("package private", item -> ! (isPublic(item.getModifiers()) || isPrivate(item.getModifiers()) || isProtected(item.getModifiers())));
+        switch (builder.accessModifier()) {
+            case PUBLIC:
+                this.addMatcher("public", item -> isPublic(item.getModifiers()));
+                break;
+            case PRIVATE:
+                this.addMatcher("private", item -> isPrivate(item.getModifiers()));
+                break;
+            case PROTECTED:
+                this.addMatcher("protected", item -> isProtected(item.getModifiers()));
+                break;
+            case PACKAGE_PRIVATE:
+                this.addMatcher("package private", item -> ! (isPublic(item.getModifiers()) || isPrivate(item.getModifiers()) || isProtected(item.getModifiers())));
+                break;
+        }
+        return this;
     }
 
 

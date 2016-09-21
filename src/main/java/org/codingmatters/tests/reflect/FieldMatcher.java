@@ -28,30 +28,6 @@ public class FieldMatcher extends TypeSafeMatcher<Field> {
         return this.memberDeleguate.named(name, this);
     }
 
-    private FieldMatcher static_() {
-        return this.memberDeleguate.static_(this);
-    }
-
-    private FieldMatcher instance() {
-        return this.memberDeleguate.notStatic(this);
-    }
-
-    private FieldMatcher public_() {
-        return this.memberDeleguate.public_(this);
-    }
-
-    private FieldMatcher private_() {
-        return this.memberDeleguate.private_(this);
-    }
-
-    private FieldMatcher protected_() {
-        return this.memberDeleguate.protected_(this);
-    }
-
-    private FieldMatcher packagePrivate() {
-        return this.memberDeleguate.packagePrivate(this);
-    }
-
     public FieldMatcher final_() {
         return this.memberDeleguate.final_(this);
     }
@@ -77,26 +53,8 @@ public class FieldMatcher extends TypeSafeMatcher<Field> {
     }
 
     private FieldMatcher configure(ReflectMatcherConfiguration builder) {
-        if(builder.levelModifier().equals(LevelModifier.INSTANCE)) {
-            this.instance();
-        } else {
-            this.static_();
-        }
-
-        switch (builder.accessModifier()) {
-            case PUBLIC:
-                this.public_();
-                break;
-            case PRIVATE:
-                this.private_();
-                break;
-            case PROTECTED:
-                this.protected_();
-                break;
-            case PACKAGE_PRIVATE:
-                this.packagePrivate();
-                break;
-        }
+        builder.levelModifier().apply(this.memberDeleguate, this);
+        builder.accessModifier().apply(this.memberDeleguate, this);
         return this;
     }
 }

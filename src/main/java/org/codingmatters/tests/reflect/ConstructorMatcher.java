@@ -13,8 +13,9 @@ import java.util.stream.Collectors;
  * Created by nelt on 9/15/16.
  */
 public class ConstructorMatcher extends TypeSafeMatcher<Constructor> {
-    static public ConstructorMatcher aConstructor() {
-        return new ConstructorMatcher();
+
+    public static ConstructorMatcher aConstructor(ReflectMatcherConfiguration configuration) {
+        return new ConstructorMatcher().configure(configuration);
     }
 
     private final MatcherChain<Constructor> matchers = new MatcherChain<>();
@@ -22,26 +23,6 @@ public class ConstructorMatcher extends TypeSafeMatcher<Constructor> {
 
     private ConstructorMatcher() {
         this.memberDeleguate = new MemberDeleguate<>(this.matchers);
-    }
-
-    public ConstructorMatcher public_() {
-        return this.memberDeleguate.public_(this);
-    }
-
-    public ConstructorMatcher private_() {
-        return this.memberDeleguate.private_(this);
-    }
-
-    public ConstructorMatcher protected_() {
-        return this.memberDeleguate.protected_(this);
-    }
-
-    public ConstructorMatcher packagePrivate() {
-        return this.memberDeleguate.packagePrivate(this);
-    }
-
-    public ConstructorMatcher abstract_() {
-        return this.memberDeleguate.abstract_(this);
     }
 
     public ConstructorMatcher withParameters(Class ... parameters) {
@@ -63,5 +44,10 @@ public class ConstructorMatcher extends TypeSafeMatcher<Constructor> {
     @Override
     protected void describeMismatchSafely(Constructor item, Description mismatchDescription) {
         this.matchers.compoundMatcher().describeMismatch(item, mismatchDescription);
+    }
+
+    private ConstructorMatcher configure(ReflectMatcherConfiguration configuration) {
+        configuration.accessModifier().apply(this.memberDeleguate, this);
+        return this;
     }
 }
