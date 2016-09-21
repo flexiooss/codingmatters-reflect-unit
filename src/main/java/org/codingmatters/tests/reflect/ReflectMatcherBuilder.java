@@ -11,7 +11,7 @@ public class ReflectMatcherBuilder {
         return this;
     }
 
-    public ReflectMatcherBuilder instance_() {
+    public ReflectMatcherBuilder instance() {
         this.configuration.levelModifier(LevelModifier.INSTANCE);
         return this;
     }

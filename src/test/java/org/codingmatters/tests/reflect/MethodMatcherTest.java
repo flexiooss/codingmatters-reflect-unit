@@ -53,6 +53,9 @@ public class MethodMatcherTest {
     @Test
     public void isAMethod() throws Exception {
         assertThat(method("publicMethod"), is(anInstance().method()));
+        assertThat(method("publicMethod"), is(aMethod()));
+        assertThat(method("publicMethod"), is(aPublic().method()));
+        assertThat(method("publicMethod"), is(aPublic().instance().method()));
     }
 
     @Test

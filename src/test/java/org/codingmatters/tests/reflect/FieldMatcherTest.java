@@ -28,6 +28,14 @@ public class FieldMatcherTest {
     }
 
     @Test
+    public void isAField() throws Exception {
+        assertThat(field("name"), is(aField()));
+        assertThat(field("name"), is(aPublic().field()));
+        assertThat(field("name"), is(anInstance().field()));
+        assertThat(field("name"), is(aPublic().instance().field()));
+    }
+
+    @Test
     public void namedField() throws Exception {
         assertThat(field("name"), is(aPublic().field().named("name")));
     }

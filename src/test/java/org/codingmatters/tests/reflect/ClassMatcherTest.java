@@ -22,8 +22,12 @@ public class ClassMatcherTest {
     public void isAClass() throws Exception {
         assertThat(String.class, is(anInstance().class_()));
     }
+    
     @Test
     public void isAnInterface() throws Exception {
+        assertThat(Comparable.class, is(anInstance().interface_()));
+        assertThat(Comparable.class, is(anInterface()));
+        assertThat(Comparable.class, is(aPublic().interface_()));
         assertThat(Comparable.class, is(anInstance().interface_()));
     }
 
@@ -73,9 +77,13 @@ public class ClassMatcherTest {
     private class Private {}
     protected class Protected {}
     class PackagePrivate {}
+    public final class FinalClass {}
 
     @Test
     public void publicClass() throws Exception {
+        assertThat(Public.class, is(aClass()));
+        assertThat(Public.class, is(aPublic().class_()));
+        assertThat(Public.class, is(anInstance().public_().class_()));
     }
 
     @Test
@@ -161,11 +169,9 @@ public class ClassMatcherTest {
         assertThat(SuperClass.class, is(anInstance().class_().extending(SubClass.class)));
     }
 
-    static public final class FinalClass {}
-
     @Test
     public void finalClass() throws Exception {
-        assertThat(FinalClass.class, is(aStatic().class_().final_()));
+        assertThat(FinalClass.class, is(aClass().final_()));
 
     }
 }

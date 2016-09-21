@@ -5,16 +5,12 @@ package org.codingmatters.tests.reflect;
  */
 public class ReflectMatchers {
 
-    static public ConstructorMatcher aConstructor() {
-        return new ReflectMatcherBuilder().constructor();
-    }
-
     static public ReflectMatcherBuilder aStatic() {
         return new ReflectMatcherBuilder().static_();
     }
 
     static public ReflectMatcherBuilder anInstance() {
-        return new ReflectMatcherBuilder().instance_();
+        return new ReflectMatcherBuilder().instance();
     }
 
     static public ReflectMatcherBuilder aPublic() {
@@ -31,6 +27,26 @@ public class ReflectMatchers {
 
     static public ReflectMatcherBuilder aPackagePrivate() {
         return new ReflectMatcherBuilder().packagePrivate();
+    }
+
+    static public ConstructorMatcher aConstructor() {
+        return new ReflectMatcherBuilder().constructor();
+    }
+
+    static public ClassMatcher aClass() {
+        return anInstance().class_();
+    }
+
+    public static ClassMatcher anInterface() {
+        return anInstance().interface_();
+    }
+
+    public static FieldMatcher aField() {
+        return anInstance().field();
+    }
+
+    public static MethodMatcher aMethod() {
+        return anInstance().method();
     }
 
 }
