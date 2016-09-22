@@ -13,7 +13,7 @@ import java.lang.reflect.Field;
  */
 public class FieldMatcher extends TypeSafeMatcher<Field> {
 
-    static public FieldMatcher field(ReflectMatcherConfiguration builder) {
+    static public FieldMatcher aField(ReflectMatcherConfiguration builder) {
         return new FieldMatcher().configure(builder);
     }
 

@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class MethodMatcher extends TypeSafeMatcher<Method> {
 
-    static public MethodMatcher method(ReflectMatcherConfiguration builder) {
+    static public MethodMatcher aMethod(ReflectMatcherConfiguration builder) {
         return new MethodMatcher().configure(builder);
     }
 

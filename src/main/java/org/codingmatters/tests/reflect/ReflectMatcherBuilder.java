@@ -53,11 +53,11 @@ public class ReflectMatcherBuilder {
     }
 
     public FieldMatcher field() {
-        return FieldMatcher.field(this.configuration);
+        return FieldMatcher.aField(this.configuration);
     }
 
     public MethodMatcher method() {
-        return MethodMatcher.method(this.configuration);
+        return MethodMatcher.aMethod(this.configuration);
     }
 
     public ConstructorMatcher constructor() {
