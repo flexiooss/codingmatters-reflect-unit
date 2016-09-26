@@ -6,6 +6,7 @@ import org.codingmatters.tests.reflect.utils.ReflectMatcherConfiguration;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -72,6 +73,22 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
     private MethodMatcher configure(ReflectMatcherConfiguration builder) {
         builder.levelModifier().apply(this.memberDeleguate, this);
         builder.accessModifier().apply(this.memberDeleguate, this);
+        return this;
+    }
+
+    /**
+     * Tests if a RUNTIME retention level annotation decorates the method.
+     * @param anotationClass
+     * @return
+     */
+    public MethodMatcher anotatedWith(Class anotationClass) {
+        this.matchers.addMatcher("method is anotated with " + anotationClass.getName(), item -> {
+            for (Annotation annotation : item.getAnnotations()) {
+                System.out.println(annotation);
+            }
+
+            return item.getAnnotation(anotationClass) != null;
+        });
         return this;
     }
 }

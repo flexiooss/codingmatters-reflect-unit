@@ -39,6 +39,9 @@ public class MethodMatcherTest {
         public String complete(String arg1, String arg2) {return "";}
 
         public final void finalMethod() {}
+
+        @Deprecated
+        public void anotated() {}
     }
 
     @Test
@@ -184,6 +187,11 @@ public class MethodMatcherTest {
     @Test
     public void finalMethod() throws Exception {
         assertThat(method("finalMethod"), is(anInstance().method().final_()));
+    }
+
+    @Test
+    public void anotatedMethod() throws Exception {
+        assertThat(method("anotated"), is(aPublic().method().anotatedWith(Deprecated.class)));
     }
 
     private Method method(String name, Class ... args) throws NoSuchMethodException {
