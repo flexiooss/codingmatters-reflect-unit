@@ -46,7 +46,6 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         this.matchers.add(new ClassMemberMatcher<>(methodMatcher, item -> {
             List<Method> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getDeclaredMethods()));
-            result.addAll(Arrays.asList(item.getMethods()));
             return result;
         }));
         return this;
@@ -56,7 +55,6 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         this.matchers.add(new ClassMemberMatcher<>(fieldMatcher, item -> {
             List<Field> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getDeclaredFields()));
-            result.addAll(Arrays.asList(item.getFields()));
             return result;
         }));
         return this;
@@ -68,7 +66,6 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         this.matchers.add(new ClassMemberMatcher<>(constructorMatcher, item -> {
             List<Constructor> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getDeclaredConstructors()));
-            result.addAll(Arrays.asList(item.getConstructors()));
             return result;
         }));
         return this;
