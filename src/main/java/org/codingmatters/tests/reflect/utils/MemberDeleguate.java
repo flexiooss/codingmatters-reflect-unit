@@ -23,7 +23,7 @@ public class MemberDeleguate<T> {
 
 
     public T static_(T self) {
-        this.matchers.addMatcher("instance member", item -> isStatic(item.getModifiers()));
+        this.matchers.addMatcher("static member", item -> isStatic(item.getModifiers()));
         return self;
     }
 
