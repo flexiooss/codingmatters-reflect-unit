@@ -53,22 +53,27 @@ public class CompiledCode {
     }
 
     public Invoker onClass(String className) {
-        return new Invoker(this.getClass(className), null);
+        return new Invoker(this, this.getClass(className), null);
     }
 
     public Invoker on(Object o) {
-        return new Invoker(o.getClass(), o);
+        return new Invoker(this, o.getClass(), o);
     }
 
     static public class Invoker {
+        private final CompiledCode compiledCode;
         private final Class aClass;
         private final Object on;
 
-        private Invoker(Class aClass, Object on) {
+        private Invoker(CompiledCode compiledCode, Class aClass, Object on) {
+            this.compiledCode = compiledCode;
             this.aClass = aClass;
             this.on = on;
         }
 
+        public Invoker castedTo(String className) {
+            return new Invoker(this.compiledCode, this.compiledCode.getClass(className), this.on);
+        }
 
         public <T> T invoke(String method) throws Exception {
             try {
