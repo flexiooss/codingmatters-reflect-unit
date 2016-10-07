@@ -5,6 +5,7 @@ import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
 import javax.tools.ToolProvider;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.LinkedList;
@@ -16,14 +17,17 @@ import java.util.List;
 public class CompiledCode {
 
     static public CompiledCode compile(File dir) throws Exception {
+        compileDir(dir);
+        return new CompiledCode(URLClassLoader.newInstance(new URL[] {dir.toURI().toURL()}));
+    }
+
+    private static void compileDir(File dir) throws IOException {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         try(StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null)) {
-
             Iterable<? extends JavaFileObject> compilationUnits1 = fileManager.getJavaFileObjectsFromFiles(resolveJavaFiles(dir));
             JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, null, null, compilationUnits1);
             task.call();
         }
-        return new CompiledCode(URLClassLoader.newInstance(new URL[] {dir.toURI().toURL()}));
     }
 
     private static List<File> resolveJavaFiles(File dir) {
@@ -44,6 +48,11 @@ public class CompiledCode {
         this.classLoader = classLoader;
     }
 
+    public CompiledCode withCompiled(File target) throws Exception {
+        compileDir(target);
+        return new CompiledCode(URLClassLoader.newInstance(new URL[] {target.toURI().toURL()}, this.classLoader));
+    }
+
     public Class getClass(String name) {
         try {
             return Class.forName(name, true, classLoader);
@@ -59,6 +68,7 @@ public class CompiledCode {
     public Invoker on(Object o) {
         return new Invoker(this, o.getClass(), o);
     }
+
 
     static public class Invoker {
         private final CompiledCode compiledCode;

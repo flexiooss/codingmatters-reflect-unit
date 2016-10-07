@@ -22,6 +22,8 @@ public class CompiledCodeTest {
     @Rule
     public TemporaryFolder dir = new TemporaryFolder();
     @Rule
+    public TemporaryFolder dir2 = new TemporaryFolder();
+    @Rule
     public ExpectedException exception = ExpectedException.none();
 
     private CompiledCode compiled;
@@ -65,5 +67,27 @@ public class CompiledCodeTest {
                         .with(aStatic().public_().method().named("main").withParameters(String[].class).returningVoid())
                 )
         );
+    }
+
+    @Test
+    public void addCompileTarget() throws Exception {
+        File newClass = new File(this.dir2.newFolder("org", "codingmatters"), "NewClass.java");
+
+        try(FileWriter writer = new FileWriter(newClass)) {
+            writer.write(
+                    "package org.codingmatters;\n" +
+                            "\n" +
+                            "public class NewClass {\n" +
+                            "}"
+            );
+            writer.flush();
+        }
+
+        CompiledCode extented = this.compiled.withCompiled(this.dir2.getRoot());
+
+        assertThat(extented.getClass("org.codingmatters.HelloWorld"), is(anInstance().class_()));
+        assertThat(extented.getClass("org.codingmatters.NewClass"), is(anInstance().class_()));
+
+        assertThat(compiled.getClass("org.codingmatters.NewClass"), is(not(anInstance().class_())));
     }
 }
