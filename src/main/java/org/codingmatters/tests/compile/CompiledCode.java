@@ -33,9 +33,9 @@ public class CompiledCode {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         try(StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null)) {
             fileManager.setLocation(StandardLocation.CLASS_PATH, toFileList(classLoaderUrls));
-            Iterable<? extends JavaFileObject> compilationUnits1 = fileManager.getJavaFileObjectsFromFiles(resolveJavaFiles(dir));
-            JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, null, null, compilationUnits1);
-            task.call();
+            Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(resolveJavaFiles(dir));
+            JavaCompiler.CompilationTask compilerTask = compiler.getTask(null, fileManager, null, null, null, compilationUnits);
+            compilerTask.call();
         }
     }
 
