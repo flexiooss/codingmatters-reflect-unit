@@ -1,11 +1,8 @@
 package org.codingmatters.tests.compile;
 
-import javax.tools.JavaCompiler;
-import javax.tools.JavaFileObject;
-import javax.tools.StandardJavaFileManager;
-import javax.tools.ToolProvider;
+import javax.tools.*;
 import java.io.File;
-import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.LinkedList;
@@ -17,17 +14,38 @@ import java.util.List;
 public class CompiledCode {
 
     static public CompiledCode compile(File dir) throws Exception {
-        compileDir(dir);
-        return new CompiledCode(URLClassLoader.newInstance(new URL[] {dir.toURI().toURL()}));
+        return compile(dir, null);
     }
 
-    private static void compileDir(File dir) throws IOException {
+    static private CompiledCode compile(File dir, URLClassLoader classLoader) throws Exception {
+        List<URL> urls = new LinkedList<>();
+        if(classLoader != null) {
+            for (URL url : classLoader.getURLs()) {
+                urls.add(url);
+            }
+        }
+        compileDir(dir, urls);
+        urls.add(dir.toURI().toURL());
+        return new CompiledCode(URLClassLoader.newInstance(urls.toArray(new URL[urls.size()])));
+    }
+
+    private static void compileDir(File dir, List<URL> classLoaderUrls) throws Exception {
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
         try(StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null)) {
+            fileManager.setLocation(StandardLocation.CLASS_PATH, toFileList(classLoaderUrls));
             Iterable<? extends JavaFileObject> compilationUnits1 = fileManager.getJavaFileObjectsFromFiles(resolveJavaFiles(dir));
             JavaCompiler.CompilationTask task = compiler.getTask(null, fileManager, null, null, null, compilationUnits1);
             task.call();
         }
+    }
+
+    private static List<File> toFileList(List<URL> classLoaderUrls) throws URISyntaxException {
+        List<File> result = new LinkedList<>();
+        for (URL classLoaderUrl : classLoaderUrls) {
+            result.add(new File(classLoaderUrl.toURI()));
+        }
+
+        return result;
     }
 
     private static List<File> resolveJavaFiles(File dir) {
@@ -49,8 +67,7 @@ public class CompiledCode {
     }
 
     public CompiledCode withCompiled(File target) throws Exception {
-        compileDir(target);
-        return new CompiledCode(URLClassLoader.newInstance(new URL[] {target.toURI().toURL()}, this.classLoader));
+        return compile(target, this.classLoader);
     }
 
     public Class getClass(String name) {
