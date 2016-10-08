@@ -39,6 +39,9 @@ public class ClassMatcherTest {
     @Test
     public void classWithName_failure() throws Exception {
         exception.expect(AssertionError.class);
+        exception.expectMessage(is("\n" +
+                "Expected: is (class and instance and public and named not.that.Name)\n" +
+                "     but: named not.that.Name was java.lang.String"));
 
         assertThat(String.class, is(anInstance().class_().named("not.that.Name")));
     }

@@ -5,7 +5,6 @@ import org.codingmatters.tests.reflect.utils.LevelModifier;
 import org.codingmatters.tests.reflect.utils.MatcherChain;
 import org.codingmatters.tests.reflect.utils.ReflectMatcherConfiguration;
 import org.hamcrest.Description;
-import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.lang.reflect.*;
@@ -38,7 +37,7 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
     private ClassMatcher() {}
 
     public ClassMatcher named(String name) {
-        this.addMatcher("class named " + name, item -> item.getName().equals(name));
+        this.addMatcher("named " + name, item -> item.getName().equals(name), item -> "was " + item.getName());
         return this;
     }
 
@@ -51,7 +50,7 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         return this;
     }
 
-    public Matcher<Class> with(FieldMatcher fieldMatcher) {
+    public org.hamcrest.Matcher with(FieldMatcher fieldMatcher) {
         this.matchers.add(new ClassMemberMatcher<>(fieldMatcher, item -> {
             List<Field> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getDeclaredFields()));
@@ -126,8 +125,12 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         this.matchers.compoundMatcher().describeMismatch(item, mismatchDescription);
     }
 
-    private ClassMatcher addMatcher(String description, LambdaMatcher.Lambda<Class> lambda) {
-        this.matchers.add(LambdaMatcher.match(description, lambda));
+    private ClassMatcher addMatcher(String description, LambdaMatcher.Matcher<Class> lambda) {
+        return this.addMatcher(description, lambda, null);
+    }
+
+    private ClassMatcher addMatcher(String description, LambdaMatcher.Matcher<Class> lambda, LambdaMatcher.MismatchDescripitor<Class> mismatchDescripitor) {
+        this.matchers.add(LambdaMatcher.match(description, lambda, mismatchDescripitor));
         return this;
     }
 

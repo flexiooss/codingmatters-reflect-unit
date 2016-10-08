@@ -1,6 +1,5 @@
 package org.codingmatters.tests.reflect.utils;
 
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 
 import java.util.LinkedList;
@@ -12,18 +11,18 @@ import static org.codingmatters.tests.reflect.utils.LambdaMatcher.match;
  */
 public class MatcherChain<T> {
 
-    private final LinkedList<Matcher<T>> matchers = new LinkedList<>();
+    private final LinkedList<org.hamcrest.Matcher> matchers = new LinkedList<>();
 
-    public void add(Matcher<T> m) {
+    public void add(org.hamcrest.Matcher m) {
         this.matchers.add(m);
     }
 
-    public void addMatcher(String description, LambdaMatcher.Lambda<T> lambda) {
+    public void addMatcher(String description, LambdaMatcher.Matcher<T> lambda) {
         this.matchers.add(match(description, lambda));
     }
 
-    public Matcher<Object> compoundMatcher() {
-        return Matchers.allOf(this.matchers.toArray(new Matcher[this.matchers.size()]));
+    public org.hamcrest.Matcher compoundMatcher() {
+        return Matchers.allOf(this.matchers.toArray(new org.hamcrest.Matcher[this.matchers.size()]));
     }
 
 }
