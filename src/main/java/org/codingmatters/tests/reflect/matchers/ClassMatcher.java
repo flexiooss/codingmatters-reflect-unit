@@ -88,19 +88,45 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
 
         switch (builder.accessModifier()) {
             case PUBLIC:
-                this.addMatcher("public", item -> isPublic(item.getModifiers()));
+                this.addMatcher(
+                        "public",
+                        item -> isPublic(item.getModifiers()),
+                        this.accessModifierMismatch());
                 break;
             case PRIVATE:
-                this.addMatcher("private", item -> isPrivate(item.getModifiers()));
+                this.addMatcher(
+                        "private",
+                        item -> isPrivate(item.getModifiers()),
+                        this.accessModifierMismatch());
                 break;
             case PROTECTED:
-                this.addMatcher("protected", item -> isProtected(item.getModifiers()));
+                this.addMatcher(
+                        "protected",
+                        item -> isProtected(item.getModifiers()),
+                        this.accessModifierMismatch());
                 break;
             case PACKAGE_PRIVATE:
-                this.addMatcher("package private", item -> ! (isPublic(item.getModifiers()) || isPrivate(item.getModifiers()) || isProtected(item.getModifiers())));
+                this.addMatcher("" +
+                        "package private",
+                        item -> ! (isPublic(item.getModifiers()) || isPrivate(item.getModifiers()) || isProtected(item.getModifiers())),
+                        this.accessModifierMismatch());
                 break;
         }
         return this;
+    }
+
+    private LambdaMatcher.MismatchDescripitor<Class> accessModifierMismatch() {
+        return item -> {
+            if(isPublic(item.getModifiers())) {
+                return "was public";
+            } else if(isPrivate(item.getModifiers())) {
+                return "was private";
+            } else if(isProtected(item.getModifiers())) {
+                return "was protected";
+            } else {
+                return "was package private";
+            }
+        };
     }
 
 
@@ -135,13 +161,18 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
     }
 
     public ClassMatcher implementing(Class interfaceClass) {
-        this.matchers.addMatcher("implements an interface", item -> isInterface(interfaceClass.getModifiers()));
-        this.matchers.addMatcher("implements " + interfaceClass.getName(), item -> Arrays.asList(item.getInterfaces()).contains(interfaceClass));
+        this.matchers.addMatcher(
+                "implements " + interfaceClass.getName(),
+                item -> Arrays.asList(item.getInterfaces()).contains(interfaceClass),
+                item -> "was false (" + item.getName() + " implements " + Arrays.asList(item.getInterfaces()) + ")");
         return this;
     }
 
     public ClassMatcher extending(Class aClass) {
-        this.matchers.addMatcher("extends " + aClass.getName(), item -> item.getSuperclass().equals(aClass));
+        this.matchers.addMatcher(
+                "extends " + aClass.getName(),
+                item -> item.getSuperclass().equals(aClass),
+                item -> "was false");
         return this;
     }
 
@@ -167,7 +198,12 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
 
         @Override
         public void describeTo(Description description) {
+            this.methodMatcher.describeTo(description);
+        }
 
+        @Override
+        protected void describeMismatchSafely(Class item, Description mismatchDescription) {
+            mismatchDescription.appendText("not found");
         }
 
         private interface MemberCollector<T extends Member> {

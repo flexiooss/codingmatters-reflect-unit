@@ -39,6 +39,7 @@ public class ConstructorMatcher extends TypeSafeMatcher<Constructor> {
 
     @Override
     public void describeTo(Description description) {
+        description.appendText("constructor");
         this.matchers.compoundMatcher().describeTo(description);
     }
 

@@ -45,6 +45,7 @@ public class FieldMatcher extends TypeSafeMatcher<Field> {
 
     @Override
     public void describeTo(Description description) {
+        description.appendText("filed");
         this.matchers.compoundMatcher().describeTo(description);
     }
 

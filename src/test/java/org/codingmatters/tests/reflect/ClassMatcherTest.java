@@ -54,6 +54,9 @@ public class ClassMatcherTest {
     @Test
     public void classWithMethod_failure() throws Exception {
         exception.expect(AssertionError.class);
+        exception.expectMessage(is("\n" +
+                "Expected: is (class and instance and public and method(instance and public and named noSuchMeth))\n" +
+                "     but: method(instance and public and named noSuchMeth) not found"));
 
         assertThat(String.class, is(anInstance().class_().with(anInstance().method().named("noSuchMeth"))));
     }
@@ -69,6 +72,9 @@ public class ClassMatcherTest {
     @Test
     public void classWithManyMethod_failure() throws Exception {
         exception.expect(AssertionError.class);
+        exception.expectMessage(is("\n" +
+                "Expected: is (class and instance and public and method(instance and public and named toUpperCase) and method(instance and public and named noSuchMethod))\n" +
+                "     but: method(instance and public and named noSuchMethod) not found"));
 
         assertThat(String.class, is(anInstance().class_()
                 .with(anInstance().method().named("toUpperCase"))
@@ -92,6 +98,9 @@ public class ClassMatcherTest {
     @Test
     public void public_failsOnPackagePrivateClass() throws Exception {
         exception.expect(AssertionError.class);
+        exception.expectMessage(is("\n" +
+                "Expected: is (class and instance and public)\n" +
+                "     but: public was package private"));
 
         assertThat(PackagePrivate.class, is(aPublic().class_()));
     }
@@ -149,16 +158,24 @@ public class ClassMatcherTest {
     @Test
     public void classNotImplementingAnInterface() throws Exception {
         exception.expect(AssertionError.class);
+        exception.expectMessage(is("\n" +
+                "Expected: is (class and instance and public and implements java.io.Closeable)\n" +
+                "     but: implements java.io.Closeable was false (org.codingmatters.tests.reflect.ClassMatcherTest$Implementation implements [interface org.codingmatters.tests.reflect.ClassMatcherTest$Interface])"));
+
         assertThat(Implementation.class, is(anInstance().class_().implementing(Closeable.class)));
     }
 
     @Test
     public void classImplementingAsNonInterface() throws Exception {
         exception.expect(AssertionError.class);
+        exception.expectMessage(is("\n" +
+                "Expected: is (class and instance and public and implements java.lang.String)\n" +
+                "     but: implements java.lang.String was false (org.codingmatters.tests.reflect.ClassMatcherTest$Implementation implements [interface org.codingmatters.tests.reflect.ClassMatcherTest$Interface])"));
+
         assertThat(Implementation.class, is(anInstance().class_().implementing(String.class)));
     }
 
-    class SuperClass {}
+    public class SuperClass {}
     public class SubClass extends SuperClass{}
 
     @Test
@@ -169,6 +186,10 @@ public class ClassMatcherTest {
     @Test
     public void classNotExtendingClass() throws Exception {
         exception.expect(AssertionError.class);
+        exception.expectMessage(is("\n" +
+                "Expected: is (class and instance and public and extends org.codingmatters.tests.reflect.ClassMatcherTest$SubClass)\n" +
+                "     but: extends org.codingmatters.tests.reflect.ClassMatcherTest$SubClass was false"));
+
         assertThat(SuperClass.class, is(anInstance().class_().extending(SubClass.class)));
     }
 

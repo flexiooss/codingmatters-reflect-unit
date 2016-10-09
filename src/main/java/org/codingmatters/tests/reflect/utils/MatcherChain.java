@@ -18,7 +18,10 @@ public class MatcherChain<T> {
     }
 
     public void addMatcher(String description, LambdaMatcher.Matcher<T> lambda) {
-        this.matchers.add(match(description, lambda));
+        this.addMatcher(description, lambda, null);
+    }
+    public void addMatcher(String description, LambdaMatcher.Matcher<T> lambda, LambdaMatcher.MismatchDescripitor<T> mismatchDescription) {
+        this.matchers.add(match(description, lambda, mismatchDescription));
     }
 
     public org.hamcrest.Matcher compoundMatcher() {

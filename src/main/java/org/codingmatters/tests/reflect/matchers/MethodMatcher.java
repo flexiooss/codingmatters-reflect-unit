@@ -62,6 +62,7 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
 
     @Override
     public void describeTo(Description description) {
+        description.appendText("method");
         this.matchers.compoundMatcher().describeTo(description);
     }
 
