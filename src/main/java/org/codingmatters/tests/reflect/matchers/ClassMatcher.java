@@ -7,7 +7,10 @@ import org.codingmatters.tests.reflect.utils.ReflectMatcherConfiguration;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,13 +24,13 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
 
     public static ClassMatcher anInterface(ReflectMatcherConfiguration builder) {
         return new ClassMatcher()
-                .addMatcher("interface", item -> Modifier.isInterface(item.getModifiers()))
+                .addMatcher("interface", item -> isInterface(item.getModifiers()))
                 .configure(builder);
     }
 
     public static ClassMatcher aClass(ReflectMatcherConfiguration builder) {
         return new ClassMatcher()
-                .addMatcher("class", item -> !Modifier.isInterface(item.getModifiers()))
+                .addMatcher("class", item -> !isInterface(item.getModifiers()))
                 .configure(builder);
     }
 
