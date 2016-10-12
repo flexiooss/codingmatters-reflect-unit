@@ -1,9 +1,6 @@
 package org.codingmatters.tests.reflect;
 
-import org.codingmatters.tests.reflect.matchers.ClassMatcher;
-import org.codingmatters.tests.reflect.matchers.ConstructorMatcher;
-import org.codingmatters.tests.reflect.matchers.FieldMatcher;
-import org.codingmatters.tests.reflect.matchers.MethodMatcher;
+import org.codingmatters.tests.reflect.matchers.*;
 
 /**
  * Created by nelt on 9/8/16.
@@ -52,6 +49,10 @@ public class ReflectMatchers {
 
     public static MethodMatcher aMethod() {
         return anInstance().method();
+    }
+
+    public static TypeVariableMatcher aTypeVariable() {
+        return new TypeVariableMatcher();
     }
 
 }

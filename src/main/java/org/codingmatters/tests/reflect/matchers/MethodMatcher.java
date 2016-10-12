@@ -8,7 +8,10 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
+import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +57,14 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this.returning(void.class);
     }
 
+    public MethodMatcher with(TypeVariableMatcher typeVariableMatcher) {
+        this.matchers.add(new CollectorMatcher<TypeVariable, Method>(typeVariableMatcher, item -> {
+            List<TypeVariable> result = new LinkedList<>();
+            result.addAll(Arrays.asList(item.getTypeParameters()));
+            return result;
+        }));
+        return this;
+    }
 
     @Override
     protected boolean matchesSafely(Method aMethod) {

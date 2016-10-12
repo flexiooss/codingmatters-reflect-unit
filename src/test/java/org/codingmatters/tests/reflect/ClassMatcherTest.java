@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.Closeable;
+import java.io.Serializable;
 
 import static org.codingmatters.tests.reflect.ReflectMatchers.*;
 import static org.hamcrest.Matchers.is;
@@ -197,5 +198,12 @@ public class ClassMatcherTest {
     public void finalClass() throws Exception {
         assertThat(FinalClass.class, is(aClass().final_()));
 
+    }
+
+    public class ParametrizedType<T extends Serializable> {}
+
+    @Test
+    public void typeVariable() throws Exception {
+        assertThat(ParametrizedType.class, is(aClass().with(aTypeVariable().named("T").withBound(Serializable.class))));
     }
 }

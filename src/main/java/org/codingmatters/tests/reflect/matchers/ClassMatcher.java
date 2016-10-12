@@ -9,8 +9,8 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
+import java.lang.reflect.TypeVariable;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,7 +45,7 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
     }
 
     public ClassMatcher with(MethodMatcher methodMatcher) {
-        this.matchers.add(new ClassMemberMatcher<>(methodMatcher, item -> {
+        this.matchers.add(new CollectorMatcher<Method, Class>(methodMatcher, item -> {
             List<Method> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getDeclaredMethods()));
             return result;
@@ -53,10 +53,19 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         return this;
     }
 
-    public org.hamcrest.Matcher with(FieldMatcher fieldMatcher) {
-        this.matchers.add(new ClassMemberMatcher<>(fieldMatcher, item -> {
+    public ClassMatcher with(FieldMatcher fieldMatcher) {
+        this.matchers.add(new CollectorMatcher<Field, Class>(fieldMatcher, item -> {
             List<Field> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getDeclaredFields()));
+            return result;
+        }));
+        return this;
+    }
+
+    public ClassMatcher with(TypeVariableMatcher typeVariableMatcher) {
+        this.matchers.add(new CollectorMatcher<TypeVariable, Class>(typeVariableMatcher, item -> {
+            List<TypeVariable> result = new LinkedList<>();
+            result.addAll(Arrays.asList(item.getTypeParameters()));
             return result;
         }));
         return this;
@@ -65,7 +74,7 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
 
 
     public ClassMatcher with(ConstructorMatcher constructorMatcher) {
-        this.matchers.add(new ClassMemberMatcher<>(constructorMatcher, item -> {
+        this.matchers.add(new CollectorMatcher<Constructor, Class>(constructorMatcher, item -> {
             List<Constructor> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getDeclaredConstructors()));
             return result;
@@ -178,40 +187,4 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
                 item -> "was false");
         return this;
     }
-
-    static private class ClassMemberMatcher<T extends Member> extends TypeSafeMatcher<Class> {
-
-        private final TypeSafeMatcher<T> methodMatcher;
-        private final MemberCollector<T> memberCollector;
-
-        private ClassMemberMatcher(TypeSafeMatcher<T> methodMatcher, MemberCollector<T> memberCollector) {
-            this.methodMatcher = methodMatcher;
-            this.memberCollector = memberCollector;
-        }
-
-        @Override
-        protected boolean matchesSafely(Class item) {
-            for (T method : this.memberCollector.candidates(item)) {
-                if(this.methodMatcher.matches(method)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        @Override
-        public void describeTo(Description description) {
-            this.methodMatcher.describeTo(description);
-        }
-
-        @Override
-        protected void describeMismatchSafely(Class item, Description mismatchDescription) {
-            mismatchDescription.appendText("not found");
-        }
-
-        private interface MemberCollector<T extends Member> {
-            List<T> candidates(Class item);
-        }
-    }
-
 }

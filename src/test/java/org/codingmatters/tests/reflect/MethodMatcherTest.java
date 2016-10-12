@@ -42,6 +42,8 @@ public class MethodMatcherTest {
 
         @Deprecated
         public void anotated() {}
+
+        static public <T> void parametrized() {}
     }
 
     @Test
@@ -196,5 +198,10 @@ public class MethodMatcherTest {
 
     private Method method(String name, Class ... args) throws NoSuchMethodException {
         return TestClass.class.getDeclaredMethod(name, args);
+    }
+
+    @Test
+    public void parametrizedMethod() throws Exception {
+        assertThat(method("parametrized"), is(aStatic().public_().method().with(aTypeVariable().named("T"))));
     }
 }
