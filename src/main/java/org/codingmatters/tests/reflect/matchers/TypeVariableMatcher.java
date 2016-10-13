@@ -12,12 +12,12 @@ import java.util.stream.Stream;
 /**
  * Created by nelt on 10/12/16.
  */
-public class TypeVariableMatcher extends TypeSafeMatcher<TypeVariable> {
+public class TypeVariableMatcher extends TypeSafeMatcher<Type> {
 
-    private final MatcherChain<TypeVariable> matchers = new MatcherChain<>();
+    private final MatcherChain<Type> matchers = new MatcherChain<>();
 
     @Override
-    protected boolean matchesSafely(TypeVariable item) {
+    protected boolean matchesSafely(Type item) {
         return matchers.compoundMatcher().matches(item);
     }
 
@@ -28,19 +28,22 @@ public class TypeVariableMatcher extends TypeSafeMatcher<TypeVariable> {
     }
 
     @Override
-    protected void describeMismatchSafely(TypeVariable item, Description mismatchDescription) {
+    protected void describeMismatchSafely(Type item, Description mismatchDescription) {
         this.matchers.compoundMatcher().describeMismatch(item, mismatchDescription);
     }
 
     public TypeVariableMatcher named(String name) {
-        this.matchers.addMatcher("named " + name, item -> name.equals(item.getName()), item -> "was " + item.getName());
+        this.matchers.addMatcher(
+                "named " + name,
+                item -> name.equals(item instanceof TypeVariable ? ((TypeVariable)item).getName() : null),
+                item -> "was " + item.getTypeName());
         return this;
     }
 
     public TypeVariableMatcher withBound(Type type) {
         this.matchers.addMatcher("with bound " + type.getTypeName(),
-                item -> Stream.of(item.getBounds()).filter(t -> t.equals(type)).findFirst().isPresent(),
-                item -> "was " + Stream.of(item.getBounds()).map(Type::getTypeName).collect(Collectors.joining(", ")));
+                item -> Stream.of(item instanceof TypeVariable ? ((TypeVariable)item).getBounds() : new Type[0]).filter(t -> t.equals(type)).findFirst().isPresent(),
+                item -> "was " + Stream.of(item instanceof TypeVariable ? ((TypeVariable)item).getBounds() : new Type[0]).map(Type::getTypeName).collect(Collectors.joining(", ")));
         return this;
     }
 }

@@ -44,6 +44,9 @@ public class MethodMatcherTest {
         public void anotated() {}
 
         static public <T> void parametrized() {}
+        static public void notParametrized() {}
+        static public <T> T parametrizedReturningParameterType() {return null;}
+        static public <T> String parametrizedNotReturningParameterType() {return null;}
     }
 
     @Test
@@ -203,5 +206,36 @@ public class MethodMatcherTest {
     @Test
     public void parametrizedMethod() throws Exception {
         assertThat(method("parametrized"), is(aStatic().public_().method().with(aTypeVariable().named("T"))));
+    }
+
+    @Test
+    public void parametrizedMethod_failure() throws Exception {
+        exception.expect(AssertionError.class);
+        exception.expectMessage(is("\n" +
+                "Expected: is method(static and public and type variable(named T))\n" +
+                "     but: type variable(named T) not found"));
+
+        assertThat(method("notParametrized"), is(aStatic().public_().method().with(aTypeVariable().named("T"))));
+    }
+
+    @Test
+    public void parametrizedMethodReturningParameterType() throws Exception {
+        assertThat(method("parametrizedReturningParameterType"), is(aStatic().public_().method()
+                .with(aTypeVariable().named("T"))
+                .returning(aTypeVariable().named("T"))
+        ));
+    }
+
+    @Test
+    public void parametrizedMethodReturningParameterType_failure() throws Exception {
+        exception.expect(AssertionError.class);
+        exception.expectMessage(is("\n" +
+                "Expected: is method(static and public and type variable(named T) and return (type variable(named T)))\n" +
+                "     but: return (type variable(named T)) was (named T was java.lang.String)"));
+
+        assertThat(method("parametrizedNotReturningParameterType"), is(aStatic().public_().method()
+                .with(aTypeVariable().named("T"))
+                .returning(aTypeVariable().named("T"))
+        ));
     }
 }

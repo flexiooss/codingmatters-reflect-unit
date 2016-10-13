@@ -8,7 +8,7 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.lang.reflect.TypeVariable;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -57,9 +57,36 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this.returning(void.class);
     }
 
+    public MethodMatcher returning(TypeVariableMatcher typeVariableMatcher) {
+        this.matchers.add(new TypeSafeMatcher<Method>() {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("return (");
+                typeVariableMatcher.describeTo(description);
+                description.appendText(")");
+            }
+
+            @Override
+            protected boolean matchesSafely(Method item) {
+                return typeVariableMatcher.matchesSafely(item.getGenericReturnType());
+            }
+
+            @Override
+            protected void describeMismatchSafely(Method item, Description mismatchDescription) {
+                mismatchDescription.appendText("was (");
+                typeVariableMatcher.describeMismatchSafely(item.getGenericReturnType(), mismatchDescription);
+                mismatchDescription.appendText(")");
+            }
+        });
+//        this.matchers.addMatcher("",
+//                item -> typeVariableMatcher.matchesSafely(item.getGenericReturnType()) ,
+//                item -> "");
+        return this;
+    }
+
     public MethodMatcher with(TypeVariableMatcher typeVariableMatcher) {
-        this.matchers.add(new CollectorMatcher<TypeVariable, Method>(typeVariableMatcher, item -> {
-            List<TypeVariable> result = new LinkedList<>();
+        this.matchers.add(new CollectorMatcher<Type, Method>(typeVariableMatcher, item -> {
+            List<Type> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getTypeParameters()));
             return result;
         }));

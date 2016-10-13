@@ -10,7 +10,7 @@ import org.hamcrest.TypeSafeMatcher;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.TypeVariable;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,8 +63,8 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
     }
 
     public ClassMatcher with(TypeVariableMatcher typeVariableMatcher) {
-        this.matchers.add(new CollectorMatcher<TypeVariable, Class>(typeVariableMatcher, item -> {
-            List<TypeVariable> result = new LinkedList<>();
+        this.matchers.add(new CollectorMatcher<Type, Class>(typeVariableMatcher, item -> {
+            List<Type> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getTypeParameters()));
             return result;
         }));
