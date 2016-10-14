@@ -62,8 +62,8 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         return this;
     }
 
-    public ClassMatcher with(TypeVariableMatcher typeVariableMatcher) {
-        this.matchers.add(new CollectorMatcher<Type, Class>(typeVariableMatcher, item -> {
+    public ClassMatcher with(TypeMatcher typeMatcher) {
+        this.matchers.add(new CollectorMatcher<Type, Class>(typeMatcher, item -> {
             List<Type> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getTypeParameters()));
             return result;

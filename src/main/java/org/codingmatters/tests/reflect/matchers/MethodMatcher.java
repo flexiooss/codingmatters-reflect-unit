@@ -48,6 +48,13 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this;
     }
 
+    public MethodMatcher withParameters(TypeMatcher typeMatcher) {
+        this.matchers.add(new CollectorMatcher<Type, Method>(
+                typeMatcher,
+                item -> Arrays.asList(item.getGenericParameterTypes())));
+        return this;
+    }
+
     public MethodMatcher returning(Class aClass) {
         this.matchers.addMatcher("method returns a " + aClass.getName(), item -> aClass.equals(item.getReturnType()));
         return this;
@@ -57,35 +64,18 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this.returning(void.class);
     }
 
-    public MethodMatcher returning(TypeVariableMatcher typeVariableMatcher) {
-        this.matchers.add(new TypeSafeMatcher<Method>() {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("return (");
-                typeVariableMatcher.describeTo(description);
-                description.appendText(")");
-            }
-
-            @Override
-            protected boolean matchesSafely(Method item) {
-                return typeVariableMatcher.matchesSafely(item.getGenericReturnType());
-            }
-
-            @Override
-            protected void describeMismatchSafely(Method item, Description mismatchDescription) {
-                mismatchDescription.appendText("was (");
-                typeVariableMatcher.describeMismatchSafely(item.getGenericReturnType(), mismatchDescription);
-                mismatchDescription.appendText(")");
-            }
-        });
-//        this.matchers.addMatcher("",
-//                item -> typeVariableMatcher.matchesSafely(item.getGenericReturnType()) ,
-//                item -> "");
+    public MethodMatcher returning(TypeMatcher typeMatcher) {
+        this.matchers.add(new MethodElementTypeMatcher(typeMatcher, method -> method.getGenericReturnType()));
         return this;
     }
 
-    public MethodMatcher with(TypeVariableMatcher typeVariableMatcher) {
-        this.matchers.add(new CollectorMatcher<Type, Method>(typeVariableMatcher, item -> {
+    public MethodMatcher returning(GenericArrayTypeMatcher genericArrayTypeMatcher) {
+        this.matchers.add(new MethodElementTypeMatcher(genericArrayTypeMatcher, method -> method.getGenericReturnType()));
+        return this;
+    }
+
+    public MethodMatcher with(TypeMatcher typeMatcher) {
+        this.matchers.add(new CollectorMatcher<Type, Method>(typeMatcher, item -> {
             List<Type> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getTypeParameters()));
             return result;
@@ -129,5 +119,44 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
             return item.getAnnotation(anotationClass) != null;
         });
         return this;
+    }
+
+    private static class MethodElementTypeMatcher extends TypeSafeMatcher<Method> {
+        private final TypeSafeMatcher typeMatcher;
+        private final MethodElementTypeSupplier typeSupplier;
+
+        public MethodElementTypeMatcher(TypeSafeMatcher typeMatcher, MethodElementTypeSupplier typeSupplier) {
+            this.typeMatcher = typeMatcher;
+            this.typeSupplier = typeSupplier;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("return (");
+            typeMatcher.describeTo(description);
+            description.appendText(")");
+        }
+
+        @Override
+        protected boolean matchesSafely(Method item) {
+            Type type = this.typeSupplier.getFrom(item);
+            if(type != null) {
+                return typeMatcher.matches(type);
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        protected void describeMismatchSafely(Method item, Description mismatchDescription) {
+            mismatchDescription.appendText("was (");
+            typeMatcher.describeMismatch(this.typeSupplier.getFrom(item), mismatchDescription);
+            mismatchDescription.appendText(")");
+        }
+
+        @FunctionalInterface
+        interface MethodElementTypeSupplier {
+            Type getFrom(Method method);
+        }
     }
 }

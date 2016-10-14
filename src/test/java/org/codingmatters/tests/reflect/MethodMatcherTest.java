@@ -27,9 +27,11 @@ public class MethodMatcherTest {
 
         public String returnsString() {return "";}
         public void returnsVoid() {}
+        public String[] returnsArray() {return null;}
 
         public void withParameters(String s, int i) {}
         public void withoutParameters() {}
+        public void withArrayParameter(String[] s) {}
 
         static public void staticMethod() {}
         public void instanceMethod() {}
@@ -43,10 +45,16 @@ public class MethodMatcherTest {
         @Deprecated
         public void anotated() {}
 
-        static public <T> void parametrized() {}
-        static public void notParametrized() {}
-        static public <T> T parametrizedReturningParameterType() {return null;}
-        static public <T> String parametrizedNotReturningParameterType() {return null;}
+        public <T> void parametrized() {}
+        public void notParametrized() {}
+        public <T> void parametrizedWithParameterTypeArg(T t) {}
+        public <T> void parametrizedWithNonParameterTypeArg(Object o) {}
+        public <T> void parametrizedWithParameterTypeArrayArg(T[] t) {}
+        public <T> T parametrizedReturningParameterType() {return null;}
+        public <T> String parametrizedNotReturningParameterType() {return null;}
+        public <T> T[] parametrizedReturningParameterTypeArray() {return null;}
+
+
     }
 
     @Test
@@ -131,6 +139,11 @@ public class MethodMatcherTest {
     }
 
     @Test
+    public void returnsArray() throws Exception {
+        assertThat(method("returnsArray"), is(aMethod().returning(String[].class)));
+    }
+
+    @Test
     public void returnsType_failure() throws Exception {
         exception.expect(AssertionError.class);
 
@@ -145,6 +158,11 @@ public class MethodMatcherTest {
     @Test
     public void withoutParameters() throws Exception {
         assertThat(method("withoutParameters"), is(anInstance().method().withParameters()));
+    }
+
+    @Test
+    public void withArrayParameter() throws Exception {
+        assertThat(method("withArrayParameter", String[].class), is(anInstance().method().withParameters(String[].class)));
     }
 
     @Test
@@ -205,24 +223,24 @@ public class MethodMatcherTest {
 
     @Test
     public void parametrizedMethod() throws Exception {
-        assertThat(method("parametrized"), is(aStatic().public_().method().with(aTypeVariable().named("T"))));
+        assertThat(method("parametrized"), is(aMethod().with(aGenericType().named("T"))));
     }
 
     @Test
     public void parametrizedMethod_failure() throws Exception {
         exception.expect(AssertionError.class);
         exception.expectMessage(is("\n" +
-                "Expected: is method(static and public and type variable(named T))\n" +
+                "Expected: is method(instance and public and type variable(named T))\n" +
                 "     but: type variable(named T) not found"));
 
-        assertThat(method("notParametrized"), is(aStatic().public_().method().with(aTypeVariable().named("T"))));
+        assertThat(method("notParametrized"), is(aMethod().with(aGenericType().named("T"))));
     }
 
     @Test
     public void parametrizedMethodReturningParameterType() throws Exception {
-        assertThat(method("parametrizedReturningParameterType"), is(aStatic().public_().method()
-                .with(aTypeVariable().named("T"))
-                .returning(aTypeVariable().named("T"))
+        assertThat(method("parametrizedReturningParameterType"), is(aMethod()
+                .with(aGenericType().named("T"))
+                .returning(aGenericType().named("T"))
         ));
     }
 
@@ -230,12 +248,76 @@ public class MethodMatcherTest {
     public void parametrizedMethodReturningParameterType_failure() throws Exception {
         exception.expect(AssertionError.class);
         exception.expectMessage(is("\n" +
-                "Expected: is method(static and public and type variable(named T) and return (type variable(named T)))\n" +
+                "Expected: is method(instance and public and type variable(named T) and return (type variable(named T)))\n" +
                 "     but: return (type variable(named T)) was (named T was java.lang.String)"));
 
-        assertThat(method("parametrizedNotReturningParameterType"), is(aStatic().public_().method()
-                .with(aTypeVariable().named("T"))
-                .returning(aTypeVariable().named("T"))
+        assertThat(method("parametrizedNotReturningParameterType"), is(aMethod()
+                .with(aGenericType().named("T"))
+                .returning(aGenericType().named("T"))
         ));
     }
+
+    @Test
+    public void parametrizedWithParameterTypeArg() throws Exception {
+        assertThat(method("parametrizedWithParameterTypeArg", Object.class), is(aMethod()
+                .with(aGenericType().named("T"))
+                .withParameters(aGenericType().named("T"))
+                .returningVoid()
+        ));
+    }
+
+    @Test
+    public void parametrizedWithParameterTypeArg_failure() throws Exception {
+        exception.expect(AssertionError.class);
+        exception.expectMessage(is("\n" +
+                "Expected: is method(instance and public and type variable(named T) and type variable(named T) and method returns a void)\n" +
+                "     but: type variable(named T) not found"));
+
+        assertThat(method("parametrizedWithNonParameterTypeArg", Object.class), is(aMethod()
+                .with(aGenericType().named("T"))
+                .withParameters(aGenericType().named("T"))
+                .returningVoid()
+        ));
+    }
+
+    @Test
+    public void parametrizedReturningParameterTypeArray() throws Exception {
+        assertThat(method("parametrizedReturningParameterTypeArray"), is(aMethod()
+                .with(aGenericType().named("T"))
+                .returning(aGenericArray().of(aGenericType().named("T")))
+        ));
+    }
+
+    @Test
+    public void parametrizedReturningParameterTypeArray_failure() throws Exception {
+        exception.expect(AssertionError.class);
+        exception.expectMessage("\n" +
+                "Expected: is method(instance and public and return (array of type variable(named Z)))\n" +
+                "     but: return (array of type variable(named Z)) was (array of named Z was T[])");
+
+        assertThat(method("parametrizedReturningParameterTypeArray"), is(aMethod()
+                .returning(aGenericArray().of(aGenericType().named("Z")))
+        ));
+    }
+
+    @Test
+    public void parametrizedReturningArray() throws Exception {
+        assertThat(method("parametrizedReturningParameterTypeArray"), is(aMethod()
+                .with(aGenericType().named("T"))
+                .returning(aGenericArray())
+        ));
+    }
+
+    @Test
+    public void returningArray_failure() throws Exception {
+        exception.expect(AssertionError.class);
+        exception.expectMessage("\n" +
+                "Expected: is method(instance and public and return (array))\n" +
+                "     but: return (array) was (not an array)");
+
+        assertThat(method("returnsString"), is(aMethod()
+                .returning(aGenericArray())
+        ));
+    }
+
 }
