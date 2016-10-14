@@ -83,6 +83,11 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this;
     }
 
+    public MethodMatcher returning(GenericTypeMatcher typeMatcher) {
+        this.matchers.add(new MethodElementTypeMatcher(typeMatcher, method -> method.getGenericReturnType()));
+        return this;
+    }
+
     public MethodMatcher with(TypeMatcher typeMatcher) {
         this.matchers.add(new CollectorMatcher<Type, Method>(typeMatcher, item -> {
             List<Type> result = new LinkedList<>();

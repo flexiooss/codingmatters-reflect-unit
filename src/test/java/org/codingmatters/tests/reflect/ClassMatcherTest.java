@@ -204,6 +204,6 @@ public class ClassMatcherTest {
 
     @Test
     public void typeVariable() throws Exception {
-        assertThat(ParametrizedType.class, is(aClass().with(aGenericType().named("T").withBound(Serializable.class))));
+        assertThat(ParametrizedType.class, is(aClass().with(aVariableType().named("T").withBound(Serializable.class))));
     }
 }

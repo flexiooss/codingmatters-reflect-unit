@@ -223,7 +223,7 @@ public class MethodMatcherTest {
 
     @Test
     public void parametrizedMethod() throws Exception {
-        assertThat(method("parametrized"), is(aMethod().with(aGenericType().named("T"))));
+        assertThat(method("parametrized"), is(aMethod().with(aVariableType().named("T"))));
     }
 
     @Test
@@ -233,14 +233,14 @@ public class MethodMatcherTest {
                 "Expected: is method(instance and public and type variable(named T))\n" +
                 "     but: type variable(named T) not found"));
 
-        assertThat(method("notParametrized"), is(aMethod().with(aGenericType().named("T"))));
+        assertThat(method("notParametrized"), is(aMethod().with(aVariableType().named("T"))));
     }
 
     @Test
     public void parametrizedMethodReturningParameterType() throws Exception {
         assertThat(method("parametrizedReturningParameterType"), is(aMethod()
-                .with(aGenericType().named("T"))
-                .returning(aGenericType().named("T"))
+                .with(aVariableType().named("T"))
+                .returning(aVariableType().named("T"))
         ));
     }
 
@@ -252,16 +252,16 @@ public class MethodMatcherTest {
                 "     but: return (type variable(named T)) was (named T was java.lang.String)"));
 
         assertThat(method("parametrizedNotReturningParameterType"), is(aMethod()
-                .with(aGenericType().named("T"))
-                .returning(aGenericType().named("T"))
+                .with(aVariableType().named("T"))
+                .returning(aVariableType().named("T"))
         ));
     }
 
     @Test
     public void parametrizedWithParameterTypeArg() throws Exception {
         assertThat(method("parametrizedWithParameterTypeArg", Object.class), is(aMethod()
-                .with(aGenericType().named("T"))
-                .withParameters(aGenericType().named("T"))
+                .with(aVariableType().named("T"))
+                .withParameters(aVariableType().named("T"))
                 .returningVoid()
         ));
     }
@@ -274,8 +274,8 @@ public class MethodMatcherTest {
                 "     but: type variable(named T) not found"));
 
         assertThat(method("parametrizedWithNonParameterTypeArg", Object.class), is(aMethod()
-                .with(aGenericType().named("T"))
-                .withParameters(aGenericType().named("T"))
+                .with(aVariableType().named("T"))
+                .withParameters(aVariableType().named("T"))
                 .returningVoid()
         ));
     }
@@ -283,8 +283,8 @@ public class MethodMatcherTest {
     @Test
     public void parametrizedReturningParameterTypeArray() throws Exception {
         assertThat(method("parametrizedReturningParameterTypeArray"), is(aMethod()
-                .with(aGenericType().named("T"))
-                .returning(aGenericArray().of(aGenericType().named("T")))
+                .with(aVariableType().named("T"))
+                .returning(aGenericArray().of(aVariableType().named("T")))
         ));
     }
 
@@ -296,14 +296,14 @@ public class MethodMatcherTest {
                 "     but: return (array of type variable(named Z)) was (array of named Z was T[])");
 
         assertThat(method("parametrizedReturningParameterTypeArray"), is(aMethod()
-                .returning(aGenericArray().of(aGenericType().named("Z")))
+                .returning(aGenericArray().of(aVariableType().named("Z")))
         ));
     }
 
     @Test
     public void parametrizedReturningArray() throws Exception {
         assertThat(method("parametrizedReturningParameterTypeArray"), is(aMethod()
-                .with(aGenericType().named("T"))
+                .with(aVariableType().named("T"))
                 .returning(aGenericArray())
         ));
     }

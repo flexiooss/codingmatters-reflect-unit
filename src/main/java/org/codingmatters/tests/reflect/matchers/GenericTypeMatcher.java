@@ -24,7 +24,7 @@ public class GenericTypeMatcher extends TypeSafeMatcher<Class> {
         return Stream.of(item.getTypeParameters()).count() > 0;
     }
 
-    public GenericTypeMatcher withTypeParameter(TypeMatcher typeMatcher) {
+    public GenericTypeMatcher with(TypeMatcher typeMatcher) {
         this.matchers.add(new CollectorMatcher<Type, Class>(
                 typeMatcher,
                 item -> Arrays.asList(item.getTypeParameters())
@@ -46,5 +46,12 @@ public class GenericTypeMatcher extends TypeSafeMatcher<Class> {
     @Override
     protected void describeMismatchSafely(Class item, Description mismatchDescription) {
         this.matchers.compoundMatcher().describeMismatch(item, mismatchDescription);
+    }
+
+    public GenericTypeMatcher of(Class aClass) {
+        this.matchers.addMatcher("of " + aClass.getName(),
+                item -> item.equals(aClass),
+                item -> "was of " + item.getName());
+        return this;
     }
 }
