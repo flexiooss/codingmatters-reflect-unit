@@ -44,11 +44,20 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
 
     public MethodMatcher withParameters(Class ... parameters) {
         String paramsSpec = Arrays.stream(parameters).map(aClass -> aClass.getName()).collect(Collectors.joining(", "));
-        this.matchers.addMatcher("method parameters are " + paramsSpec, item -> Arrays.equals(item.getParameterTypes(), parameters));
+        this.matchers.addMatcher(
+                "method parameters are " + paramsSpec,
+                item -> Arrays.equals(item.getParameterTypes(), parameters));
         return this;
     }
 
     public MethodMatcher withParameters(TypeMatcher typeMatcher) {
+        this.matchers.add(new CollectorMatcher<Type, Method>(
+                typeMatcher,
+                item -> Arrays.asList(item.getGenericParameterTypes())));
+        return this;
+    }
+
+    public MethodMatcher withParameters(GenericArrayTypeMatcher typeMatcher) {
         this.matchers.add(new CollectorMatcher<Type, Method>(
                 typeMatcher,
                 item -> Arrays.asList(item.getGenericParameterTypes())));
