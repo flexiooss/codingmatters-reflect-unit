@@ -36,14 +36,16 @@ public class TypeMatcher extends TypeSafeMatcher<Type> {
         this.matchers.addMatcher(
                 "named " + name,
                 item -> name.equals(this.typeName(item)),
-                item -> "was " + item.getTypeName());
+                (item, description) -> description.appendText("was " + item.getTypeName())
+        );
         return this;
     }
 
     public TypeMatcher withBound(Type type) {
         this.matchers.addMatcher("with bound " + type.getTypeName(),
                 item -> Stream.of(item instanceof TypeVariable ? ((TypeVariable)item).getBounds() : new Type[0]).filter(t -> t.equals(type)).findFirst().isPresent(),
-                item -> "was " + Stream.of(item instanceof TypeVariable ? ((TypeVariable)item).getBounds() : new Type[0]).map(Type::getTypeName).collect(Collectors.joining(", ")));
+                (item, description) -> description.appendText("was " + Stream.of(item instanceof TypeVariable ? ((TypeVariable)item).getBounds() : new Type[0]).map(Type::getTypeName).collect(Collectors.joining(", ")))
+        );
         return this;
     }
 

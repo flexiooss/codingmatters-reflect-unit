@@ -5,9 +5,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.Serializable;
+import java.util.List;
 
-import static org.codingmatters.tests.reflect.ReflectMatchers.aGenericType;
-import static org.codingmatters.tests.reflect.ReflectMatchers.aVariableType;
+import static org.codingmatters.tests.reflect.ReflectMatchers.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -27,6 +27,20 @@ public class GenericTypeMatcherTest {
         assertThat(ParametrizedType.class, is(aGenericType()));
         assertThat(ParametrizedType.class, is(aGenericType().of(ParametrizedType.class)));
         assertThat(ParametrizedType.class, is(aGenericType().with(aVariableType().named("T").withBound(Serializable.class))));
+        assertThat(ParametrizedType.class, is(aGenericType().of(ParametrizedType.class).with(aVariableType().named("T"))));
+        assertThat(ParametrizedType.class, is(aGenericType().of(ParametrizedType.class).with(aVariableType().named("T").withBound(Serializable.class))));
+    }
+
+    @Test
+    public void genericTypeWithVariableType() throws Exception {
+        assertThat(Iterable.class, is(aGenericType().with(aVariableType().named("T"))));
+    }
+
+    @Test
+    public void methodWithGenericArrayArgument() throws Exception {
+        assertThat(List.class.getMethod("toArray", Object[].class), is(
+                aMethod().withParameters(aGenericArray().of(aVariableType().named("T")))
+        ));
     }
 
     @Test

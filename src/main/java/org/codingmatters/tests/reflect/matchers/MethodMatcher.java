@@ -50,14 +50,45 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this;
     }
 
-    public MethodMatcher withParameters(TypeMatcher typeMatcher) {
+    public MethodMatcher withParameters(TypeMatcher ... typeMatcher) {
+
+        if(typeMatcher == null) {
+            this.matchers.addMatcher("no parameters",
+                    item -> item.getParameterCount() == 0,
+                    (item, description) -> description.appendText("was " + item.getParameterCount())
+            );
+        } else {
+            this.matchers.addMatcher(typeMatcher.length + " parameters",
+                    item -> item.getParameterCount() == typeMatcher.length,
+                    (item, description) -> description.appendText("was " + item.getParameterCount())
+            );
+
+            for (int i = 0; i < typeMatcher.length; i++) {
+                int index = i;
+                this.matchers.addMatcher(
+                        description -> description
+                                .appendText("parameter[" + index + "]" + " is ")
+                                .appendDescriptionOf(typeMatcher[index]),
+                        item -> typeMatcher[index].matches(item.getParameterTypes()[index]),
+                        (item, description) -> {
+                            System.out.println(typeMatcher[index].getClass());
+                            typeMatcher[index].describeMismatch(item, description);
+                        }
+                );
+            }
+        }
+        return this;
+    }
+
+    public MethodMatcher withParameters(GenericArrayTypeMatcher typeMatcher) {
         this.matchers.add(new CollectorMatcher<Type, Method>(
                 typeMatcher,
                 item -> Arrays.asList(item.getGenericParameterTypes())));
         return this;
     }
 
-    public MethodMatcher withParameters(GenericArrayTypeMatcher typeMatcher) {
+
+    public MethodMatcher withParameters(GenericTypeMatcher typeMatcher) {
         this.matchers.add(new CollectorMatcher<Type, Method>(
                 typeMatcher,
                 item -> Arrays.asList(item.getGenericParameterTypes())));
@@ -132,6 +163,15 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
 
             return item.getAnnotation(anotationClass) != null;
         });
+        return this;
+    }
+
+    public MethodMatcher withoutParameters() {
+        this.matchers.addMatcher(
+                "no parameters",
+                item -> item.getParameterCount() == 0,
+                (item, description) -> description.appendText("was " + item.getParameterCount())
+        );
         return this;
     }
 

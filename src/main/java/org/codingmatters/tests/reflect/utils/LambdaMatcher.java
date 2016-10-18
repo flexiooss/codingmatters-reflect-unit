@@ -12,29 +12,39 @@ public class LambdaMatcher<T> extends TypeSafeMatcher<T> {
     static public <T> LambdaMatcher<T> match(String description, Matcher<T> lamda) {
         return match(description, lamda, null);
     }
-    static public <T> LambdaMatcher<T> match(String description, Matcher<T> lamda, MismatchDescripitor<T> mismatchDescripitor) {
+    static public <T> LambdaMatcher<T> match(String description, Matcher<T> lamda, ItemDescripitor<T> mismatchDescripitor) {
         return new LambdaMatcher(description, lamda, mismatchDescripitor);
     }
+    static public <T> LambdaMatcher<T> match(Descripitor descriptor, Matcher<T> lamda) {
+        return match(descriptor, lamda);
+    }
+    static public <T> LambdaMatcher<T> match(Descripitor descriptor, Matcher<T> lamda, ItemDescripitor<T> mismatchDescripitor) {
+        return new LambdaMatcher(descriptor, lamda, mismatchDescripitor);
+    }
 
-    private final String description;
+    private final Descripitor descriptor;
     private final Matcher lambda;
-    private final MismatchDescripitor<T> mismatchDescripitor;
+    private final ItemDescripitor<T> mismatchDescripitor;
 
-    public LambdaMatcher(String description, Matcher<T> lambda, MismatchDescripitor<T> mismatchDescripitor) {
-        this.description = description;
+    public LambdaMatcher(Descripitor descripitor, Matcher<T> lambda, ItemDescripitor<T> mismatchDescripitor) {
+        this.descriptor = descripitor;
         this.lambda = lambda;
         this.mismatchDescripitor = mismatchDescripitor;
     }
 
+    public LambdaMatcher(String description, Matcher<T> lambda, ItemDescripitor<T> mismatchDescripitor) {
+        this(desc -> desc.appendText(description), lambda, mismatchDescripitor);
+    }
+
     @Override
     public void describeTo(Description description) {
-        description.appendText(this.description);
+        this.descriptor.describe(description);
     }
 
     @Override
     protected void describeMismatchSafely(T item, Description mismatchDescription) {
         if(this.mismatchDescripitor != null) {
-            mismatchDescription.appendText(this.mismatchDescripitor.describe(item));
+            this.mismatchDescripitor.describe(item, mismatchDescription);
         } else {
             super.describeMismatchSafely(item, mismatchDescription);
         }
@@ -49,7 +59,11 @@ public class LambdaMatcher<T> extends TypeSafeMatcher<T> {
         boolean matches(T item);
     }
 
-    public interface MismatchDescripitor<T> {
-        String describe(T item);
+    public interface Descripitor {
+        void describe(Description description);
+    }
+
+    public interface ItemDescripitor<T> {
+        void describe(T item, Description description);
     }
 }

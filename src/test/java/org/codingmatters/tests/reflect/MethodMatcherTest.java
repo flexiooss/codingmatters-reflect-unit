@@ -47,7 +47,7 @@ public class MethodMatcherTest {
 
         public <T> void parametrized() {}
         public void notParametrized() {}
-        public <T> void parametrizedWithParameterTypeArg(T t) {}
+        public <T> void parametrizedWithParameterTypeArg(T[] t) {}
         public <T> void parametrizedWithNonParameterTypeArg(Object o) {}
         public <T> void parametrizedWithParameterTypeArrayArg(T[] t) {}
         public <T> T parametrizedReturningParameterType() {return null;}
@@ -157,7 +157,7 @@ public class MethodMatcherTest {
 
     @Test
     public void withoutParameters() throws Exception {
-        assertThat(method("withoutParameters"), is(anInstance().method().withParameters()));
+        assertThat(method("withoutParameters"), is(anInstance().method().withoutParameters()));
     }
 
     @Test
@@ -171,7 +171,7 @@ public class MethodMatcherTest {
         assertThat(method("withParameters", String.class, int.class), is(anInstance().method().withParameters(String.class)));
 
         exception.expect(AssertionError.class);
-        assertThat(method("withParameters", String.class, int.class), is(anInstance().method().withParameters()));
+        assertThat(method("withParameters", String.class, int.class), is(anInstance().method().withoutParameters()));
 
         exception.expect(AssertionError.class);
         assertThat(method("withoutParameters"), is(anInstance().method().withParameters(String.class)));
@@ -259,9 +259,9 @@ public class MethodMatcherTest {
 
     @Test
     public void parametrizedWithParameterTypeArg() throws Exception {
-        assertThat(method("parametrizedWithParameterTypeArg", Object.class), is(aMethod()
+        assertThat(method("parametrizedWithParameterTypeArg", Object[].class), is(aMethod()
                 .with(aVariableType().named("T"))
-                .withParameters(aVariableType().named("T"))
+                .withParameters(aGenericArray().of(aVariableType().named("T")))
                 .returningVoid()
         ));
     }
@@ -270,12 +270,12 @@ public class MethodMatcherTest {
     public void parametrizedWithParameterTypeArg_failure() throws Exception {
         exception.expect(AssertionError.class);
         exception.expectMessage(is("\n" +
-                "Expected: is method(instance and public and type variable(named T) and type variable(named T) and method returns a void)\n" +
-                "     but: type variable(named T) not found"));
+                "Expected: is method(instance and public and type variable(named T) and array of type variable(named T) and method returns a void)\n" +
+                "     but: array of type variable(named T) not found"));
 
         assertThat(method("parametrizedWithNonParameterTypeArg", Object.class), is(aMethod()
                 .with(aVariableType().named("T"))
-                .withParameters(aVariableType().named("T"))
+                .withParameters(aGenericArray().of(aVariableType().named("T")))
                 .returningVoid()
         ));
     }

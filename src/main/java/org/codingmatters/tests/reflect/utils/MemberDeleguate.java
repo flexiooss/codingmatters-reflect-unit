@@ -20,7 +20,7 @@ public class MemberDeleguate<T> {
         this.matchers.addMatcher(
                 "named " + name,
                 item -> item.getName().equals(name),
-                item -> item.getName()
+                (item, description) -> description.appendText(item.getName())
         );
         return self;
     }
@@ -30,7 +30,7 @@ public class MemberDeleguate<T> {
         this.matchers.addMatcher(
                 "static",
                 item -> isStatic(item.getModifiers()),
-                item -> "not static");
+                (item, description) -> description.appendText("not static"));
         return self;
     }
 
@@ -38,7 +38,7 @@ public class MemberDeleguate<T> {
         this.matchers.addMatcher(
                 "instance",
                 item -> ! isStatic(item.getModifiers()),
-                item -> "static");
+                (item, description) -> description.appendText("static"));
         return self;
     }
 
@@ -78,7 +78,7 @@ public class MemberDeleguate<T> {
         this.matchers.addMatcher(
                 "final",
                 item -> isFinal(item.getModifiers()),
-                item -> "not final");
+                (item, description) -> description.appendText("not final"));
         return self;
     }
 
@@ -86,21 +86,21 @@ public class MemberDeleguate<T> {
         this.matchers.addMatcher(
                 "abstract",
                 item -> isAbstract(item.getModifiers()),
-                item -> "concrete");
+                (item, description) -> description.appendText("concrete"));
         return self;
     }
 
 
-    private LambdaMatcher.MismatchDescripitor<Member> accessModifierMismatch() {
-        return item -> {
+    private LambdaMatcher.ItemDescripitor<Member> accessModifierMismatch() {
+        return (item, description) -> {
             if(isPublic(item.getModifiers())) {
-                return "was public";
+                description.appendText("was public");
             } else if(isPrivate(item.getModifiers())) {
-                return "was private";
+                description.appendText("was private");
             } else if(isProtected(item.getModifiers())) {
-                return "was protected";
+                description.appendText("was protected");
             } else {
-                return "was package private";
+                description.appendText("was package private");
             }
         };
     }

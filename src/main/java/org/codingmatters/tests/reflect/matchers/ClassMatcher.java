@@ -40,7 +40,11 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
     private ClassMatcher() {}
 
     public ClassMatcher named(String name) {
-        this.addMatcher("named " + name, item -> item.getName().equals(name), item -> "was " + item.getName());
+        this.addMatcher(
+                "named " + name,
+                item -> item.getName().equals(name),
+                (item, description) -> description.appendText("was " + item.getName())
+        );
         return this;
     }
 
@@ -127,16 +131,16 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         return this;
     }
 
-    private LambdaMatcher.MismatchDescripitor<Class> accessModifierMismatch() {
-        return item -> {
+    private LambdaMatcher.ItemDescripitor<Class> accessModifierMismatch() {
+        return (item, description) -> {
             if(isPublic(item.getModifiers())) {
-                return "was public";
+                description.appendText("was public");
             } else if(isPrivate(item.getModifiers())) {
-                return "was private";
+                description.appendText("was private");
             } else if(isProtected(item.getModifiers())) {
-                return "was protected";
+                description.appendText("was protected");
             } else {
-                return "was package private";
+                description.appendText("was package private");
             }
         };
     }
@@ -167,7 +171,7 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         return this.addMatcher(description, lambda, null);
     }
 
-    private ClassMatcher addMatcher(String description, LambdaMatcher.Matcher<Class> lambda, LambdaMatcher.MismatchDescripitor<Class> mismatchDescripitor) {
+    private ClassMatcher addMatcher(String description, LambdaMatcher.Matcher<Class> lambda, LambdaMatcher.ItemDescripitor<Class> mismatchDescripitor) {
         this.matchers.add(LambdaMatcher.match(description, lambda, mismatchDescripitor));
         return this;
     }
@@ -176,7 +180,8 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         this.matchers.addMatcher(
                 "implements " + interfaceClass.getName(),
                 item -> Arrays.asList(item.getInterfaces()).contains(interfaceClass),
-                item -> "was false (" + item.getName() + " implements " + Arrays.asList(item.getInterfaces()) + ")");
+                (item, description) -> description.appendText("was false (" + item.getName() + " implements " + Arrays.asList(item.getInterfaces()) + ")")
+        );
         return this;
     }
 
@@ -184,7 +189,8 @@ public class ClassMatcher extends TypeSafeMatcher<Class> {
         this.matchers.addMatcher(
                 "extends " + aClass.getName(),
                 item -> item.getSuperclass().equals(aClass),
-                item -> "was false");
+                (item, description) -> description.appendText("was false")
+        );
         return this;
     }
 }

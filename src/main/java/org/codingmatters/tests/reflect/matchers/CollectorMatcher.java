@@ -1,6 +1,7 @@
 package org.codingmatters.tests.reflect.matchers;
 
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.util.List;
@@ -10,10 +11,10 @@ import java.util.List;
  */
 public class CollectorMatcher<T, E> extends TypeSafeMatcher<E> {
 
-    private final TypeSafeMatcher<T> methodMatcher;
+    private final Matcher<T> methodMatcher;
     private final ElementCollector<T, E> elementCollector;
 
-    public CollectorMatcher(TypeSafeMatcher<T> methodMatcher, ElementCollector<T, E> elementCollector) {
+    public CollectorMatcher(Matcher<T> methodMatcher, ElementCollector<T, E> elementCollector) {
         this.methodMatcher = methodMatcher;
         this.elementCollector = elementCollector;
     }
