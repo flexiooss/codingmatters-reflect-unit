@@ -1,37 +1,38 @@
 package org.codingmatters.tests.reflect.matchers.internal;
 
 import org.codingmatters.tests.reflect.utils.MatcherChain;
+import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
+
+import java.lang.reflect.Type;
 
 /**
  * Created by nelt on 10/26/16.
  */
-public class TypeInfoMatcher extends TypeSafeMatcher<TypeInfo> {
+public class TypeMatcher extends BaseMatcher<Type> {
 
-    public static TypeInfoMatcher generic() {
-        return new TypeInfoMatcher().generic_();
+    public static TypeMatcher generic() {
+        return new TypeMatcher().generic_();
     }
 
-    public static TypeInfoMatcher nonGeneric() {
-        return new TypeInfoMatcher().nonGeneric_();
+    public static TypeMatcher nonGeneric() {
+        return new TypeMatcher().nonGeneric_();
     }
 
     public static VariableTypeMatcher variable() {
         return new VariableTypeMatcher();
     }
 
-    public static TypeInfoMatcher class_(Class aClass) {
-        return new TypeInfoMatcher().baseClass(aClass);
+    public static TypeMatcher class_(Class aClass) {
+        return new TypeMatcher().baseClass(aClass);
     }
-
 
     private final MatcherChain<TypeInfo> matchers = new MatcherChain<>();
 
-    private TypeInfoMatcher() {
+    private TypeMatcher() {
     }
 
-    private TypeInfoMatcher generic_() {
+    private TypeMatcher generic_() {
         this.matchers.addMatcher(
                 description -> description.appendText("a generic type"),
                 item -> item.isGeneric(),
@@ -39,7 +40,7 @@ public class TypeInfoMatcher extends TypeSafeMatcher<TypeInfo> {
         return this;
     }
 
-    private TypeInfoMatcher nonGeneric_() {
+    private TypeMatcher nonGeneric_() {
         this.matchers.addMatcher(
                 description -> description.appendText("a non generic type"),
                 item -> ! item.isGeneric(),
@@ -47,7 +48,7 @@ public class TypeInfoMatcher extends TypeSafeMatcher<TypeInfo> {
         return this;
     }
 
-    public TypeInfoMatcher baseClass(Class aClass) {
+    public TypeMatcher baseClass(Class aClass) {
         this.matchers.addMatcher(
                 description -> description.appendText("base class ").appendValue(aClass),
                 item -> aClass.equals(item.baseClass()),
@@ -57,7 +58,7 @@ public class TypeInfoMatcher extends TypeSafeMatcher<TypeInfo> {
     }
 
 
-    public TypeInfoMatcher withParameterCount(int count) {
+    public TypeMatcher withParameterCount(int count) {
         this.matchers.addMatcher(
                 description -> description.appendText("has " + count + " parameters"),
                 item -> item.parameters().size() == count,
@@ -66,7 +67,7 @@ public class TypeInfoMatcher extends TypeSafeMatcher<TypeInfo> {
         return this;
     }
 
-    public TypeInfoMatcher withParameters(TypeParameterMatcher ... parameterMatchers) {
+    public TypeMatcher withParameters(TypeParameterMatcher ... parameterMatchers) {
         for(int i = 0 ; i < parameterMatchers.length ; i++) {
             int paramIndex = i;
             this.matchers.addMatcher(
@@ -83,10 +84,14 @@ public class TypeInfoMatcher extends TypeSafeMatcher<TypeInfo> {
         return this;
     }
 
-
     @Override
-    protected boolean matchesSafely(TypeInfo item) {
-        return matchers.compoundMatcher().matches(item);
+    public boolean matches(Object item) {
+        if(Type.class.isInstance(item)) {
+            item = TypeInfo.from((Type) item);
+        }
+        return item != null
+                && TypeInfo.class.isInstance(item)
+                && matchers.compoundMatcher().matches(item);
     }
 
     @Override
@@ -95,7 +100,22 @@ public class TypeInfoMatcher extends TypeSafeMatcher<TypeInfo> {
     }
 
     @Override
-    protected void describeMismatchSafely(TypeInfo item, Description mismatchDescription) {
-        this.matchers.compoundMatcher().describeMismatch(item, mismatchDescription);
+    public void describeMismatch(Object item, Description description) {
+        if (item == null) {
+            super.describeMismatch(item, description);
+        } else {
+            if(Type.class.isInstance(item)) {
+                item = TypeInfo.from((Type) item);
+            }
+            if (! TypeInfo.class.isInstance(item)) {
+                description.appendText("was a ")
+                        .appendText(item.getClass().getName())
+                        .appendText(" (")
+                        .appendValue(item)
+                        .appendText(")");
+            } else {
+                this.matchers.compoundMatcher().describeMismatch(item, description);
+            }
+        }
     }
 }

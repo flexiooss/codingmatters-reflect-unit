@@ -21,35 +21,35 @@ public class TypeParameterMatcher extends TypeSafeMatcher<TypeParameterInfo> {
         return this;
     }
 
-    public TypeParameterMatcher upperBound(TypeInfoMatcher ... typeInfoMatchers) {
-        for(int i = 0 ; i < typeInfoMatchers.length ; i++) {
+    public TypeParameterMatcher upperBound(TypeMatcher... typeMatchers) {
+        for(int i = 0; i < typeMatchers.length ; i++) {
             int index = i;
             this.matchers.addMatcher(
                     description -> {
                         description.appendText("with upper bound " + index + " ");
-                        typeInfoMatchers[index].describeTo(description);
+                        typeMatchers[index].describeTo(description);
                     },
-                    item -> typeInfoMatchers[index].matches(item.upperBounds().get(index)),
+                    item -> typeMatchers[index].matches(item.upperBounds().get(index)),
                     (item, description) -> {
                         description.appendText("was ");
-                        typeInfoMatchers[index].describeMismatch(item.upperBounds().get(index), description);
+                        typeMatchers[index].describeMismatch(item.upperBounds().get(index), description);
                     });
         }
         return this;
     }
 
-    public TypeParameterMatcher lowerBound(TypeInfoMatcher ... typeInfoMatchers) {
-        for(int i = 0 ; i < typeInfoMatchers.length ; i++) {
+    public TypeParameterMatcher lowerBound(TypeMatcher... typeMatchers) {
+        for(int i = 0; i < typeMatchers.length ; i++) {
             int index = i;
             this.matchers.addMatcher(
                     description -> {
                         description.appendText("with lower bound " + index + " ");
-                        typeInfoMatchers[index].describeTo(description);
+                        typeMatchers[index].describeTo(description);
                     },
-                    item -> typeInfoMatchers[index].matches(item.lowerBounds().get(index)),
+                    item -> typeMatchers[index].matches(item.lowerBounds().get(index)),
                     (item, description) -> {
                         description.appendText("was ");
-                        typeInfoMatchers[index].describeMismatch(item.lowerBounds().get(index), description);
+                        typeMatchers[index].describeMismatch(item.lowerBounds().get(index), description);
                     });
         }
         return this;
