@@ -1,5 +1,6 @@
-package org.codingmatters.tests.reflect.matchers.internal;
+package org.codingmatters.tests.reflect.matchers;
 
+import org.codingmatters.tests.reflect.matchers.internal.TypeInfo;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;

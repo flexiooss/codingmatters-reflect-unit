@@ -1,5 +1,7 @@
-package org.codingmatters.tests.reflect.matchers.internal;
+package org.codingmatters.tests.reflect.matchers;
 
+import org.codingmatters.tests.reflect.matchers.internal.TypeInfo;
+import org.codingmatters.tests.reflect.matchers.internal.VariableTypeMatcher;
 import org.codingmatters.tests.reflect.utils.MatcherChain;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
@@ -67,7 +69,7 @@ public class TypeMatcher extends BaseMatcher<Type> {
         return this;
     }
 
-    public TypeMatcher withParameters(TypeParameterMatcher ... parameterMatchers) {
+    public TypeMatcher withParameters(TypeParameterMatcher... parameterMatchers) {
         for(int i = 0 ; i < parameterMatchers.length ; i++) {
             int paramIndex = i;
             this.matchers.addMatcher(
