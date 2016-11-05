@@ -50,7 +50,7 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this;
     }
 
-    public MethodMatcher withParameters(TypeMatcher ... typeMatcher) {
+    public MethodMatcher withParameters(ScrapTypeMatcher... typeMatcher) {
 
         if(typeMatcher == null) {
             this.matchers.addMatcher("no parameters",
@@ -104,7 +104,7 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this.returning(void.class);
     }
 
-    public MethodMatcher returning(TypeMatcher typeMatcher) {
+    public MethodMatcher returning(ScrapTypeMatcher typeMatcher) {
         this.matchers.add(new MethodElementTypeMatcher(typeMatcher, method -> method.getGenericReturnType()));
         return this;
     }
@@ -119,7 +119,7 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this;
     }
 
-    public MethodMatcher with(TypeMatcher typeMatcher) {
+    public MethodMatcher with(ScrapTypeMatcher typeMatcher) {
         this.matchers.add(new CollectorMatcher<Type, Method>(typeMatcher, item -> {
             List<Type> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getTypeParameters()));

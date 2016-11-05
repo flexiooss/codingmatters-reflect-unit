@@ -14,7 +14,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Created by nelt on 10/12/16.
  */
-public class TypeMatcherTest {
+public class ScrapTypeMatcherTest {
 
     @Rule
     public ExpectedException exception = ExpectedException.none();
@@ -25,7 +25,7 @@ public class TypeMatcherTest {
     public void name() throws Exception {
         TypeVariable typeParam = ParametrizedType.class.getTypeParameters()[0];
 
-        assertThat(typeParam, is(new TypeMatcher().named("T")));
+        assertThat(typeParam, is(new ScrapTypeMatcher().named("T")));
     }
 
     @Test
@@ -37,14 +37,14 @@ public class TypeMatcherTest {
 
         TypeVariable typeParam = ParametrizedType.class.getTypeParameters()[0];
 
-        assertThat(typeParam, is(new TypeMatcher().named("NotNamedLikeThat")));
+        assertThat(typeParam, is(new ScrapTypeMatcher().named("NotNamedLikeThat")));
     }
 
     @Test
     public void bound() throws Exception {
         TypeVariable typeParam = ParametrizedType.class.getTypeParameters()[0];
 
-        assertThat(typeParam, is(new TypeMatcher().withBound(Serializable.class)));
+        assertThat(typeParam, is(new ScrapTypeMatcher().withBound(Serializable.class)));
     }
 
     @Test
@@ -56,14 +56,14 @@ public class TypeMatcherTest {
 
         TypeVariable typeParam = ParametrizedType.class.getTypeParameters()[0];
 
-        assertThat(typeParam, is(new TypeMatcher().withBound(Closeable.class)));
+        assertThat(typeParam, is(new ScrapTypeMatcher().withBound(Closeable.class)));
     }
 
     @Test
     public void nameAndBound() throws Exception {
         TypeVariable typeParam = ParametrizedType.class.getTypeParameters()[0];
 
-        assertThat(typeParam, is(new TypeMatcher().named("T").withBound(Serializable.class)));
+        assertThat(typeParam, is(new ScrapTypeMatcher().named("T").withBound(Serializable.class)));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class TypeMatcherTest {
 
         TypeVariable typeParam = ParametrizedType.class.getTypeParameters()[0];
 
-        assertThat(typeParam, is(new TypeMatcher().named("NotQuite").withBound(Serializable.class)));
+        assertThat(typeParam, is(new ScrapTypeMatcher().named("NotQuite").withBound(Serializable.class)));
     }
 
     @Test
@@ -87,6 +87,6 @@ public class TypeMatcherTest {
 
         TypeVariable typeParam = ParametrizedType.class.getTypeParameters()[0];
 
-        assertThat(typeParam, is(new TypeMatcher().named("T").withBound(Closeable.class)));
+        assertThat(typeParam, is(new ScrapTypeMatcher().named("T").withBound(Closeable.class)));
     }
 }

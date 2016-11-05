@@ -40,7 +40,7 @@ public class GenericTypeMatcher extends TypeSafeMatcher<Type> {
         return this;
     }
 
-    public GenericTypeMatcher with(TypeMatcher typeMatcher) {
+    public GenericTypeMatcher with(ScrapTypeMatcher typeMatcher) {
         this.matchers.add(new CollectorMatcher<Type, Type>(
                 typeMatcher,
                 item -> Arrays.asList(item instanceof Class ? ((Class)item).getTypeParameters() : new Type[0])

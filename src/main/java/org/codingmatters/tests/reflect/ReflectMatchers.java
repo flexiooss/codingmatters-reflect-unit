@@ -51,8 +51,8 @@ public class ReflectMatchers {
         return anInstance().method();
     }
 
-    public static TypeMatcher aVariableType() {
-        return new TypeMatcher();
+    public static ScrapTypeMatcher aVariableType() {
+        return new ScrapTypeMatcher();
     }
 
     public static GenericTypeMatcher aGenericType() {

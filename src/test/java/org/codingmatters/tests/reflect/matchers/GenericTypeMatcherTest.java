@@ -1,11 +1,13 @@
 package org.codingmatters.tests.reflect.matchers;
 
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Spliterator;
 
 import static org.codingmatters.tests.reflect.ReflectMatchers.*;
 import static org.hamcrest.Matchers.is;
@@ -40,6 +42,15 @@ public class GenericTypeMatcherTest {
     public void methodWithGenericArrayArgument() throws Exception {
         assertThat(List.class.getMethod("toArray", Object[].class), is(
                 aMethod().withParameters(aGenericArray().of(aVariableType().named("T")))
+        ));
+    }
+
+    @Ignore
+    @Test
+    public void genericReturnType() throws Exception {
+        // Spliterator<E> spliterator()
+        assertThat(List.class.getMethod("spliterator"), is(
+                aMethod().withoutParameters().returning(aGenericType().of(Spliterator.class))
         ));
     }
 

@@ -1,18 +1,18 @@
 package org.codingmatters.tests.reflect.matchers;
 
+import org.codingmatters.tests.reflect.matchers.internal.TypeWrapper;
 import org.codingmatters.tests.reflect.utils.MatcherChain;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.lang.reflect.Type;
-import java.lang.reflect.TypeVariable;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
  * Created by nelt on 10/12/16.
  */
-public class TypeMatcher extends TypeSafeMatcher<Type> {
+public class ScrapTypeMatcher extends TypeSafeMatcher<Type> {
 
     private final MatcherChain<Type> matchers = new MatcherChain<>();
 
@@ -32,28 +32,21 @@ public class TypeMatcher extends TypeSafeMatcher<Type> {
         this.matchers.compoundMatcher().describeMismatch(item, mismatchDescription);
     }
 
-    public TypeMatcher named(String name) {
+    public ScrapTypeMatcher named(String name) {
         this.matchers.addMatcher(
                 "named " + name,
-                item -> name.equals(this.typeName(item)),
-                (item, description) -> description.appendText("was " + item.getTypeName())
+                item -> name.equals(TypeWrapper.wrap(item).name()),
+                (item, description) -> description.appendText("was " + TypeWrapper.wrap(item).name())
         );
         return this;
     }
 
-    public TypeMatcher withBound(Type type) {
-        this.matchers.addMatcher("with bound " + type.getTypeName(),
-                item -> Stream.of(item instanceof TypeVariable ? ((TypeVariable)item).getBounds() : new Type[0]).filter(t -> t.equals(type)).findFirst().isPresent(),
-                (item, description) -> description.appendText("was " + Stream.of(item instanceof TypeVariable ? ((TypeVariable)item).getBounds() : new Type[0]).map(Type::getTypeName).collect(Collectors.joining(", ")))
+    public ScrapTypeMatcher withBound(Type aType) {
+        TypeWrapper type = TypeWrapper.wrap(aType);
+        this.matchers.addMatcher("with bound " + type.name(),
+                item -> Stream.of(TypeWrapper.wrap(item).bounds()).filter(t -> t.equals(aType)).findFirst().isPresent(),
+                (item, description) -> description.appendText("was " + Stream.of(TypeWrapper.wrap(item).bounds()).map(Type::getTypeName).collect(Collectors.joining(", ")))
         );
         return this;
-    }
-
-    private String typeName(Type type) {
-        if (type instanceof TypeVariable) {
-            return ((TypeVariable) type).getName();
-        } else {
-            return type.getTypeName();
-        }
     }
 }

@@ -11,11 +11,11 @@ import java.lang.reflect.Type;
  */
 public class GenericArrayTypeMatcher extends TypeSafeMatcher<Type> {
 
-    private TypeMatcher typeMatcher;
+    private ScrapTypeMatcher typeMatcher;
 
     public GenericArrayTypeMatcher() {}
 
-    public GenericArrayTypeMatcher of(TypeMatcher typeMatcher) {
+    public GenericArrayTypeMatcher of(ScrapTypeMatcher typeMatcher) {
         this.typeMatcher = typeMatcher;
         return this;
     }
