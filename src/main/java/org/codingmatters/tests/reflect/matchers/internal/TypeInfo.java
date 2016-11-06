@@ -1,5 +1,6 @@
 package org.codingmatters.tests.reflect.matchers.internal;
 
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
@@ -21,6 +22,9 @@ public class TypeInfo {
             return fromParametrizedType((ParameterizedType) type);
         } else if(type instanceof TypeVariable) {
             return fromTypeVariable((TypeVariable) type);
+        } else if(type instanceof GenericArrayType) {
+            TypeInfo componentType = TypeInfo.from(((GenericArrayType) type).getGenericComponentType());
+            return new TypeInfo(null, type.getTypeName(), componentType.isGeneric(), componentType.isVariable(), null, true, componentType);
         } else {
             throw new RuntimeException("NYIMPL : type info for " + type.getTypeName() + " - " + type.getClass().getName());
         }
@@ -36,7 +40,7 @@ public class TypeInfo {
                 for (TypeVariable variable : aClass.getTypeParameters()) {
                     parameters.add(TypeParameterInfo.from(variable));
                 }
-                classTypeInfoCache.put(aClass, new TypeInfo(aClass, aClass.getName(), generic, false, parameters));
+                classTypeInfoCache.put(aClass, new TypeInfo(aClass, aClass.getName(), generic, false, parameters, false, null));
             }
 
             return classTypeInfoCache.get(aClass);
@@ -53,11 +57,11 @@ public class TypeInfo {
                 (Class) type.getRawType(),
                 type.getRawType().getTypeName(),
                 true, false,
-                parameters);
+                parameters, false, null);
     }
 
     private static TypeInfo fromTypeVariable(TypeVariable type) {
-        return new TypeInfo(null, type.getTypeName(), false, true, new ArrayList<>());
+        return new TypeInfo(null, type.getTypeName(), false, true, new ArrayList<>(), false, null);
     }
 
     private final Class baseClass;
@@ -66,17 +70,24 @@ public class TypeInfo {
     private final boolean variable;
     private final List<TypeParameterInfo> parameters;
 
+    private final boolean array;
+    private final TypeInfo arrayOf;
+
     private TypeInfo(
             Class baseClass,
             String name,
             boolean generic,
             boolean variable,
-            List<TypeParameterInfo> parameters) {
+            List<TypeParameterInfo> parameters,
+            boolean array,
+            TypeInfo arrayOf) {
         this.baseClass = baseClass;
         this.name = name;
         this.variable = variable;
         this.generic = generic;
         this.parameters = parameters;
+        this.array = array;
+        this.arrayOf = arrayOf;
     }
 
     public Class baseClass() {
@@ -89,6 +100,10 @@ public class TypeInfo {
 
     public boolean isVariable() {
         return this.variable;
+    }
+
+    public boolean isArray() {
+        return this.array;
     }
 
     public String name() {

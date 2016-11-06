@@ -1,17 +1,60 @@
 package org.codingmatters.tests.reflect.matchers;
 
 import org.codingmatters.tests.reflect.matchers.internal.TypeInfo;
-import org.codingmatters.tests.reflect.matchers.internal.VariableTypeMatcher;
 import org.codingmatters.tests.reflect.utils.MatcherChain;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeMatcher;
 
+import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Type;
 
 /**
  * Created by nelt on 10/26/16.
  */
 public class TypeMatcher extends BaseMatcher<Type> {
+
+
+    public static Matcher<Type> typeArray() {
+        return typeArray(null);
+    }
+
+    public static Matcher<Type> typeArray(TypeMatcher matcher) {
+        return new TypeSafeMatcher<Type>() {
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("array");
+                if(matcher != null) {
+                    description.appendText(" of ");
+                    description.appendDescriptionOf(matcher);
+                }
+            }
+
+            @Override
+            protected boolean matchesSafely(Type item) {
+                return GenericArrayType.class.isInstance(item) && (
+                        matcher == null ||
+                        matcher.matches(TypeInfo.from(((GenericArrayType)item).getGenericComponentType()))
+                );
+            }
+
+            @Override
+            protected void describeMismatchSafely(Type item, Description mismatchDescription) {
+                if(GenericArrayType.class.isInstance(item)) {
+                    mismatchDescription.appendText("array");
+                    if(matcher != null) {
+                        mismatchDescription.appendText(" of ");
+
+                        matcher.describeMismatch(item, mismatchDescription);
+                    }
+                } else {
+                    mismatchDescription.appendText("not an array");
+                }
+            }
+        };
+    }
 
     public static TypeMatcher generic() {
         return new TypeMatcher().generic_();
@@ -21,8 +64,8 @@ public class TypeMatcher extends BaseMatcher<Type> {
         return new TypeMatcher().nonGeneric_();
     }
 
-    public static VariableTypeMatcher variable() {
-        return new VariableTypeMatcher();
+    public static TypeMatcher variable() {
+        return new TypeMatcher().variable_();
     }
 
     public static TypeMatcher class_(Class aClass) {
@@ -55,6 +98,24 @@ public class TypeMatcher extends BaseMatcher<Type> {
                 description -> description.appendText("base class ").appendValue(aClass),
                 item -> aClass.equals(item.baseClass()),
                 (item, description) -> description.appendText("was ").appendValue(item.baseClass())
+        );
+        return this;
+    }
+
+    private TypeMatcher variable_() {
+        this.matchers.addMatcher(
+                description -> description.appendText("a variable type"),
+                item -> item.isVariable(),
+                (item, description) -> description.appendValue(item.name()).appendText(" was not a variable")
+        );
+        return this;
+    }
+
+    public TypeMatcher named(String name) {
+        this.matchers.addMatcher(
+                description -> description.appendText("named ").appendValue(name),
+                item -> name.equals(item.name()),
+                (item, description) -> description.appendText("name was ").appendValue(item.name())
         );
         return this;
     }

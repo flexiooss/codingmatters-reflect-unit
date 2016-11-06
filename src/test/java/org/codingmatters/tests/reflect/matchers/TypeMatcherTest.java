@@ -1,6 +1,5 @@
 package org.codingmatters.tests.reflect.matchers;
 
-import org.codingmatters.tests.reflect.matchers.internal.TypeInfo;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -86,7 +85,7 @@ public class TypeMatcherTest {
 
     @Test
     public void isAVariable() throws Exception {
-        assertThat(TypeInfo.from(List.class.getTypeParameters()[0]), is(TypeMatcher.variable()));
+        assertThat(List.class.getTypeParameters()[0], is(TypeMatcher.variable()));
     }
 
     @Test
@@ -96,12 +95,12 @@ public class TypeMatcherTest {
                 "Expected: is (a variable type)\n" +
                 "     but: a variable type \"java.util.List\" was not a variable");
 
-        assertThat(TypeInfo.from(List.class), is(TypeMatcher.variable()));
+        assertThat(List.class, is(TypeMatcher.variable()));
     }
 
     @Test
     public void variableName() throws Exception {
-        assertThat(TypeInfo.from(List.class.getTypeParameters()[0]), is(TypeMatcher.variable().named("E")));
+        assertThat(List.class.getTypeParameters()[0], is(TypeMatcher.variable().named("E")));
     }
 
     @Test
@@ -111,7 +110,7 @@ public class TypeMatcherTest {
                 "Expected: is (a variable type and named \"T\")\n" +
                 "     but: named \"T\" name was \"E\"");
 
-        assertThat(TypeInfo.from(List.class.getTypeParameters()[0]), is(TypeMatcher.variable().named("T")));
+        assertThat(List.class.getTypeParameters()[0], is(TypeMatcher.variable().named("T")));
     }
 
     @Test
@@ -184,4 +183,45 @@ public class TypeMatcherTest {
         ));
     }
 
+    @Test
+    public void typeArray() throws Exception {
+        assertThat(
+                List.class.getMethod("toArray", Object[].class).getGenericReturnType(),
+                is(TypeMatcher.typeArray())
+        );
+    }
+
+    @Test
+    public void typeArray_anArrayOfVariable() throws Exception {
+        assertThat(
+                List.class.getMethod("toArray", Object[].class).getGenericReturnType(),
+                is(TypeMatcher.typeArray(TypeMatcher.variable().named("T")))
+        );
+    }
+
+    @Test
+    public void typeArray_notAnArray_failure() throws Exception {
+        exception.expect(AssertionError.class);
+        exception.expectMessage("\n" +
+                "Expected: is array of (a variable type and named \"T\")\n" +
+                "     but: not an array");
+
+        assertThat(
+                List.class.getMethod("size").getGenericReturnType(),
+                is(TypeMatcher.typeArray(TypeMatcher.variable().named("T")))
+        );
+    }
+
+    @Test
+    public void typeArray_notMatchingType_failure() throws Exception {
+        exception.expect(AssertionError.class);
+        exception.expectMessage("\n" +
+                "Expected: is array of (base class <class java.lang.String>)\n" +
+                "     but: array of base class <class java.lang.String> was null");
+
+        assertThat(
+                List.class.getMethod("toArray", Object[].class).getGenericReturnType(),
+                is(TypeMatcher.typeArray(TypeMatcher.class_(String.class)))
+        );
+    }
 }
