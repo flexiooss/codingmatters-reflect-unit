@@ -34,8 +34,6 @@ public class TypeMatcher extends BaseMatcher<Type> {
 
             @Override
             protected boolean matchesSafely(Type item) {
-                System.out.println(item.getTypeName());
-                System.out.println(Object[].class.isInstance(item));
                 if(Class.class.isInstance(item) && ((Class)item).isArray()) {
                     if(matcher == null) return true;
                     return matcher.matches(TypeInfo.from(((Class)item).getComponentType()));

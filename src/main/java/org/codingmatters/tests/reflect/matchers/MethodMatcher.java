@@ -4,6 +4,7 @@ import org.codingmatters.tests.reflect.utils.MatcherChain;
 import org.codingmatters.tests.reflect.utils.MemberDeleguate;
 import org.codingmatters.tests.reflect.utils.ReflectMatcherConfiguration;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.lang.annotation.Annotation;
@@ -96,25 +97,16 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
     }
 
     public MethodMatcher returning(Class aClass) {
-        this.matchers.addMatcher("method returns a " + aClass.getName(), item -> aClass.equals(item.getReturnType()));
-        return this;
+//        this.matchers.addMatcher("method returns a " + aClass.getName(), item -> aClass.equals(item.getReturnType()));
+//        return this;
+        return this.returning(TypeMatcher.class_(aClass));
     }
 
     public MethodMatcher returningVoid() {
         return this.returning(void.class);
     }
 
-    public MethodMatcher returning(ScrapTypeMatcher typeMatcher) {
-        this.matchers.add(new MethodElementTypeMatcher(typeMatcher, method -> method.getGenericReturnType()));
-        return this;
-    }
-
-    public MethodMatcher returning(GenericArrayTypeMatcher genericArrayTypeMatcher) {
-        this.matchers.add(new MethodElementTypeMatcher(genericArrayTypeMatcher, method -> method.getGenericReturnType()));
-        return this;
-    }
-
-    public MethodMatcher returning(GenericTypeMatcher typeMatcher) {
+    public MethodMatcher returning(Matcher<Type> typeMatcher) {
         this.matchers.add(new MethodElementTypeMatcher(typeMatcher, method -> method.getGenericReturnType()));
         return this;
     }
@@ -176,10 +168,10 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
     }
 
     private static class MethodElementTypeMatcher extends TypeSafeMatcher<Method> {
-        private final TypeSafeMatcher typeMatcher;
+        private final Matcher<Type> typeMatcher;
         private final MethodElementTypeSupplier typeSupplier;
 
-        public MethodElementTypeMatcher(TypeSafeMatcher typeMatcher, MethodElementTypeSupplier typeSupplier) {
+        public MethodElementTypeMatcher(Matcher<Type> typeMatcher, MethodElementTypeSupplier typeSupplier) {
             this.typeMatcher = typeMatcher;
             this.typeSupplier = typeSupplier;
         }

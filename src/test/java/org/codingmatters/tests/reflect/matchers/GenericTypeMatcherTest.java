@@ -1,6 +1,5 @@
 package org.codingmatters.tests.reflect.matchers;
 
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -45,12 +44,11 @@ public class GenericTypeMatcherTest {
         ));
     }
 
-    @Ignore
     @Test
     public void genericReturnType() throws Exception {
         // Spliterator<E> spliterator()
         assertThat(List.class.getMethod("spliterator"), is(
-                aMethod().withoutParameters().returning(aGenericType().of(Spliterator.class))
+                aMethod().withoutParameters().returning(TypeMatcher.generic().baseClass(Spliterator.class))
         ));
     }
 
