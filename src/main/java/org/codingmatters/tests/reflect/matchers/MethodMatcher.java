@@ -97,13 +97,7 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
     }
 
     public MethodMatcher returning(Class aClass) {
-//        this.matchers.addMatcher("method returns a " + aClass.getName(), item -> aClass.equals(item.getReturnType()));
-//        return this;
         return this.returning(TypeMatcher.class_(aClass));
-    }
-
-    public MethodMatcher returningVoid() {
-        return this.returning(void.class);
     }
 
     public MethodMatcher returning(Matcher<Type> typeMatcher) {
@@ -111,7 +105,11 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this;
     }
 
-    public MethodMatcher with(ScrapTypeMatcher typeMatcher) {
+    public MethodMatcher returningVoid() {
+        return this.returning(void.class);
+    }
+
+    public MethodMatcher withVariable(TypeMatcher typeMatcher) {
         this.matchers.add(new CollectorMatcher<Type, Method>(typeMatcher, item -> {
             List<Type> result = new LinkedList<>();
             result.addAll(Arrays.asList(item.getTypeParameters()));
