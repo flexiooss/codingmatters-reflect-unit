@@ -34,23 +34,38 @@ public class TypeMatcher extends BaseMatcher<Type> {
 
             @Override
             protected boolean matchesSafely(Type item) {
-                return GenericArrayType.class.isInstance(item) && (
-                        matcher == null ||
-                        matcher.matches(TypeInfo.from(((GenericArrayType)item).getGenericComponentType()))
-                );
+                System.out.println(item.getTypeName());
+                System.out.println(Object[].class.isInstance(item));
+                if(Class.class.isInstance(item) && ((Class)item).isArray()) {
+                    if(matcher == null) return true;
+                    return matcher.matches(TypeInfo.from(((Class)item).getComponentType()));
+                } else if(GenericArrayType.class.isInstance(item)){
+                    if(matcher == null) return true;
+                    return matcher.matches(TypeInfo.from(((GenericArrayType)item).getGenericComponentType()));
+                } else {
+                    return false;
+                }
             }
 
             @Override
             protected void describeMismatchSafely(Type item, Description mismatchDescription) {
-                if(GenericArrayType.class.isInstance(item)) {
+                Type it;
+                if(Class.class.isInstance(item) && ((Class)item).isArray()) {
                     mismatchDescription.appendText("array");
-                    if(matcher != null) {
-                        mismatchDescription.appendText(" of ");
-
-                        matcher.describeMismatch(item, mismatchDescription);
-                    }
+                    it = ((Class)item).getComponentType();
+                } else if(GenericArrayType.class.isInstance(item)){
+                    mismatchDescription.appendText("array");
+                    it = ((GenericArrayType)item).getGenericComponentType();
                 } else {
                     mismatchDescription.appendText("not an array");
+                    return;
+                }
+
+
+                if(matcher != null) {
+                    mismatchDescription.appendText(" of ");
+
+                    matcher.describeMismatch(it, mismatchDescription);
                 }
             }
         };

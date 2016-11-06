@@ -224,4 +224,25 @@ public class TypeMatcherTest {
                 is(TypeMatcher.typeArray(TypeMatcher.class_(String.class)))
         );
     }
+
+    @Test
+    public void notGenericTypeArray() throws Exception {
+        assertThat(
+                List.class.getMethod("toArray").getGenericReturnType(),
+                is(TypeMatcher.typeArray(TypeMatcher.class_(Object.class)))
+        );
+    }
+
+    @Test
+    public void notGenericTypeArray_failure() throws Exception {
+        exception.expect(AssertionError.class);
+        exception.expectMessage("\n" +
+                "Expected: is array of (base class <class java.lang.String>)\n" +
+                "     but: array of base class <class java.lang.String> was <class java.lang.Object>");
+
+        assertThat(
+                List.class.getMethod("toArray").getGenericReturnType(),
+                is(TypeMatcher.typeArray(TypeMatcher.class_(String.class)))
+        );
+    }
 }
