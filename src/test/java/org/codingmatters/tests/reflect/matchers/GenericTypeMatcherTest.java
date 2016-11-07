@@ -8,7 +8,8 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Spliterator;
 
-import static org.codingmatters.tests.reflect.ReflectMatchers.*;
+import static org.codingmatters.tests.reflect.ReflectMatchers.aGenericType;
+import static org.codingmatters.tests.reflect.ReflectMatchers.aMethod;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -26,21 +27,23 @@ public class GenericTypeMatcherTest {
     @Test
     public void parametrizedType() throws Exception {
         assertThat(ParametrizedType.class, is(aGenericType()));
-        assertThat(ParametrizedType.class, is(aGenericType().of(ParametrizedType.class)));
-        assertThat(ParametrizedType.class, is(aGenericType().with(aVariableType().named("T").withBound(Serializable.class))));
-        assertThat(ParametrizedType.class, is(aGenericType().of(ParametrizedType.class).with(aVariableType().named("T"))));
-        assertThat(ParametrizedType.class, is(aGenericType().of(ParametrizedType.class).with(aVariableType().named("T").withBound(Serializable.class))));
+        assertThat(ParametrizedType.class, is(aGenericType().baseClass(ParametrizedType.class)));
+
+        assertThat(ParametrizedType.class, is(TypeMatcher.generic().withParameters(TypeParameterMatcher.typeParameter().named("T").upperBound(TypeMatcher.class_(Serializable.class)))));
+
+        assertThat(ParametrizedType.class, is(aGenericType().baseClass(ParametrizedType.class).withParameters(TypeParameterMatcher.typeParameter().named("T"))));
+        assertThat(ParametrizedType.class, is(aGenericType().baseClass(ParametrizedType.class).withParameters(TypeParameterMatcher.typeParameter().named("T").upperBound(TypeMatcher.class_(Serializable.class)))));
     }
 
     @Test
     public void genericTypeWithVariableType() throws Exception {
-        assertThat(Iterable.class, is(aGenericType().with(aVariableType().named("T"))));
+        assertThat(Iterable.class, is(aGenericType().withParameters(TypeParameterMatcher.typeParameter().named("T"))));
     }
 
     @Test
     public void methodWithGenericArrayArgument() throws Exception {
         assertThat(List.class.getMethod("toArray", Object[].class), is(
-                aMethod().withParameters(aGenericArray().of(aVariableType().named("T")))
+                aMethod().withParameters(TypeMatcher.typeArray(TypeMatcher.variable().named("T")))
         ));
     }
 
@@ -56,19 +59,19 @@ public class GenericTypeMatcherTest {
     public void notParametrizedType_failure() throws Exception {
         exception.expect(AssertionError.class);
         exception.expectMessage(is("\n" +
-                "Expected: is (generic)\n" +
-                "     but: generic org.codingmatters.tests.reflect.matchers.GenericTypeMatcherTest$NotParametrizedType is not generic"));
+                "Expected: is (a generic type)\n" +
+                "     but: a generic type \"org.codingmatters.tests.reflect.matchers.GenericTypeMatcherTest$NotParametrizedType\" was not generic"));
 
-        assertThat(NotParametrizedType.class, is(new GenericTypeMatcher()));
+        assertThat(NotParametrizedType.class, is(aGenericType()));
     }
 
     @Test
     public void of_failure() throws Exception {
         exception.expect(AssertionError.class);
         exception.expectMessage(is("\n" +
-                "Expected: is (generic and of java.io.Serializable)\n" +
-                "     but: of java.io.Serializable was of org.codingmatters.tests.reflect.matchers.GenericTypeMatcherTest$ParametrizedType"));
+                "Expected: is (a generic type and base class <interface java.io.Serializable>)\n" +
+                "     but: base class <interface java.io.Serializable> was <class org.codingmatters.tests.reflect.matchers.GenericTypeMatcherTest$ParametrizedType>"));
 
-        assertThat(ParametrizedType.class, is(aGenericType().of(Serializable.class)));
+        assertThat(ParametrizedType.class, is(aGenericType().baseClass(Serializable.class)));
     }
 }

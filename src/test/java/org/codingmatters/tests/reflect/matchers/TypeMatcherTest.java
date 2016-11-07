@@ -135,7 +135,7 @@ public class TypeMatcherTest {
 
     @Test
     public void oneParameter() throws Exception {
-        assertThat(List.class, is(TypeMatcher.generic().withParameters(new TypeParameterMatcher())));
+        assertThat(List.class, is(TypeMatcher.generic().withParameters(TypeParameterMatcher.typeParameter())));
     }
 
     @Test
@@ -144,12 +144,12 @@ public class TypeMatcherTest {
         exception.expectMessage("\n" +
                 "Expected: is (a generic type and parameter 0() and parameter 1())\n" +
                 "     but: parameter 1() was null");
-        assertThat(List.class, is(TypeMatcher.generic().withParameters(new TypeParameterMatcher(), new TypeParameterMatcher())));
+        assertThat(List.class, is(TypeMatcher.generic().withParameters(TypeParameterMatcher.typeParameter(), TypeParameterMatcher.typeParameter())));
     }
 
     @Test
     public void oneParameterName() throws Exception {
-        assertThat(List.class, is(TypeMatcher.generic().withParameters(new TypeParameterMatcher().named("E"))));
+        assertThat(List.class, is(TypeMatcher.generic().withParameters(TypeParameterMatcher.typeParameter().named("E"))));
     }
 
     @Test
@@ -159,7 +159,7 @@ public class TypeMatcherTest {
                 "Expected: is (a generic type and parameter 0(named \"T\"))\n" +
                 "     but: parameter 0(named \"T\") named \"T\" was \"E\"");
 
-        assertThat(List.class, is(TypeMatcher.generic().withParameters(new TypeParameterMatcher().named("T"))));
+        assertThat(List.class, is(TypeMatcher.generic().withParameters(TypeParameterMatcher.typeParameter().named("T"))));
     }
 
     interface GenericTypeWithBounds<T extends Closeable> {}
@@ -167,7 +167,7 @@ public class TypeMatcherTest {
     @Test
     public void parameterWithBound() throws Exception {
         assertThat(GenericTypeWithBounds.class, is(TypeMatcher.generic().withParameters(
-                new TypeParameterMatcher().upperBound(TypeMatcher.nonGeneric().baseClass(Closeable.class)))
+                TypeParameterMatcher.typeParameter().upperBound(TypeMatcher.nonGeneric().baseClass(Closeable.class)))
         ));
     }
 
@@ -179,7 +179,7 @@ public class TypeMatcherTest {
                 "     but: parameter 0(with upper bound 0 (a non generic type and base class <interface java.io.Closeable>)) with upper bound 0 (a non generic type and base class <interface java.io.Closeable>) was base class <interface java.io.Closeable> was <class java.lang.Object>");
 
         assertThat(List.class, is(TypeMatcher.generic().withParameters(
-                new TypeParameterMatcher().upperBound(TypeMatcher.nonGeneric().baseClass(Closeable.class)))
+                TypeParameterMatcher.typeParameter().upperBound(TypeMatcher.nonGeneric().baseClass(Closeable.class)))
         ));
     }
 

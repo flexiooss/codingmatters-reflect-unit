@@ -10,9 +10,13 @@ import org.hamcrest.TypeSafeMatcher;
  */
 public class TypeParameterMatcher extends TypeSafeMatcher<TypeParameterInfo> {
 
+    static public TypeParameterMatcher typeParameter() {
+        return new TypeParameterMatcher();
+    }
+
     private final MatcherChain<TypeParameterInfo> matchers = new MatcherChain<>();
 
-    // type
+    private TypeParameterMatcher() {}
 
     public TypeParameterMatcher named(String name) {
         this.matchers.addMatcher(

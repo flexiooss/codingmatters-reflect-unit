@@ -1,5 +1,7 @@
 package org.codingmatters.tests.reflect;
 
+import org.codingmatters.tests.reflect.matchers.TypeMatcher;
+import org.codingmatters.tests.reflect.matchers.TypeParameterMatcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -204,6 +206,6 @@ public class ClassMatcherTest {
 
     @Test
     public void typeVariable() throws Exception {
-        assertThat(ParametrizedType.class, is(aClass().with(aVariableType().named("T").withBound(Serializable.class))));
+        assertThat(ParametrizedType.class, is(aGenericType().withParameters(TypeParameterMatcher.typeParameter().named("T").upperBound(TypeMatcher.class_(Serializable.class)))));
     }
 }

@@ -51,8 +51,7 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
         return this;
     }
 
-    public MethodMatcher withParameters(ScrapTypeMatcher... typeMatcher) {
-
+    public MethodMatcher withParameters(Matcher<Type>... typeMatcher) {
         if(typeMatcher == null) {
             this.matchers.addMatcher("no parameters",
                     item -> item.getParameterCount() == 0,
@@ -70,7 +69,7 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
                         description -> description
                                 .appendText("parameter[" + index + "]" + " is ")
                                 .appendDescriptionOf(typeMatcher[index]),
-                        item -> typeMatcher[index].matches(item.getParameterTypes()[index]),
+                        item -> typeMatcher[index].matches(item.getGenericParameterTypes()[index]),
                         (item, description) -> {
                             System.out.println(typeMatcher[index].getClass());
                             typeMatcher[index].describeMismatch(item, description);
@@ -78,21 +77,6 @@ public class MethodMatcher extends TypeSafeMatcher<Method> {
                 );
             }
         }
-        return this;
-    }
-
-    public MethodMatcher withParameters(GenericArrayTypeMatcher typeMatcher) {
-        this.matchers.add(new CollectorMatcher<Type, Method>(
-                typeMatcher,
-                item -> Arrays.asList(item.getGenericParameterTypes())));
-        return this;
-    }
-
-
-    public MethodMatcher withParameters(GenericTypeMatcher typeMatcher) {
-        this.matchers.add(new CollectorMatcher<Type, Method>(
-                typeMatcher,
-                item -> Arrays.asList(item.getGenericParameterTypes())));
         return this;
     }
 
