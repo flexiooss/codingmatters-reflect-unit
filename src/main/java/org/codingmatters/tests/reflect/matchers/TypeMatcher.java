@@ -1,6 +1,6 @@
 package org.codingmatters.tests.reflect.matchers;
 
-import org.codingmatters.tests.reflect.matchers.support.utils.MatcherChain;
+import org.codingmatters.tests.reflect.matchers.support.MatcherChain;
 import org.codingmatters.tests.reflect.matchers.type.TypeInfo;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;

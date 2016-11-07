@@ -1,6 +1,6 @@
 package org.codingmatters.tests.reflect.matchers;
 
-import org.codingmatters.tests.reflect.matchers.support.utils.*;
+import org.codingmatters.tests.reflect.matchers.support.*;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
