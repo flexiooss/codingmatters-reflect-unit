@@ -1,4 +1,4 @@
-package org.codingmatters.tests.reflect.matchers.internal;
+package org.codingmatters.tests.reflect.matchers.type;
 
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;

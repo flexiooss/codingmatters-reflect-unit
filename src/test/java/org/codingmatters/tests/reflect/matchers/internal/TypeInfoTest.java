@@ -1,5 +1,7 @@
 package org.codingmatters.tests.reflect.matchers.internal;
 
+import org.codingmatters.tests.reflect.matchers.type.TypeInfo;
+import org.codingmatters.tests.reflect.matchers.type.TypeParameterInfo;
 import org.junit.Test;
 
 import java.io.Closeable;

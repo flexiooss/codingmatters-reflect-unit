@@ -1,9 +1,6 @@
 package org.codingmatters.tests.reflect.matchers;
 
-import org.codingmatters.tests.reflect.utils.LambdaMatcher;
-import org.codingmatters.tests.reflect.utils.LevelModifier;
-import org.codingmatters.tests.reflect.utils.MatcherChain;
-import org.codingmatters.tests.reflect.utils.ReflectMatcherConfiguration;
+import org.codingmatters.tests.reflect.matchers.support.utils.*;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 

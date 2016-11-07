@@ -1,4 +1,4 @@
-package org.codingmatters.tests.reflect.matchers;
+package org.codingmatters.tests.reflect.matchers.support.utils;
 
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;

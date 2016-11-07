@@ -1,4 +1,4 @@
-package org.codingmatters.tests.reflect.utils;
+package org.codingmatters.tests.reflect.matchers.support.utils;
 
 /**
  * Created by nelt on 9/21/16.

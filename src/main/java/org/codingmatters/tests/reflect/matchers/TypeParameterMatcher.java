@@ -1,7 +1,7 @@
 package org.codingmatters.tests.reflect.matchers;
 
-import org.codingmatters.tests.reflect.matchers.internal.TypeParameterInfo;
-import org.codingmatters.tests.reflect.utils.MatcherChain;
+import org.codingmatters.tests.reflect.matchers.support.utils.MatcherChain;
+import org.codingmatters.tests.reflect.matchers.type.TypeParameterInfo;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 

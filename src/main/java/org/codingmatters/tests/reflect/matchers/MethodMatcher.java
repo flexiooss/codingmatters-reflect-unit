@@ -1,8 +1,9 @@
 package org.codingmatters.tests.reflect.matchers;
 
-import org.codingmatters.tests.reflect.utils.MatcherChain;
-import org.codingmatters.tests.reflect.utils.MemberDeleguate;
-import org.codingmatters.tests.reflect.utils.ReflectMatcherConfiguration;
+import org.codingmatters.tests.reflect.matchers.support.utils.CollectorMatcher;
+import org.codingmatters.tests.reflect.matchers.support.utils.MatcherChain;
+import org.codingmatters.tests.reflect.matchers.support.utils.MemberDeleguate;
+import org.codingmatters.tests.reflect.matchers.support.utils.ReflectMatcherConfiguration;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;

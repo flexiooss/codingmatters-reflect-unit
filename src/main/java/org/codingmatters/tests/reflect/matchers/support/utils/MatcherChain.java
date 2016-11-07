@@ -1,10 +1,10 @@
-package org.codingmatters.tests.reflect.utils;
+package org.codingmatters.tests.reflect.matchers.support.utils;
 
 import org.hamcrest.Matchers;
 
 import java.util.LinkedList;
 
-import static org.codingmatters.tests.reflect.utils.LambdaMatcher.match;
+import static org.codingmatters.tests.reflect.matchers.support.utils.LambdaMatcher.match;
 
 /**
  * Created by nelt on 9/11/16.

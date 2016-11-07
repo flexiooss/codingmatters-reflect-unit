@@ -1,4 +1,4 @@
-package org.codingmatters.tests.reflect.utils;
+package org.codingmatters.tests.reflect.matchers.support.utils;
 
 import java.lang.reflect.Member;
 
