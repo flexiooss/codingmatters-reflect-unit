@@ -39,7 +39,6 @@ public class JavaTypeFrameworkTest {
         ParameterizedType parameterizedType = (ParameterizedType) aGenericMethod.getGenericReturnType();
         assertThat(parameterizedType.getRawType(), is((Type)aGenericMethod.getReturnType()));
 
-        System.out.println(parameterizedType.getActualTypeArguments()[0].getClass());
         assertThat(parameterizedType.getActualTypeArguments()[0], is(instanceOf(TypeVariable.class)));
         assertThat(((TypeVariable)parameterizedType.getActualTypeArguments()[0]).getName(), is("E"));
         assertThat(((TypeVariable)parameterizedType.getActualTypeArguments()[0]).getBounds(), is(new Type[]{Object.class}));

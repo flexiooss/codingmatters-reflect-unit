@@ -15,6 +15,9 @@ import java.lang.reflect.Type;
  */
 public class TypeMatcher extends BaseMatcher<Type> {
 
+    public static TypeParameterMatcher typeParameter() {
+        return TypeParameterMatcher.typeParameter();
+    }
 
     public static Matcher<Type> typeArray() {
         return typeArray(null);

@@ -298,7 +298,7 @@ public class MethodMatcherTest {
                 "     but: return (array of (a variable type and named \"Z\")) was (array of named \"Z\" name was \"T\")"));
 
         assertThat(method("parametrizedReturningParameterTypeArray"), is(aMethod()
-                .returning(TypeMatcher.typeArray(ReflectMatchers.aVariableType().named("Z")))
+                .returning(TypeMatcher.typeArray(TypeMatcher.variable().named("Z")))
         ));
     }
 
