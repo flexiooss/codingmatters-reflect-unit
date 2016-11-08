@@ -35,23 +35,23 @@ public class ReflectMatchers {
     }
 
     static public ConstructorMatcher aConstructor() {
-        return new ReflectMatcherBuilder().constructor();
+        return new ReflectMatcherBuilder().public_().constructor();
     }
 
     static public ClassMatcher aClass() {
-        return anInstance().class_();
+        return new ReflectMatcherBuilder().public_().instance().class_();
     }
 
     public static ClassMatcher anInterface() {
-        return anInstance().interface_();
+        return new ReflectMatcherBuilder().public_().instance().interface_();
     }
 
     public static FieldMatcher aField() {
-        return anInstance().field();
+        return new ReflectMatcherBuilder().public_().instance().field();
     }
 
     public static MethodMatcher aMethod() {
-        return anInstance().method();
+        return new ReflectMatcherBuilder().public_().instance().method();
     }
 
 }
