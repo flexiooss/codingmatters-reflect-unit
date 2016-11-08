@@ -1,6 +1,5 @@
 package org.codingmatters.tests.reflect;
 
-import org.codingmatters.tests.reflect.matchers.TypeMatcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -224,7 +223,7 @@ public class MethodMatcherTest {
 
     @Test
     public void parametrizedMethod() throws Exception {
-        assertThat(method("parametrized"), is(aMethod().withVariable(TypeMatcher.variable().named("T"))));
+        assertThat(method("parametrized"), is(aMethod().withVariable(variableType().named("T"))));
     }
 
     @Test
@@ -234,14 +233,14 @@ public class MethodMatcherTest {
                 "Expected: is method(instance and public and (a variable type and named \"T\"))\n" +
                 "     but: (a variable type and named \"T\") not found"));
 
-        assertThat(method("notParametrized"), is(aMethod().withVariable(TypeMatcher.variable().named("T"))));
+        assertThat(method("notParametrized"), is(aMethod().withVariable(variableType().named("T"))));
     }
 
     @Test
     public void parametrizedMethodReturningParameterType() throws Exception {
         assertThat(method("parametrizedReturningParameterType"), is(aMethod()
-                .withVariable(TypeMatcher.variable().named("T"))
-                .returning(TypeMatcher.variable().named("T"))
+                .withVariable(variableType().named("T"))
+                .returning(variableType().named("T"))
         ));
     }
 
@@ -253,8 +252,8 @@ public class MethodMatcherTest {
                 "     but: return ((a variable type and named \"T\")) was (a variable type \"java.lang.String\" was not a variable)"));
 
         assertThat(method("parametrizedNotReturningParameterType"), is(aMethod()
-                .withVariable(TypeMatcher.variable().named("T"))
-                .returning(TypeMatcher.variable().named("T"))
+                .withVariable(variableType().named("T"))
+                .returning(variableType().named("T"))
         ));
     }
 
@@ -262,8 +261,8 @@ public class MethodMatcherTest {
     public void parametrizedWithParameterTypeArg() throws Exception {
         //public <T> void parametrizedWithParameterTypeArg(T[] t) {}
         assertThat(method("parametrizedWithParameterTypeArg", Object[].class), is(aMethod()
-                .withVariable(TypeMatcher.variable().named("T"))
-                .withParameters(TypeMatcher.typeArray(TypeMatcher.variable().named("T")))
+                .withVariable(variableType().named("T"))
+                .withParameters(typeArray(variableType().named("T")))
                 .returningVoid()
         ));
     }
@@ -276,8 +275,8 @@ public class MethodMatcherTest {
                 "     but: parameter[0] is array of (a variable type and named \"T\") was a java.lang.reflect.Method (<public void org.codingmatters.tests.reflect.MethodMatcherTest$TestClass.parametrizedWithNonParameterTypeArg(java.lang.Object)>)"));
 
         assertThat(method("parametrizedWithNonParameterTypeArg", Object.class), is(aMethod()
-                .withVariable(TypeMatcher.variable().named("T"))
-                .withParameters(TypeMatcher.typeArray(TypeMatcher.variable().named("T")))
+                .withVariable(variableType().named("T"))
+                .withParameters(typeArray(variableType().named("T")))
                 .returningVoid()
         ));
     }
@@ -285,8 +284,8 @@ public class MethodMatcherTest {
     @Test
     public void parametrizedReturningParameterTypeArray() throws Exception {
         assertThat(method("parametrizedReturningParameterTypeArray"), is(aMethod()
-                .withVariable(TypeMatcher.variable().named("T"))
-                .returning(TypeMatcher.typeArray(TypeMatcher.variable().named("T")))
+                .withVariable(variableType().named("T"))
+                .returning(typeArray(variableType().named("T")))
         ));
     }
 
@@ -298,15 +297,15 @@ public class MethodMatcherTest {
                 "     but: return (array of (a variable type and named \"Z\")) was (array of named \"Z\" name was \"T\")"));
 
         assertThat(method("parametrizedReturningParameterTypeArray"), is(aMethod()
-                .returning(TypeMatcher.typeArray(TypeMatcher.variable().named("Z")))
+                .returning(typeArray(variableType().named("Z")))
         ));
     }
 
     @Test
     public void parametrizedReturningArray() throws Exception {
         assertThat(method("parametrizedReturningParameterTypeArray"), is(aMethod()
-                .withVariable(TypeMatcher.variable().named("T"))
-                .returning(TypeMatcher.typeArray())
+                .withVariable(variableType().named("T"))
+                .returning(typeArray())
         ));
     }
 
@@ -318,7 +317,7 @@ public class MethodMatcherTest {
                 "     but: return (array) was (not an array)");
 
         assertThat(method("returnsString"), is(aMethod()
-                .returning(TypeMatcher.typeArray())
+                .returning(typeArray())
         ));
     }
 

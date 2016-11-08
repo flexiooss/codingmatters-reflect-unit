@@ -1,9 +1,9 @@
-package org.codingmatters.tests.reflect;
+package org.codingmatters.tests.reflect.matchers;
 
-import org.codingmatters.tests.reflect.matchers.ClassMatcher;
-import org.codingmatters.tests.reflect.matchers.ConstructorMatcher;
-import org.codingmatters.tests.reflect.matchers.FieldMatcher;
-import org.codingmatters.tests.reflect.matchers.MethodMatcher;
+import org.codingmatters.tests.reflect.matchers.impl.ClassMatcherImpl;
+import org.codingmatters.tests.reflect.matchers.impl.ConstructorMatcherImpl;
+import org.codingmatters.tests.reflect.matchers.impl.FieldMatcherImpl;
+import org.codingmatters.tests.reflect.matchers.impl.MethodMatcherImpl;
 import org.codingmatters.tests.reflect.matchers.support.AccessModifier;
 import org.codingmatters.tests.reflect.matchers.support.LevelModifier;
 import org.codingmatters.tests.reflect.matchers.support.ReflectMatcherConfiguration;
@@ -45,22 +45,22 @@ public class ReflectMatcherBuilder {
     }
 
     public ClassMatcher class_() {
-        return ClassMatcher.aClass(this.configuration);
+        return ClassMatcherImpl.aClass(this.configuration);
     }
 
     public ClassMatcher interface_() {
-        return ClassMatcher.anInterface(this.configuration);
+        return ClassMatcherImpl.anInterface(this.configuration);
     }
 
     public FieldMatcher field() {
-        return FieldMatcher.aField(this.configuration);
+        return FieldMatcherImpl.aField(this.configuration);
     }
 
-    public MethodMatcher method() {
-        return MethodMatcher.aMethod(this.configuration);
+    public MethodMatcherImpl method() {
+        return MethodMatcherImpl.aMethod(this.configuration);
     }
 
     public ConstructorMatcher constructor() {
-        return ConstructorMatcher.aConstructor(this.configuration);
+        return ConstructorMatcherImpl.aConstructor(this.configuration);
     }
 }

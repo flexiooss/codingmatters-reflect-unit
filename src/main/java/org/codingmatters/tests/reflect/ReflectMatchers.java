@@ -1,9 +1,10 @@
 package org.codingmatters.tests.reflect;
 
-import org.codingmatters.tests.reflect.matchers.ClassMatcher;
-import org.codingmatters.tests.reflect.matchers.ConstructorMatcher;
-import org.codingmatters.tests.reflect.matchers.FieldMatcher;
-import org.codingmatters.tests.reflect.matchers.MethodMatcher;
+import org.codingmatters.tests.reflect.matchers.*;
+import org.codingmatters.tests.reflect.matchers.impl.TypeArrayMatcherImpl;
+import org.codingmatters.tests.reflect.matchers.impl.TypeMatcherImpl;
+import org.codingmatters.tests.reflect.matchers.impl.TypeParameterMatcherImpl;
+import org.hamcrest.Matcher;
 
 /**
  * Created by nelt on 9/8/16.
@@ -54,4 +55,31 @@ public class ReflectMatchers {
         return new ReflectMatcherBuilder().public_().instance().method();
     }
 
+    public static TypeParameterMatcherImpl typeParameter() {
+        return TypeParameterMatcherImpl.typeParameter();
+    }
+
+    public static Matcher<java.lang.reflect.Type> typeArray() {
+        return new TypeArrayMatcherImpl(null);
+    }
+
+    public static Matcher<java.lang.reflect.Type> typeArray(TypeMatcher matcher) {
+        return new TypeArrayMatcherImpl(matcher);
+    }
+
+    public static TypeMatcher genericType() {
+        return new TypeMatcherImpl().generic_();
+    }
+
+    public static TypeMatcher nonGenericType() {
+        return new TypeMatcherImpl().nonGeneric_();
+    }
+
+    public static TypeMatcher variableType() {
+        return new TypeMatcherImpl().variable_();
+    }
+
+    public static TypeMatcherImpl classType(Class aClass) {
+        return new TypeMatcherImpl().baseClass(aClass);
+    }
 }
