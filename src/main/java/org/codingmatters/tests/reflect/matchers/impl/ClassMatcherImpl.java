@@ -194,7 +194,7 @@ public class ClassMatcherImpl extends TypeSafeMatcher<Class> implements ClassMat
     public ClassMatcher extending(Class aClass) {
         this.matchers.addMatcher(
                 "extends " + aClass.getName(),
-                item -> item.getSuperclass().equals(aClass),
+                item -> aClass.equals(item.getSuperclass()),
                 (item, description) -> description.appendText("was false")
         );
         return this;
