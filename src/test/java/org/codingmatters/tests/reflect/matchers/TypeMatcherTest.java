@@ -7,7 +7,9 @@ import org.junit.rules.ExpectedException;
 
 import java.io.Closeable;
 import java.util.List;
+import java.util.function.Consumer;
 
+import static org.codingmatters.tests.reflect.ReflectMatchers.*;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -20,13 +22,13 @@ public class TypeMatcherTest {
 
     @Test
     public void isClass() throws Exception {
-        assertThat(Integer.class, is(ReflectMatchers.classType(Integer.class)));
-        assertThat(List.class, is(ReflectMatchers.classType(List.class)));
+        assertThat(Integer.class, is(classType(Integer.class)));
+        assertThat(List.class, is(classType(List.class)));
     }
 
     @Test
     public void isGeneric() throws Exception {
-        assertThat(List.class, is(ReflectMatchers.genericType()));
+        assertThat(List.class, is(genericType()));
     }
 
     @Test
@@ -36,12 +38,12 @@ public class TypeMatcherTest {
                 "Expected: is (a generic type)\n" +
                 "     but: a generic type \"java.lang.String\" was not generic");
 
-        assertThat(String.class, is(ReflectMatchers.genericType()));
+        assertThat(String.class, is(genericType()));
     }
 
     @Test
     public void isNotGeneric() throws Exception {
-        assertThat(String.class, is(ReflectMatchers.nonGenericType()));
+        assertThat(String.class, is(nonGenericType()));
     }
 
     @Test
@@ -51,12 +53,12 @@ public class TypeMatcherTest {
                 "Expected: is (a non generic type)\n" +
                 "     but: a non generic type \"java.util.List\" was generic");
 
-        assertThat(List.class, is(ReflectMatchers.nonGenericType()));
+        assertThat(List.class, is(nonGenericType()));
     }
 
     @Test
     public void isANonGenericClass() throws Exception {
-        assertThat(String.class, is(ReflectMatchers.nonGenericType().baseClass(String.class)));
+        assertThat(String.class, is(nonGenericType().baseClass(String.class)));
     }
 
     @Test
@@ -66,12 +68,12 @@ public class TypeMatcherTest {
                 "Expected: is (a non generic type and base class <class java.lang.Integer>)\n" +
                 "     but: base class <class java.lang.Integer>");
 
-        assertThat(String.class, is(ReflectMatchers.nonGenericType().baseClass(Integer.class)));
+        assertThat(String.class, is(nonGenericType().baseClass(Integer.class)));
     }
 
     @Test
     public void isAGenericClass() throws Exception {
-        assertThat(List.class, is(ReflectMatchers.genericType().baseClass(List.class)));
+        assertThat(List.class, is(genericType().baseClass(List.class)));
     }
 
     @Test
@@ -81,12 +83,12 @@ public class TypeMatcherTest {
                 "Expected: is (a generic type and base class <class java.lang.Integer>)\n" +
                 "     but: base class <class java.lang.Integer>");
 
-        assertThat(List.class, is(ReflectMatchers.genericType().baseClass(Integer.class)));
+        assertThat(List.class, is(genericType().baseClass(Integer.class)));
     }
 
     @Test
     public void isAVariable() throws Exception {
-        assertThat(List.class.getTypeParameters()[0], is(ReflectMatchers.variableType()));
+        assertThat(List.class.getTypeParameters()[0], is(variableType()));
     }
 
     @Test
@@ -96,12 +98,12 @@ public class TypeMatcherTest {
                 "Expected: is (a variable type)\n" +
                 "     but: a variable type \"java.util.List\" was not a variable");
 
-        assertThat(List.class, is(ReflectMatchers.variableType()));
+        assertThat(List.class, is(variableType()));
     }
 
     @Test
     public void variableName() throws Exception {
-        assertThat(List.class.getTypeParameters()[0], is(ReflectMatchers.variableType().named("E")));
+        assertThat(List.class.getTypeParameters()[0], is(variableType().named("E")));
     }
 
     @Test
@@ -111,12 +113,12 @@ public class TypeMatcherTest {
                 "Expected: is (a variable type and named \"T\")\n" +
                 "     but: named \"T\" name was \"E\"");
 
-        assertThat(List.class.getTypeParameters()[0], is(ReflectMatchers.variableType().named("T")));
+        assertThat(List.class.getTypeParameters()[0], is(variableType().named("T")));
     }
 
     @Test
     public void parameterCount() throws Exception {
-        assertThat(List.class, is(ReflectMatchers.genericType().withParameterCount(1)));
+        assertThat(List.class, is(genericType().withParameterCount(1)));
     }
 
     @Test
@@ -126,17 +128,17 @@ public class TypeMatcherTest {
                 "Expected: is (a generic type and has 0 parameters)\n" +
                 "     but: has 0 parameters had 1 parameters");
 
-        assertThat(List.class, is(ReflectMatchers.genericType().withParameterCount(0)));
+        assertThat(List.class, is(genericType().withParameterCount(0)));
     }
 
     @Test
     public void noParameter() throws Exception {
-        assertThat(String.class, is(ReflectMatchers.nonGenericType().withParameters()));
+        assertThat(String.class, is(nonGenericType().withParameters()));
     }
 
     @Test
     public void oneParameter() throws Exception {
-        assertThat(List.class, is(ReflectMatchers.genericType().withParameters(ReflectMatchers.typeParameter())));
+        assertThat(List.class, is(genericType().withParameters(typeParameter())));
     }
 
     @Test
@@ -145,12 +147,12 @@ public class TypeMatcherTest {
         exception.expectMessage("\n" +
                 "Expected: is (a generic type and parameter 0() and parameter 1())\n" +
                 "     but: parameter 1() was null");
-        assertThat(List.class, is(ReflectMatchers.genericType().withParameters(ReflectMatchers.typeParameter(), ReflectMatchers.typeParameter())));
+        assertThat(List.class, is(genericType().withParameters(typeParameter(), typeParameter())));
     }
 
     @Test
     public void oneParameterName() throws Exception {
-        assertThat(List.class, is(ReflectMatchers.genericType().withParameters(ReflectMatchers.typeParameter().named("E"))));
+        assertThat(List.class, is(genericType().withParameters(typeParameter().named("E"))));
     }
 
     @Test
@@ -160,16 +162,26 @@ public class TypeMatcherTest {
                 "Expected: is (a generic type and parameter 0(named \"T\"))\n" +
                 "     but: parameter 0(named \"T\") named \"T\" was \"E\"");
 
-        assertThat(List.class, is(ReflectMatchers.genericType().withParameters(ReflectMatchers.typeParameter().named("T"))));
+        assertThat(List.class, is(genericType().withParameters(typeParameter().named("T"))));
     }
 
     interface GenericTypeWithBounds<T extends Closeable> {}
 
     @Test
     public void parameterWithBound() throws Exception {
-        assertThat(GenericTypeWithBounds.class, is(ReflectMatchers.genericType().withParameters(
-                ReflectMatchers.typeParameter().upperBound(ReflectMatchers.nonGenericType().baseClass(Closeable.class)))
+        assertThat(GenericTypeWithBounds.class, is(genericType().withParameters(
+                typeParameter().upperBound(nonGenericType().baseClass(Closeable.class)))
         ));
+    }
+
+    @Test
+    public void wildcardWithBound() throws Exception {
+        //java.util.function.Consumer<? super T>
+        assertThat(
+                Iterable.class.getMethod("forEach", Consumer.class).getGenericParameterTypes()[0],
+                is(genericType().withParameters(typeParameter().wildcard().lowerBound(variableType().named("T"))))
+        );
+
     }
 
     @Test
@@ -179,8 +191,8 @@ public class TypeMatcherTest {
                 "Expected: is (a generic type and parameter 0(with upper bound 0 (a non generic type and base class <interface java.io.Closeable>)))\n" +
                 "     but: parameter 0(with upper bound 0 (a non generic type and base class <interface java.io.Closeable>)) with upper bound 0 (a non generic type and base class <interface java.io.Closeable>) was base class <interface java.io.Closeable> was <class java.lang.Object>");
 
-        assertThat(List.class, is(ReflectMatchers.genericType().withParameters(
-                ReflectMatchers.typeParameter().upperBound(ReflectMatchers.nonGenericType().baseClass(Closeable.class)))
+        assertThat(List.class, is(genericType().withParameters(
+                typeParameter().upperBound(nonGenericType().baseClass(Closeable.class)))
         ));
     }
 
@@ -196,7 +208,7 @@ public class TypeMatcherTest {
     public void typeArray_anArrayOfVariable() throws Exception {
         assertThat(
                 List.class.getMethod("toArray", Object[].class).getGenericReturnType(),
-                is(ReflectMatchers.typeArray(ReflectMatchers.variableType().named("T")))
+                is(ReflectMatchers.typeArray(variableType().named("T")))
         );
     }
 
@@ -209,7 +221,7 @@ public class TypeMatcherTest {
 
         assertThat(
                 List.class.getMethod("size").getGenericReturnType(),
-                is(ReflectMatchers.typeArray(ReflectMatchers.variableType().named("T")))
+                is(ReflectMatchers.typeArray(variableType().named("T")))
         );
     }
 
@@ -222,7 +234,7 @@ public class TypeMatcherTest {
 
         assertThat(
                 List.class.getMethod("toArray", Object[].class).getGenericReturnType(),
-                is(ReflectMatchers.typeArray(ReflectMatchers.classType(String.class)))
+                is(ReflectMatchers.typeArray(classType(String.class)))
         );
     }
 
@@ -230,7 +242,7 @@ public class TypeMatcherTest {
     public void notGenericTypeArray() throws Exception {
         assertThat(
                 List.class.getMethod("toArray").getGenericReturnType(),
-                is(ReflectMatchers.typeArray(ReflectMatchers.classType(Object.class)))
+                is(ReflectMatchers.typeArray(classType(Object.class)))
         );
     }
 
@@ -243,7 +255,7 @@ public class TypeMatcherTest {
 
         assertThat(
                 List.class.getMethod("toArray").getGenericReturnType(),
-                is(ReflectMatchers.typeArray(ReflectMatchers.classType(String.class)))
+                is(ReflectMatchers.typeArray(classType(String.class)))
         );
     }
 }

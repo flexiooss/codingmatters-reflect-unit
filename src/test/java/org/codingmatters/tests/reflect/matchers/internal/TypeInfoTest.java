@@ -8,6 +8,7 @@ import java.io.Closeable;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
@@ -124,6 +125,18 @@ public class TypeInfoTest {
 
         assertThat(type.parameters().get(0).name(), is("?"));
         assertThat(type.parameters().get(0).isWildcard(), is(true));
+        assertThat(type.parameters().get(0).upperBounds().get(0).baseClass(), is((Type)Serializable.class));
+    }
+
+    @Test
+    public void wildcardWithVariableBound() throws Exception {
+        //java.util.function.Consumer<? super T>
+        TypeInfo type = TypeInfo.from(Iterable.class.getMethod("forEach", Consumer.class).getGenericParameterTypes()[0]);
+
+        assertThat(type.parameters().get(0).name(), is("?"));
+        assertThat(type.parameters().get(0).isWildcard(), is(true));
+        assertThat(type.parameters().get(0).lowerBounds().get(0).isVariable(), is(true));
+        assertThat(type.parameters().get(0).lowerBounds().get(0).name(), is("T"));
     }
 
     @Test

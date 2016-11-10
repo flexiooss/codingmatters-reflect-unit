@@ -17,7 +17,7 @@ public class TypeParameterInfo {
         } else if(type instanceof Class) {
             return fromClass((Class) type);
         }else if(type instanceof WildcardType) {
-            return fromWilcard((WildcardType)type);
+            return fromWildcard((WildcardType)type);
         } else {
             throw new RuntimeException("NYIMPL type parameter info from : " + type + " (" + type.getClass().getName() + ")");
         }
@@ -31,7 +31,7 @@ public class TypeParameterInfo {
         return new TypeParameterInfo(type.getName(), TypeInfo.from(type), null, null);
     }
 
-    private static TypeParameterInfo fromWilcard(WildcardType type) {
+    private static TypeParameterInfo fromWildcard(WildcardType type) {
         return new TypeParameterInfo("?", null, boundsFrom(type.getUpperBounds()), boundsFrom(type.getLowerBounds()));
     }
 
