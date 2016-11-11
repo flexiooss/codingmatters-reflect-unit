@@ -55,7 +55,7 @@ public class ReflectMatchers {
         return new ReflectMatcherBuilder().public_().instance().method();
     }
 
-    public static TypeParameterMatcherImpl typeParameter() {
+    public static TypeParameterMatcher typeParameter() {
         return TypeParameterMatcherImpl.typeParameter();
     }
 

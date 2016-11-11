@@ -21,7 +21,7 @@ public class TypeParameterMatcherImpl extends TypeSafeMatcher<TypeParameterInfo>
     private TypeParameterMatcherImpl() {}
 
     @Override
-    public TypeParameterMatcherImpl named(String name) {
+    public TypeParameterMatcher named(String name) {
         this.matchers.addMatcher(
                 description -> description.appendText("named ").appendValue(name),
                 item -> name.equals(item.name()),
