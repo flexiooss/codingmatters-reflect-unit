@@ -58,7 +58,13 @@ public class CompiledCodeTest {
         exception.expectMessage(is(
                 this.dir.getRoot().getAbsolutePath() + "/org/codingmatters/BrokenHello.java:3: error: reached end of file while parsing\n" +
                 "public class BrokenHello {\n" +
-                "                          ^\n"
+                "                          ^\n" +
+                "\n" +
+                "source files with error :\n" +
+                this.dir.getRoot().getAbsolutePath() + "/org/codingmatters/BrokenHello.java : \n" +
+                "001   package org.codingmatters;\n" +
+                "002   \n" +
+                "003   public class BrokenHello {\n"
         ));
 
         File helloWorld = new File(this.dir.getRoot(), "org/codingmatters/BrokenHello.java");

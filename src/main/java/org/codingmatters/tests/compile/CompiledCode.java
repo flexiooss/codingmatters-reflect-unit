@@ -1,10 +1,12 @@
 package org.codingmatters.tests.compile;
 
 import javax.tools.*;
+import java.io.BufferedReader;
 import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -39,9 +41,26 @@ public class CompiledCode {
             Boolean result = compilerTask.call();
             if(! result) {
                 StringBuilder report = new StringBuilder();
-                for (Object o : diagnosticListener.getDiagnostics()) {
-                    report.append(o.toString()).append("\n");
+                HashSet<JavaFileObject> sourceWithError = new HashSet<>();
+                List<Diagnostic> diags = diagnosticListener.getDiagnostics();
+                for (Diagnostic diag : diags) {
+                    report.append(diag.toString()).append("\n");
+                    sourceWithError.add((JavaFileObject) diag.getSource());
                 }
+
+                report.append("\nsource files with error :");
+                for (JavaFileObject file : sourceWithError) {
+
+                    report.append("\n").append(file.getName()).append(" : \n");
+                    try(BufferedReader reader = new BufferedReader(file.openReader(true))) {
+                        int index = 1;
+                        for(String line = reader.readLine() ; line != null ; line = reader.readLine()) {
+                            report.append(String.format("%03d   ", index)).append(line).append("\n");
+                            index++;
+                        }
+                    }
+                }
+
 
                 throw new AssertionError(report);
             }
