@@ -53,6 +53,29 @@ public class CompiledCodeTest {
     }
 
     @Test
+    public void compilationFails() throws Exception {
+        exception.expect(AssertionError.class);
+        exception.expectMessage(is(
+                this.dir.getRoot().getAbsolutePath() + "/org/codingmatters/BrokenHello.java:3: error: reached end of file while parsing\n" +
+                "public class BrokenHello {\n" +
+                "                          ^\n"
+        ));
+
+        File helloWorld = new File(this.dir.getRoot(), "org/codingmatters/BrokenHello.java");
+
+        try(FileWriter writer = new FileWriter(helloWorld)) {
+            writer.write(
+                    "package org.codingmatters;\n" +
+                    "\n" +
+                    "public class BrokenHello {\n"
+            );
+            writer.flush();
+        }
+
+        this.compiled = CompiledCode.compile(this.dir.getRoot());
+    }
+
+    @Test
     public void getCompiledClass() throws Exception {
         assertThat(compiled.getClass("org.codingmatters.HelloWorld"), is(anInstance().class_()));
         assertThat(compiled.getClass("org.codingmatters.NoSuchClass"), is(not(anInstance().class_())));

@@ -34,8 +34,17 @@ public class CompiledCode {
         try(StandardJavaFileManager fileManager = compiler.getStandardFileManager(null, null, null)) {
             fileManager.setLocation(StandardLocation.CLASS_PATH, toFileList(classLoaderUrls));
             Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(resolveJavaFiles(dir));
-            JavaCompiler.CompilationTask compilerTask = compiler.getTask(null, fileManager, null, null, null, compilationUnits);
-            compilerTask.call();
+            DiagnosticCollector diagnosticListener = new DiagnosticCollector();
+            JavaCompiler.CompilationTask compilerTask = compiler.getTask(null, fileManager, diagnosticListener, null, null, compilationUnits);
+            Boolean result = compilerTask.call();
+            if(! result) {
+                StringBuilder report = new StringBuilder();
+                for (Object o : diagnosticListener.getDiagnostics()) {
+                    report.append(o.toString()).append("\n");
+                }
+
+                throw new AssertionError(report);
+            }
         }
     }
 
