@@ -45,7 +45,9 @@ public class CompiledCode {
                 List<Diagnostic> diags = diagnosticListener.getDiagnostics();
                 for (Diagnostic diag : diags) {
                     report.append(diag.toString()).append("\n");
-                    sourceWithError.add((JavaFileObject) diag.getSource());
+                    if(diag.getSource() != null) {
+                        sourceWithError.add((JavaFileObject) diag.getSource());
+                    }
                 }
 
                 report.append("\nsource files with error :");
