@@ -6,6 +6,7 @@ import java.io.File;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,9 +23,7 @@ public class CompiledCode {
     static private CompiledCode compile(File dir, URLClassLoader classLoader) throws Exception {
         List<URL> urls = new LinkedList<>();
         if(classLoader != null) {
-            for (URL url : classLoader.getURLs()) {
-                urls.add(url);
-            }
+            Collections.addAll(urls, classLoader.getURLs());
         }
         compileDir(dir, urls);
         urls.add(dir.toURI().toURL());
@@ -80,9 +79,9 @@ public class CompiledCode {
 
     private static List<File> resolveJavaFiles(File dir) {
         List<File> results = new LinkedList<>();
-        for (File javaFile : dir.listFiles(file -> file.getName().endsWith(".java"))) {
-            results.add(javaFile);
-        }
+        if(dir == null) return results;
+
+        Collections.addAll(results, dir.listFiles(file -> file.getName().endsWith(".java")));
         for (File subDir : dir.listFiles(file -> file.isDirectory())) {
             results.addAll(resolveJavaFiles(subDir));
         }
