@@ -3,6 +3,7 @@ package org.codingmatters.tests.compile;
 import javax.tools.*;
 import java.io.BufferedReader;
 import java.io.File;
+import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -158,10 +159,17 @@ public class CompiledCode {
             }
 
             public <T> T with(Object ... params) throws Exception {
+                Method m = this.aClass.getMethod(this.method, this.paramTypes);
                 try {
-                    return (T) this.aClass.getMethod(this.method, this.paramTypes).invoke(this.on, params);
+                    return (T) m.invoke(this.on, params);
                 } catch(ClassCastException e) {
-                    throw new AssertionError(method + " return type mismatch", e);
+                    throw new AssertionError(m + " return type mismatch", e);
+                } catch(IllegalArgumentException e) {
+                    String msg = m + " called with wrong arguments: " + params;
+                    if(params == null) {
+                        msg += " (if you meant to invoke method with one null argument, call with new Object[] {null})";
+                    }
+                    throw new AssertionError(msg, e);
                 }
             }
         }

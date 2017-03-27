@@ -119,4 +119,14 @@ public class CompiledCodeTest {
 
         assertThat(compiled.getClass("org.codingmatters.NewClass"), is(not(anInstance().class_())));
     }
+
+    @Test
+    public void invokeWithNullArgument_nullMustBeEnclosedInAnArray() throws Exception {
+        StringBuilder o = new StringBuilder();
+        this.compiled.on(o).invoke("append", String.class).with(new Object [] {null});
+
+        this.exception.expect(AssertionError.class);
+        this.exception.expectMessage("(if you meant to invoke method with one null argument, call with new Object[] {null})");
+        this.compiled.on(o).invoke("append", String.class).with(null);
+    }
 }
