@@ -7,18 +7,53 @@ import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by nelt on 9/6/16.
  */
 public class CompiledCode {
 
+    static public class Builder {
+        List<URL> classpath = new LinkedList<>();
+        List<File> sources = new LinkedList<>();
+
+        public Builder classpath(URL ... elements) {
+            if(elements != null) {
+                for (URL element : elements) {
+                    this.classpath.add(element);
+                }
+            }
+            return this;
+        }
+
+        public Builder source(File ... elements) {
+            if(elements != null) {
+                for (File element : elements) {
+                    this.sources.add(element);
+                }
+            }
+            return this;
+        }
+
+        public CompiledCode compile() throws Exception {
+            List<URL> urls = new ArrayList<>(this.classpath);
+
+            for (File source : this.sources) {
+                compileDir(source, urls);
+                urls.add(source.toURI().toURL());
+            }
+
+            return new CompiledCode(URLClassLoader.newInstance(urls.toArray(new URL[urls.size()])));
+        }
+    }
+
     static public CompiledCode compile(File dir) throws Exception {
-        return compile(dir, null);
+        return new Builder().source(dir).compile();
+    }
+
+    static public CompiledCode compile(File dir, URL ... classLoaderUrls) throws Exception {
+        return new Builder().classpath(classLoaderUrls).source(dir).compile();
     }
 
     static private CompiledCode compile(File dir, URLClassLoader classLoader) throws Exception {
