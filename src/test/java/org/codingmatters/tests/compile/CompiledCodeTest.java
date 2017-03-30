@@ -49,7 +49,7 @@ public class CompiledCodeTest {
             writer.flush();
         }
 
-        this.compiled = CompiledCode.compile(this.dir.getRoot());
+        this.compiled = CompiledCode.builder().source(this.dir.getRoot()).compile();
     }
 
     @Test
@@ -78,7 +78,7 @@ public class CompiledCodeTest {
             writer.flush();
         }
 
-        this.compiled = CompiledCode.compile(this.dir.getRoot());
+        this.compiled = CompiledCode.builder().source(this.dir.getRoot()).compile();
     }
 
     @Test

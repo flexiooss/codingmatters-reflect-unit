@@ -4,6 +4,7 @@ import javax.tools.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -48,12 +49,17 @@ public class CompiledCode {
         }
     }
 
-    static public CompiledCode compile(File dir) throws Exception {
-        return new Builder().source(dir).compile();
+    static public Builder builder() {
+        return new CompiledCode.Builder();
     }
 
-    static public CompiledCode compile(File dir, URL ... classLoaderUrls) throws Exception {
-        return new Builder().classpath(classLoaderUrls).source(dir).compile();
+    static public URL findInClasspath(String pattern) throws MalformedURLException {
+        for (String element : System.getProperty("java.class.path").split(System.getProperty("path.separator"))) {
+            if(element.matches(pattern)) {
+                return new File(element).toURI().toURL();
+            }
+        }
+        return null;
     }
 
     static private CompiledCode compile(File dir, URLClassLoader classLoader) throws Exception {
