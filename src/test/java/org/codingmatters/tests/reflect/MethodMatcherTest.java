@@ -4,7 +4,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import java.io.IOException;
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
 import java.util.List;
 
 import static org.codingmatters.tests.reflect.ReflectMatchers.*;
@@ -53,6 +55,10 @@ public class MethodMatcherTest {
         public <T> T parametrizedReturningParameterType() {return null;}
         public <T> String parametrizedNotReturningParameterType() {return null;}
         public <T> T[] parametrizedReturningParameterTypeArray() {return null;}
+
+        public void throwing() throws IOException {}
+        public void throwingMany() throws IOException, MalformedURLException {}
+        public void notThrowing() {}
 
 
     }
@@ -321,4 +327,49 @@ public class MethodMatcherTest {
         ));
     }
 
+    @Test
+    public void methodThrowingException() throws Exception {
+        assertThat(method("throwing"), is(aMethod().throwing(IOException.class)));
+    }
+
+    @Test
+    public void methodThrowingManyException() throws Exception {
+        assertThat(method("throwingMany"), is(aMethod().throwing(IOException.class, MalformedURLException.class)));
+    }
+
+    @Test
+    public void methodNotThrowingException() throws Exception {
+        assertThat(method("notThrowing"), is(aMethod().notThrowing()));
+    }
+
+
+    @Test
+    public void throwing_failure_whenNotThrowingAnything() throws Exception {
+        exception.expect(AssertionError.class);
+        exception.expectMessage(is("\n" +
+                "Expected: is method(instance and public and 1 thrown exceptions and throws (base class <class java.lang.Exception>))\n" +
+                "     but: 1 thrown exceptions was 0"));
+
+        assertThat(method("notThrowing"), is(aMethod().throwing(Exception.class)));
+    }
+
+    @Test
+    public void throwing_failure_whenNotThrowingExpectedExceptionType() throws Exception {
+        exception.expect(AssertionError.class);
+        exception.expectMessage(is("\n" +
+                "Expected: is method(instance and public and 1 thrown exceptions and throws (base class <class java.net.MalformedURLException>))\n" +
+                "     but: throws (base class <class java.net.MalformedURLException>) was a java.lang.reflect.Method (<public void org.codingmatters.tests.reflect.MethodMatcherTest$TestClass.throwing() throws java.io.IOException>)"));
+
+        assertThat(method("throwing"), is(aMethod().throwing(MalformedURLException.class)));
+    }
+
+    @Test
+    public void throwing_failure_whenExceptionListInWrongOrder() throws Exception {
+        exception.expect(AssertionError.class);
+        exception.expectMessage(is("\n" +
+                "Expected: is method(instance and public and 2 thrown exceptions and throws (base class <class java.net.MalformedURLException>) and throws (base class <class java.io.IOException>))\n" +
+                "     but: throws (base class <class java.net.MalformedURLException>) was a java.lang.reflect.Method (<public void org.codingmatters.tests.reflect.MethodMatcherTest$TestClass.throwingMany() throws java.io.IOException,java.net.MalformedURLException>)"));
+
+        assertThat(method("throwingMany"), is(aMethod().throwing(MalformedURLException.class, IOException.class)));
+    }
 }

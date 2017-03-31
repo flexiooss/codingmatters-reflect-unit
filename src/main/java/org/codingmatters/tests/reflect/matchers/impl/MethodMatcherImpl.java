@@ -1,6 +1,5 @@
 package org.codingmatters.tests.reflect.matchers.impl;
 
-import org.codingmatters.tests.reflect.ReflectMatchers;
 import org.codingmatters.tests.reflect.matchers.MethodMatcher;
 import org.codingmatters.tests.reflect.matchers.TypeMatcher;
 import org.codingmatters.tests.reflect.matchers.support.CollectorMatcher;
@@ -13,10 +12,13 @@ import org.hamcrest.TypeSafeMatcher;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static org.codingmatters.tests.reflect.ReflectMatchers.classType;
 
 /**
  * Created by nelt on 9/8/16.
@@ -87,7 +89,7 @@ public class MethodMatcherImpl extends TypeSafeMatcher<Method> implements Method
 
     @Override
     public MethodMatcher returning(Class aClass) {
-        return this.returning(ReflectMatchers.classType(aClass));
+        return this.returning(classType(aClass));
     }
 
     @Override
@@ -151,6 +153,50 @@ public class MethodMatcherImpl extends TypeSafeMatcher<Method> implements Method
                 (item, description) -> description.appendText("was " + item.getParameterCount())
         );
         return this;
+    }
+
+    @Override
+    public MethodMatcher throwing(Class[] exceptionClasses) {
+        List<Matcher<Type>> exceptionMatcherList = exceptionClasses != null ? new ArrayList<>(exceptionClasses.length) : null;
+        if(exceptionClasses != null) {
+            for (Class exceptionClass : exceptionClasses) {
+                exceptionMatcherList.add(classType(exceptionClass));
+            }
+        }
+        Matcher<Type> [] exceptionMatchers = exceptionMatcherList != null ? exceptionMatcherList.toArray(new Matcher[exceptionMatcherList.size()]) : null;
+        return this.throwing(exceptionMatchers);
+    }
+
+    @Override
+    public MethodMatcher throwing(Matcher<Type>[] exceptionMatchers) {
+        if(exceptionMatchers == null) {
+            this.matchers.addMatcher("not throwing exception",
+                    item -> item.getGenericExceptionTypes().length == 0,
+                    (item, description) -> description.appendText("was " + item.getGenericExceptionTypes().length)
+            );
+        } else {
+            this.matchers.addMatcher(exceptionMatchers.length + " thrown exceptions",
+                    item -> item.getGenericExceptionTypes().length == exceptionMatchers.length,
+                    (item, description) -> description.appendText("was " + item.getGenericExceptionTypes().length)
+            );
+
+            for (int i = 0; i < exceptionMatchers.length; i++) {
+                int index = i;
+                this.matchers.addMatcher(
+                        description -> description
+                                .appendText("throws ")
+                                .appendDescriptionOf(exceptionMatchers[index]),
+                        item -> exceptionMatchers[index].matches(item.getGenericExceptionTypes()[index]),
+                        (item, description) -> exceptionMatchers[index].describeMismatch(item, description)
+                );
+            }
+        }
+        return this;
+    }
+
+    @Override
+    public MethodMatcher notThrowing() {
+        return throwing((Class[]) null);
     }
 
     private static class MethodElementTypeMatcher extends TypeSafeMatcher<Method> {

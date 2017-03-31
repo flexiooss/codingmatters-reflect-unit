@@ -28,4 +28,8 @@ public interface MethodMatcher extends Matcher<Method> {
     MethodMatcher withVariable(TypeMatcher typeMatcher);
 
     MethodMatcher withoutParameters();
+
+    MethodMatcher throwing(Class ... exceptionClasses);
+    MethodMatcher throwing(Matcher<Type> ... exceptionMatchers);
+    MethodMatcher notThrowing();
 }
