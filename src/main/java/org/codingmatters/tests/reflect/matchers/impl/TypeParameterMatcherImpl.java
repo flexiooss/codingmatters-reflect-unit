@@ -29,6 +29,15 @@ public class TypeParameterMatcherImpl extends TypeSafeMatcher<TypeParameterInfo>
         return this;
     }
 
+    @Override
+    public TypeParameterMatcher aClass(Class clazz) {
+        this.matchers.addMatcher(
+                description -> description.appendText("class ").appendValue(clazz),
+                item -> clazz.equals(item.clazz()),
+                (item, description) -> description.appendText("was ").appendValue(item.clazz()));
+        return this;
+    }
+
 
     @Override
     public TypeParameterMatcher wildcard() {

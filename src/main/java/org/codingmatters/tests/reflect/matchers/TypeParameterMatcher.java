@@ -14,4 +14,6 @@ public interface TypeParameterMatcher extends Matcher<TypeParameterInfo> {
     TypeParameterMatcher lowerBound(TypeMatcher... typeMatchers);
 
     TypeParameterMatcher wildcard();
+
+    TypeParameterMatcher aClass(Class clazz);
 }

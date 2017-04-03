@@ -24,15 +24,15 @@ public class TypeParameterInfo {
     }
 
     private static TypeParameterInfo fromTypeVariable(TypeVariable type) {
-        return new TypeParameterInfo(type.getName(), null, boundsFrom(type.getBounds()), null);
+        return new TypeParameterInfo(type.getName(), null, boundsFrom(type.getBounds()), null, null);
     }
 
     private static TypeParameterInfo fromClass(Class type) {
-        return new TypeParameterInfo(type.getName(), TypeInfo.from(type), null, null);
+        return new TypeParameterInfo(type.getName(), TypeInfo.from(type), null, null, type);
     }
 
     private static TypeParameterInfo fromWildcard(WildcardType type) {
-        return new TypeParameterInfo("?", null, boundsFrom(type.getUpperBounds()), boundsFrom(type.getLowerBounds()));
+        return new TypeParameterInfo("?", null, boundsFrom(type.getUpperBounds()), boundsFrom(type.getLowerBounds()), null);
     }
 
     private static ArrayList<TypeInfo> boundsFrom(Type[] typeBounds) {
@@ -47,12 +47,14 @@ public class TypeParameterInfo {
     private final TypeInfo type;
     private final List<TypeInfo> upperBounds;
     private final List<TypeInfo> lowerBounds;
+    private final Class clazz;
 
-    private TypeParameterInfo(String name, TypeInfo type, List<TypeInfo> upperBounds, List<TypeInfo> lowerBounds) {
+    private TypeParameterInfo(String name, TypeInfo type, List<TypeInfo> upperBounds, List<TypeInfo> lowerBounds, Class clazz) {
         this.name = name;
         this.type = type;
         this.upperBounds = upperBounds != null ? upperBounds : new ArrayList<>(0);
         this.lowerBounds = lowerBounds != null ? lowerBounds : new ArrayList<>(0);
+        this.clazz = clazz;
     }
 
     public String name() {
@@ -75,6 +77,10 @@ public class TypeParameterInfo {
         return this.name.equals("?");
     }
 
+    public Class clazz() {
+        return clazz;
+    }
+
     @Override
     public String toString() {
         return "TypeParameterInfo{" +
@@ -82,6 +88,7 @@ public class TypeParameterInfo {
                 ", type=" + type +
                 ", upperBounds=" + upperBounds +
                 ", lowerBounds=" + lowerBounds +
+                ", clazz=" + clazz +
                 '}';
     }
 }

@@ -59,6 +59,10 @@ public class ReflectMatchers {
         return TypeParameterMatcherImpl.typeParameter();
     }
 
+    public static TypeParameterMatcher classTypeParameter(Class clazz) {
+        return TypeParameterMatcherImpl.typeParameter().aClass(clazz);
+    }
+
     public static Matcher<java.lang.reflect.Type> typeArray() {
         return new TypeArrayMatcherImpl(null);
     }

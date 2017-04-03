@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.Serializable;
+import java.lang.reflect.ParameterizedType;
 import java.util.List;
 import java.util.Spliterator;
 
@@ -23,6 +24,8 @@ public class GenericTypeMatcherTest {
 
     public class ParametrizedType<T extends Serializable> {}
     public class NotParametrizedType{}
+
+    public List<String> returnListOfString() {return null;}
 
     @Test
     public void parametrizedType() throws Exception {
@@ -73,5 +76,17 @@ public class GenericTypeMatcherTest {
                 "     but: base class <interface java.io.Serializable> was <class org.codingmatters.tests.reflect.matchers.GenericTypeMatcherTest$ParametrizedType>"));
 
         assertThat(ParametrizedType.class, is(ReflectMatchers.genericType().baseClass(Serializable.class)));
+    }
+
+    @Test
+    public void listOfString() throws Exception {
+        ParameterizedType listOfString = (ParameterizedType) this.getClass().getMethod("returnListOfString").getGenericReturnType();
+        assertThat(
+                listOfString,
+                is(ReflectMatchers.genericType()
+                        .baseClass(List.class)
+                        .withParameters(ReflectMatchers.classTypeParameter(String.class))
+                )
+        );
     }
 }
