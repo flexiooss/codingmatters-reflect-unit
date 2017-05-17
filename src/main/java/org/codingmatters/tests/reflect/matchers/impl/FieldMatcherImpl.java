@@ -47,7 +47,7 @@ public class FieldMatcherImpl extends TypeSafeMatcher<Field> implements FieldMat
     public FieldMatcher withType(TypeMatcher typeMatcher) {
         this.matchers.addMatcher(
                 "field type",
-                item -> typeMatcher.matches(item.getType()),
+                item -> typeMatcher.matches(item.getGenericType()),
                 (item, description) -> description.appendDescriptionOf(typeMatcher)
         );
         return this;
