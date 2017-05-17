@@ -13,4 +13,5 @@ public interface FieldMatcher extends Matcher<Field> {
     FieldMatcher final_();
 
     FieldMatcher withType(Class type);
+    FieldMatcher withType(TypeMatcher typeMatcher);
 }

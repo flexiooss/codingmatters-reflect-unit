@@ -1,6 +1,7 @@
 package org.codingmatters.tests.reflect.matchers.impl;
 
 import org.codingmatters.tests.reflect.matchers.FieldMatcher;
+import org.codingmatters.tests.reflect.matchers.TypeMatcher;
 import org.codingmatters.tests.reflect.matchers.support.MatcherChain;
 import org.codingmatters.tests.reflect.matchers.support.MemberDeleguate;
 import org.codingmatters.tests.reflect.matchers.support.ReflectMatcherConfiguration;
@@ -39,6 +40,16 @@ public class FieldMatcherImpl extends TypeSafeMatcher<Field> implements FieldMat
     @Override
     public FieldMatcher withType(Class type) {
         this.matchers.addMatcher("field type", item -> item.getType().equals(type));
+        return this;
+    }
+
+    @Override
+    public FieldMatcher withType(TypeMatcher typeMatcher) {
+        this.matchers.addMatcher(
+                "field type",
+                item -> typeMatcher.matches(item.getType()),
+                (item, description) -> description.appendDescriptionOf(typeMatcher)
+        );
         return this;
     }
 

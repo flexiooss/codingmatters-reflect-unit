@@ -46,6 +46,11 @@ public class FieldMatcherTest {
     }
 
     @Test
+    public void fieldTypeWithTypeMatcher() throws Exception {
+        assertThat(field("name"), is(aPublic().field().withType(classType(String.class))));
+    }
+
+    @Test
     public void publicField() throws Exception {
         assertThat(field("publicField"), is(aPublic().field()));
     }
