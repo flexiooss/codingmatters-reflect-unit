@@ -62,6 +62,27 @@ public class CompiledCode {
         return null;
     }
 
+    static public URL findLibraryInClasspath(String libraryName) throws MalformedURLException {
+        /*
+        jackson-core
+        .*jackson-core/target/classes.*
+        .*jackson-core-.*.jar
+         */
+        URL result = findMavenArtifactInClasspath(libraryName);
+        if(result == null) {
+            result = findMavenTargetClassesInClasspath(libraryName);
+        }
+        return result;
+    }
+
+    private static URL findMavenArtifactInClasspath(String libraryName) throws MalformedURLException {
+        return findInClasspath(".*" + libraryName + "-.*.jar");
+    }
+
+    private static URL findMavenTargetClassesInClasspath(String libraryName) throws MalformedURLException {
+        return findInClasspath(".*" + libraryName + "/target/classes.*");
+    }
+
     static private CompiledCode compile(File dir, URLClassLoader classLoader) throws Exception {
         List<URL> urls = new LinkedList<>();
         if(classLoader != null) {
