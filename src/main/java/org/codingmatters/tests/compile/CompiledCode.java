@@ -1,5 +1,7 @@
 package org.codingmatters.tests.compile;
 
+import org.codingmatters.tests.compile.helpers.ClassLoaderHelper;
+
 import javax.tools.*;
 import java.io.BufferedReader;
 import java.io.File;
@@ -156,6 +158,10 @@ public class CompiledCode {
 
     public CompiledCode(URLClassLoader classLoader) {
         this.classLoader = classLoader;
+    }
+
+    public ClassLoaderHelper classLoader() {
+        return new ClassLoaderHelper(this.classLoader);
     }
 
     public CompiledCode withCompiled(File target) throws Exception {
