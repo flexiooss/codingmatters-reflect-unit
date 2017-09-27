@@ -168,6 +168,7 @@ public class CompiledCode {
         return compile(target, this.classLoader);
     }
 
+    @Deprecated
     public Class getClass(String name) {
         try {
             return Class.forName(name, true, classLoader);
@@ -176,10 +177,13 @@ public class CompiledCode {
         }
     }
 
+
+    @Deprecated
     public Invoker onClass(String className) {
         return new Invoker(this, this.getClass(className), null);
     }
 
+    @Deprecated
     public Invoker on(Object o) {
         return new Invoker(this, o.getClass(), o);
     }
