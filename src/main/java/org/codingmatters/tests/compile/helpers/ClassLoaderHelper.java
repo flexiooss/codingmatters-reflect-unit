@@ -36,7 +36,7 @@ public class ClassLoaderHelper {
     }
 
     public ObjectHelper wrap(Object o) {
-        return new ObjectHelper(this, o.getClass(), o);
+        return new ObjectHelper(this, o != null ? o.getClass() : Object.class, o);
     }
 
     public Class[] resolve(ClassDescriptor[] descriptors) {
