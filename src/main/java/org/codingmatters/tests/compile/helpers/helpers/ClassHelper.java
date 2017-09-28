@@ -5,6 +5,7 @@ import org.codingmatters.tests.compile.helpers.helpers.invokers.ClassMethodInvok
 import org.codingmatters.tests.compile.helpers.helpers.invokers.ConstructorInvoker;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.Arrays;
 
 public class ClassHelper {
@@ -51,11 +52,17 @@ public class ClassHelper {
     }
 
     public ClassMethodInvoker call(String method, Class ... argTypes) {
+        Method meth = getMethod(method, argTypes);
+        return new ClassMethodInvoker(this.classLoader, meth);
+    }
+
+    public Method getMethod(String method, Class ... argTypes) {
+        Method meth;
         try {
             if(argTypes == null) {
-                return new ClassMethodInvoker(this.classLoader, this.clazz.getMethod(method));
+                meth = this.clazz.getMethod(method);
             } else {
-                return new ClassMethodInvoker(this.classLoader, this.clazz.getMethod(method, argTypes));
+                meth = this.clazz.getMethod(method, argTypes);
             }
         } catch (NoSuchMethodException e) {
             if(argTypes == null) {
@@ -64,9 +71,11 @@ public class ClassHelper {
                 throw new AssertionError("no class method " + method + " on class " + this.clazz.getName() + " with args types " + Arrays.asList(argTypes), e);
             }
         }
+        return meth;
     }
 
     public Class get() {
         return this.clazz;
     }
+
 }
