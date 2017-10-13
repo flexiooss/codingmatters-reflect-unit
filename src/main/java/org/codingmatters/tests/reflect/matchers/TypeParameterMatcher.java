@@ -16,4 +16,8 @@ public interface TypeParameterMatcher extends Matcher<TypeParameterInfo> {
     TypeParameterMatcher wildcard();
 
     TypeParameterMatcher aClass(Class clazz);
+
+    TypeParameterMatcher aType(TypeMatcher typeMatcher);
+
+    TypeParameterMatcher aVariable(String name);
 }

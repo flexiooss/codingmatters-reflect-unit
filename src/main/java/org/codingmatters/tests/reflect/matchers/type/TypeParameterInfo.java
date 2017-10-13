@@ -1,9 +1,11 @@
 package org.codingmatters.tests.reflect.matchers.type;
 
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,8 +18,10 @@ public class TypeParameterInfo {
             return fromTypeVariable((TypeVariable) type);
         } else if(type instanceof Class) {
             return fromClass((Class) type);
-        }else if(type instanceof WildcardType) {
-            return fromWildcard((WildcardType)type);
+        } else if(type instanceof WildcardType) {
+            return fromWildcard((WildcardType) type);
+        } else if(type instanceof ParameterizedType) {
+            return fromParameterizedType((ParameterizedType) type);
         } else {
             throw new RuntimeException("NYIMPL type parameter info from : " + type + " (" + type.getClass().getName() + ")");
         }
@@ -33,6 +37,14 @@ public class TypeParameterInfo {
 
     private static TypeParameterInfo fromWildcard(WildcardType type) {
         return new TypeParameterInfo("?", null, boundsFrom(type.getUpperBounds()), boundsFrom(type.getLowerBounds()), null);
+    }
+
+    private static TypeParameterInfo fromParameterizedType(ParameterizedType type) {
+        System.out.println("raw type : " + type.getRawType());
+        System.out.println("owner type : " + type.getOwnerType());
+        System.out.println("actual type args type : " + Arrays.asList(type.getActualTypeArguments()));
+        System.out.println("type info : " + TypeInfo.from(type));
+        return new TypeParameterInfo(type.getTypeName(), TypeInfo.from(type), null, null, null);
     }
 
     private static ArrayList<TypeInfo> boundsFrom(Type[] typeBounds) {

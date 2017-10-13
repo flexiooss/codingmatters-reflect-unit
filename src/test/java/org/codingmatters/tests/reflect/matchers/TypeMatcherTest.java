@@ -6,7 +6,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import java.io.Closeable;
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 import static org.codingmatters.tests.reflect.ReflectMatchers.*;
@@ -256,6 +258,61 @@ public class TypeMatcherTest {
         assertThat(
                 List.class.getMethod("toArray").getGenericReturnType(),
                 is(ReflectMatchers.typeArray(classType(String.class)))
+        );
+    }
+
+    public <U> void genParamParam(List<Optional<U>> param) {}
+
+    @Test
+    public void parametrizedGenericType() throws Exception {
+        Method method = null;
+        for (Method m : this.getClass().getMethods()) {
+            if(m.getName().equals("genParamParam")) {
+                method = m;
+                break;
+            }
+        }
+
+        assertThat(
+                method,
+                is(aPublic().method().withVariable(variableType().named("U")))
+        );
+
+        assertThat(
+                method,
+                is(aPublic().method().withParameters(
+                        genericType().baseClass(List.class)
+                ))
+        );
+
+        assertThat(
+                method,
+                is(aPublic().method().withParameters(
+                        genericType().baseClass(List.class).withParameters(typeParameter().aClass(Optional.class))
+                ))
+        );
+
+        assertThat(
+                method,
+                is(aPublic().method().withParameters(
+                        genericType().baseClass(List.class).withParameters(typeParameter().aClass(Optional.class))
+                ))
+        );
+
+        assertThat(
+                method,
+                is(aPublic().method().withParameters(
+                        genericType().baseClass(List.class).withParameters(typeParameter().aType(genericType().baseClass(Optional.class)))
+                ))
+        );
+
+        assertThat(
+                method,
+                is(aPublic().method().withParameters(
+                        genericType().baseClass(List.class).withParameters(
+                                typeParameter().aType(genericType().baseClass(Optional.class).withParameters(typeParameter().aVariable("U")))
+                        )
+                ))
         );
     }
 }

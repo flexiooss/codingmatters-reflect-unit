@@ -33,8 +33,34 @@ public class TypeParameterMatcherImpl extends TypeSafeMatcher<TypeParameterInfo>
     public TypeParameterMatcher aClass(Class clazz) {
         this.matchers.addMatcher(
                 description -> description.appendText("class ").appendValue(clazz),
-                item -> clazz.equals(item.clazz()),
+                item -> {
+                    return clazz.equals(item.type().baseClass());
+                },
                 (item, description) -> description.appendText("was ").appendValue(item.clazz()));
+        return this;
+    }
+
+    @Override
+    public TypeParameterMatcher aType(TypeMatcher typeMatcher) {
+        this.matchers.addMatcher(
+                description -> typeMatcher.describeTo(description),
+                item -> {
+                    return typeMatcher.matches(item.type());
+                },
+                (item, description) -> typeMatcher.describeMismatch(item, description)
+        );
+        return this;
+    }
+
+    @Override
+    public TypeParameterMatcher aVariable(String name) {
+        this.matchers.addMatcher(
+                description -> description.appendText("a variable named " + name),
+                item -> {
+                    return name.equals(item.name());
+                },
+                (item, description) -> description.appendText("was ").appendValue(item.name())
+        );
         return this;
     }
 
