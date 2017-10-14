@@ -5,7 +5,6 @@ import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
 import java.lang.reflect.WildcardType;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -40,10 +39,6 @@ public class TypeParameterInfo {
     }
 
     private static TypeParameterInfo fromParameterizedType(ParameterizedType type) {
-        System.out.println("raw type : " + type.getRawType());
-        System.out.println("owner type : " + type.getOwnerType());
-        System.out.println("actual type args type : " + Arrays.asList(type.getActualTypeArguments()));
-        System.out.println("type info : " + TypeInfo.from(type));
         return new TypeParameterInfo(type.getTypeName(), TypeInfo.from(type), null, null, null);
     }
 
