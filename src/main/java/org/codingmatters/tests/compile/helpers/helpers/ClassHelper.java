@@ -4,6 +4,7 @@ import org.codingmatters.tests.compile.helpers.ClassLoaderHelper;
 import org.codingmatters.tests.compile.helpers.helpers.invokers.ClassMethodInvoker;
 import org.codingmatters.tests.compile.helpers.helpers.invokers.ConstructorInvoker;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
@@ -15,6 +16,10 @@ public class ClassHelper {
     public ClassHelper(ClassLoaderHelper classLoader, Class clazz) {
         this.classLoader = classLoader;
         this.clazz = clazz;
+    }
+
+    public ClassHelper array() {
+        return new ClassHelper(this.classLoader, Array.newInstance(this.clazz, 0).getClass());
     }
 
     public ObjectHelper newInstance() {
