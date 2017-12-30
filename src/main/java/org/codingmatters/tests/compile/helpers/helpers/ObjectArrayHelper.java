@@ -28,4 +28,13 @@ public class ObjectArrayHelper {
     public ObjectHelper get(int i) {
         return this.os[i];
     }
+
+    public Object [] get() {
+        if(this.os == null) return null;
+        Object[] results = new Object[this.os.length];
+        for (int i = 0; i < this.os.length; i++) {
+            results[i] = this.os[i].get();
+        }
+        return results;
+    }
 }
