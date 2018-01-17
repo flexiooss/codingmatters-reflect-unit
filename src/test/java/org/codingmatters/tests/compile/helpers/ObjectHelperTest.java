@@ -6,6 +6,7 @@ import org.junit.rules.ExpectedException;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 import static org.hamcrest.Matchers.is;
@@ -38,7 +39,7 @@ public class ObjectHelperTest {
         Object o = SimpleDateFormat.class.getConstructor(String.class).newInstance("yyyy");
         assertThat(
                 ClassLoaderHelper.current().wrap(o).as(DateFormat.class).call("format", Date.class).with(new Date()).get(),
-                is("2017")
+                is("" + Calendar.getInstance().get(Calendar.YEAR))
         );
 
         this.expected.expect(AssertionError.class);
@@ -50,7 +51,7 @@ public class ObjectHelperTest {
         Object o = SimpleDateFormat.class.getConstructor(String.class).newInstance("yyyy");
         assertThat(
                 ClassLoaderHelper.current().wrap(o).as("java.text.DateFormat").call("format", Date.class).with(new Date()).get(),
-                is("2017")
+                is("" + Calendar.getInstance().get(Calendar.YEAR))
         );
 
         this.expected.expect(AssertionError.class);
