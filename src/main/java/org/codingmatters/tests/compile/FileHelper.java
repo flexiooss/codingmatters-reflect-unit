@@ -87,4 +87,15 @@ public class FileHelper extends ExternalResource {
             System.out.println(prefix + "   " + root.getName());
         }
     }
+
+    public String fileContent(String name, File root) throws IOException {
+        File file = new File(root, name);
+        try(ByteArrayOutputStream out = new ByteArrayOutputStream(); FileInputStream in = new FileInputStream(file)) {
+            byte [] buffer = new byte[1024];
+            for(int read = in.read(buffer) ; read != -1 ; read = in.read(buffer)) {
+                out.write(buffer, 0, read);
+            }
+            return out.toString();
+        }
+    }
 }
