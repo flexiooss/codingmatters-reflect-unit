@@ -3,8 +3,7 @@ stages:
   - name: prepare-env
     exec:
       - $NOTIFY --data-urlencode "status=2" --data-urlencode "current-stage=$STAGE"
-      - git clone -b $FLEXIO_SCRIPTS_BRANCH $FLEXIO_SCRIPTS $WORKSPACE/flexio-ci-scripts
-      - export PATH=$PATH:$WORKSPACE/flexio-ci-scripts/bin
+      - git clone -b $FLEXIO_SCRIPTS_BRANCH $FLEXIO_SCRIPTS $WORKSPACE/flexio-ci-scripts && export PATH=$PATH:$WORKSPACE/flexio-ci-scripts/bin
       - echo $PATH
       - hello-world.sh
       - docker pull $CI_TOOLS_IMAGE
