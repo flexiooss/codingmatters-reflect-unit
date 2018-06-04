@@ -26,7 +26,6 @@ onSuccess:
       - $UPLOAD_PROJECT_METADATA $DEPENDENCIES_URL $SRC
       - $NOTIFY --data-urlencode "status=0" --data-urlencode "current-stage="
 
-
 onError:
   - name: notify-flexio
     exec:
