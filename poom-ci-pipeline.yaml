@@ -20,7 +20,7 @@ stages:
       - $MVN deploy  -DskipTests
 
 onSuccess:
-  - name: metadata
+  - name: metadata-management
     exec:
       - $UPLOAD_PROJECT_METADATA
       - $TRIGGER_DOWNSTREAM
