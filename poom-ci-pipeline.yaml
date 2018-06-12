@@ -22,6 +22,7 @@ stages:
 onSuccess:
   - name: metadata-management
     exec:
+      - $NOTIFY --data-urlencode "status=2" --data-urlencode "current-stage=$STAGE"
       - $UPLOAD_PROJECT_METADATA
       - $TRIGGER_DOWNSTREAM
   - name: notify-flexio
