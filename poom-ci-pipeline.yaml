@@ -8,13 +8,11 @@ stages:
       - mkdir -p $WORKSPACE/.m2
 
   - name: build
-    timeout: 15
     exec:
       - $NOTIFY --data-urlencode "status=2" --data-urlencode "current-stage=$STAGE"
       - $MVN clean install
 
   - name: deploy
-    timeout: 15
     exec:
       - $NOTIFY --data-urlencode "status=2" --data-urlencode "current-stage=$STAGE"
       - $MVN deploy  -DskipTests
