@@ -38,7 +38,6 @@ onError:
 env:
   - FLEXIO_SCRIPTS: git@github.com:Flexio-corp/flexio-ci-scripts.git
   - FLEXIO_SCRIPTS_BRANCH: master
-
   - PIPELINES_URL: http://master.ci.flexio.io:6545/pipelines
   - DEPENDENCIES_URL: http://master.ci.flexio.io:6545/dependencies
   - CI_TOOLS_IMAGE: codingmatters/ci-tools:0.0.1-SNAPSHOT
