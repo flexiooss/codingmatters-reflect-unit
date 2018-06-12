@@ -42,10 +42,10 @@ env:
   - PIPELINES_URL: http://master.ci.flexio.io:6545/pipelines
   - DEPENDENCIES_URL: http://master.ci.flexio.io:6545/dependencies
   - CI_TOOLS_IMAGE: codingmatters/ci-tools:0.0.1-SNAPSHOT
-  - CI-TOOLS: \"docker run --rm  --env REPOSITORY_ID="$REPOSITORY_ID" --env REPOSITORY="$REPOSITORY" --env CHECKOUT_SPEC="$CHECKOUT_SPEC" -v $SRC:/src -v $WORKSPACE/.m2:/root/.m2 -v $WORKSPACE/secrets/settings.xml:/root/.m2/settings.xml $CI_TOOLS_IMAGE\"
-  - MVN: $CI-TOOLS mvn -B -Ddocker.registry=registry.containers.ovh.net
-  - UPLOAD_PROJECT_METADATA: $CI-TOOLS /usr/local/bin/upload-project-metadata.sh $DEPENDENCIES_URL /src
-  - TRIGGER_DOWNSTREAM: $CI-TOOLS /usr/local/bin/trigger-downstream.sh $PIPELINES_URL $DEPENDENCIES_URL $REPOSITORY_ID "$REPOSITORY" "$CHECKOUT_SPEC"
+  - CI-TOOLS: --rm  --env REPOSITORY_ID="$REPOSITORY_ID" --env REPOSITORY="$REPOSITORY" --env CHECKOUT_SPEC="$CHECKOUT_SPEC" -v $SRC:/src -v $WORKSPACE/.m2:/root/.m2 -v $WORKSPACE/secrets/settings.xml:/root/.m2/settings.xml $CI_TOOLS_IMAGE
+  - MVN: docker run $CI-TOOLS mvn -B -Ddocker.registry=registry.containers.ovh.net
+  - UPLOAD_PROJECT_METADATA: docker run $CI-TOOLS /usr/local/bin/upload-project-metadata.sh $DEPENDENCIES_URL /src
+  - TRIGGER_DOWNSTREAM: docker run $CI-TOOLS /usr/local/bin/trigger-downstream.sh $PIPELINES_URL $DEPENDENCIES_URL $REPOSITORY_ID "$REPOSITORY" "$CHECKOUT_SPEC"
 
   - NOTIFY: curl -G "https://my.flexio.io/channelApi/flexHttpInOut/59d3a0105d443519843d0496/5adf40aededdbb452368cfca" --data-urlencode "repository=$REPOSITORY" --data-urlencode "branch=$BRANCH" --data-urlencode "pipeline-id=$PIPELINE_ID"
 
