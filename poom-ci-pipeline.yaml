@@ -44,7 +44,7 @@ env:
   - PIPELINES_URL: http://master.ci.flexio.io:6545/pipelines
   - DEPENDENCIES_URL: http://master.ci.flexio.io:6545/dependencies
   - UPLOAD_PROJECT_METADATA: docker run --rm  --env REPOSITORY_ID="$REPOSITORY_ID" --env REPOSITORY="$REPOSITORY" --env CHECKOUT_SPEC="$CHECKOUT_SPEC" -v $SRC:/src -v $WORKSPACE/.m2:/root/.m2 -v $WORKSPACE/secrets/settings.xml:/root/.m2/settings.xml -v $WORKSPACE/flexio-ci-scripts:/flexio-ci-scripts $CI_TOOLS_IMAGE /flexio-ci-scripts/bin/upload-project-metadata.sh $DEPENDENCIES_URL /src
-  - TRIGGER_DOWNSTREAM: docker run --rm  --env REPOSITORY_ID="$REPOSITORY_ID" --env REPOSITORY="$REPOSITORY" --env CHECKOUT_SPEC="$CHECKOUT_SPEC" $CI_TOOLS_IMAGE /usr/local/bin/trigger-downstream.sh $DEPENDENCIES_URL $PIPELINES_URL $REPOSITORY_ID "$REPOSITORY" "$CHECKOUT_SPEC"
+  - TRIGGER_DOWNSTREAM: docker run --rm  --env REPOSITORY_ID="$REPOSITORY_ID" --env REPOSITORY="$REPOSITORY" --env CHECKOUT_SPEC="$CHECKOUT_SPEC" $CI_TOOLS_IMAGE /usr/local/bin/trigger-downstream.sh $PIPELINES_URL $DEPENDENCIES_URL $REPOSITORY_ID "$REPOSITORY" "$CHECKOUT_SPEC"
 
 secrets:
   - name: settings.xml
