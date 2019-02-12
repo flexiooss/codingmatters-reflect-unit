@@ -16,7 +16,7 @@
 
     <name>Generated Code Test Harness</name>
     <description>Test harness for unit testing generated source code.</description>
-    <url>https://github.com/nelt/codingmatters-reflect-unit</url>
+    <url>https://github.com/flexiooss/codingmatters-reflect-unit</url>
 
     <licenses>
         <license>
