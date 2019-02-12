@@ -8,7 +8,6 @@
         <groupId>org.codingmatters</groupId>
         <artifactId>codingmatters-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../codingmatters-parent</relativePath>
     </parent>
 
     <groupId>org.codingmatters.tests</groupId>
@@ -40,45 +39,16 @@
         <url>git@github.com:flexiooss/codingmatters-reflect-unit.git</url>
     </scm>
 
-    <!--<distributionManagement>-->
-        <!--<snapshotRepository>-->
-            <!--<id>ossrh</id>-->
-            <!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
-        <!--</snapshotRepository>-->
-        <!--<repository>-->
-            <!--<id>ossrh</id>-->
-            <!--<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-        <!--</repository>-->
-    <!--</distributionManagement>-->
-
-    <!--<repositories>-->
-        <!--<repository>-->
-            <!--<id>oss-snapshots</id>-->
-            <!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
-            <!--<releases><enabled>false</enabled></releases>-->
-            <!--<snapshots><enabled>true</enabled></snapshots>-->
-        <!--</repository>-->
-    <!--</repositories>-->
-    <!--<pluginRepositories>-->
-        <!--<pluginRepository>-->
-            <!--<id>oss-snapshots</id>-->
-            <!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
-            <!--<releases><enabled>false</enabled></releases>-->
-            <!--<snapshots><enabled>true</enabled></snapshots>-->
-        <!--</pluginRepository>-->
-    <!--</pluginRepositories>-->
-
-
-
-
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
