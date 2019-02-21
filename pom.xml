@@ -7,12 +7,12 @@
     <parent>
         <groupId>org.codingmatters</groupId>
         <artifactId>codingmatters-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
 
     <groupId>org.codingmatters.tests</groupId>
     <artifactId>codingmatters-reflect-unit</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.1.0</version>
 
     <name>Generated Code Test Harness</name>
     <description>Test harness for unit testing generated source code.</description>
@@ -41,17 +41,17 @@
 
     <repositories>
         <repository>
-            <id>oss-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases><enabled>false</enabled></releases>
+            <id>oss-staging</id>
+            <url>https://oss.sonatype.org/content/groups/staging</url>
+            <releases><enabled>true</enabled></releases>
             <snapshots><enabled>true</enabled></snapshots>
         </repository>
     </repositories>
     <pluginRepositories>
         <pluginRepository>
-            <id>oss-snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-            <releases><enabled>false</enabled></releases>
+            <id>oss-staging</id>
+            <url>https://oss.sonatype.org/content/groups/staging</url>
+            <releases><enabled>true</enabled></releases>
             <snapshots><enabled>true</enabled></snapshots>
         </pluginRepository>
     </pluginRepositories>
@@ -68,9 +68,4 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
-
-
-    <prerequisites>
-        <maven>3.0</maven>
-    </prerequisites>
 </project>
