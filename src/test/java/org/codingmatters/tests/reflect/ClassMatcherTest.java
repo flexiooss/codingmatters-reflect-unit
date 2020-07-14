@@ -6,10 +6,11 @@ import org.junit.rules.ExpectedException;
 
 import java.io.Closeable;
 import java.io.Serializable;
+import java.util.function.Function;
 
 import static org.codingmatters.tests.reflect.ReflectMatchers.*;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Created by nelt on 9/6/16.
@@ -151,9 +152,30 @@ public class ClassMatcherTest {
     interface Interface {}
     public class Implementation implements Interface{}
 
+    public class GenericImplementation implements Function<String, Number> {
+        @Override
+        public Number apply(String s) {
+            return null;
+        }
+    }
+
     @Test
     public void classImplementingInterface() throws Exception {
         assertThat(Implementation.class, is(anInstance().class_().implementing(Interface.class)));
+    }
+
+    @Test
+    public void classImplementingGenericInterface() throws Exception {
+        assertThat(GenericImplementation.class, is(anInstance().class_().implementing(Function.class)));
+
+        assertThat(GenericImplementation.class, is(anInstance().class_().implementing(
+                genericType().baseClass(Function.class)
+//                GENERIC TYPES ARE ERASED ??
+//                    .withParameterCount(2)
+//                    .withParameters(classTypeParameter(String.class))
+//                        .withParameters(classTypeParameter(String.class), classTypeParameter(Number.class))
+        )));
+
     }
 
     @Test

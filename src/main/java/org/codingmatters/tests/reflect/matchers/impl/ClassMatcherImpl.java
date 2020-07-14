@@ -3,6 +3,7 @@ package org.codingmatters.tests.reflect.matchers.impl;
 import org.codingmatters.tests.reflect.matchers.*;
 import org.codingmatters.tests.reflect.matchers.support.*;
 import org.hamcrest.Description;
+import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
 import java.lang.reflect.Constructor;
@@ -186,6 +187,28 @@ public class ClassMatcherImpl extends TypeSafeMatcher<Class> implements ClassMat
                 "implements " + interfaceClass.getName(),
                 item -> Arrays.asList(item.getInterfaces()).contains(interfaceClass),
                 (item, description) -> description.appendText("was false (" + item.getName() + " implements " + Arrays.asList(item.getInterfaces()) + ")")
+        );
+        return this;
+    }
+
+    @Override
+    public ClassMatcher implementing(Matcher<Type> interfaceMatcher) {
+//        this.matchers.addMatcher(
+//                description -> description.appendText("should implement ").appendDescriptionOf(interfaceMatcher),
+//                item -> Arrays.asList(item.getInterfaces()).stream().anyMatch(aClass -> interfaceMatcher.matches(aClass)),
+//                (item, description) -> description.appendText("")
+//        );
+        this.matchers.addMatcher(
+                description -> description.appendText("should implement ").appendDescriptionOf(interfaceMatcher),
+                item -> {
+                    for (Class anInterface : item.getInterfaces()) {
+                        if(interfaceMatcher.matches(anInterface)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                },
+                (item, description) -> description.appendDescriptionOf(interfaceMatcher)
         );
         return this;
     }
