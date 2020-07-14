@@ -18,15 +18,23 @@ import java.util.*;
 public class CompiledCode {
 
     static public class Builder {
-        List<URL> classpath = new LinkedList<>();
+        List<URL> classpath = initialClasspath();
+
         List<File> sources = new LinkedList<>();
 
+        /**
+         * Deprecated : the classpath is built transparently from the calling classloader classpath. This method is useless
+         * and thus is a noop. Kept so that the relying code can still compile, but should be removed in a future release.
+         * @param elements
+         * @return
+         */
+        @Deprecated
         public Builder classpath(URL ... elements) {
-            if(elements != null) {
-                for (URL element : elements) {
-                    this.classpath.add(element);
-                }
-            }
+//            if(elements != null) {
+//                for (URL element : elements) {
+//                    this.classpath.add(element);
+//                }
+//            }
             return this;
         }
 
@@ -245,6 +253,19 @@ public class CompiledCode {
                 }
             }
         }
+    }
+
+
+    static private List<URL> initialClasspath() {
+        List<URL> result = new LinkedList<>();
+        for (String element : System.getProperty("java.class.path").split(System.getProperty("path.separator"))) {
+            try {
+                result.add(new File(element).toURI().toURL());
+            } catch (MalformedURLException e) {
+                System.err.println("couldn't build URL from " + element);
+            }
+        }
+        return result;
     }
 
 }
